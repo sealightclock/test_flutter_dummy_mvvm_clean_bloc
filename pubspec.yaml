@@ -36,8 +36,6 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
 
-  provider: ^6.1.2 # state management
-
   # State Management
   flutter_bloc: ^8.1.4
   equatable: ^2.0.5
