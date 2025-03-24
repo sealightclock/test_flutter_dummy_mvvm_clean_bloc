@@ -55,11 +55,10 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
 
   void _updateFromUser() {
     final value = _controller.text.trim();
-    if (value.isNotEmpty) {
-      _bloc.add(UpdateMyStringFromUser(value));
-      _viewModel.saveMyStringToLocal(value);
-      _controller.clear(); // ✅ Clear after submission
-    }
+
+    _bloc.add(UpdateMyStringFromUser(value));
+    _viewModel.saveMyStringToLocal(value);
+    _controller.clear(); // ✅ Clear after submission
   }
 
   void _updateFromServer() {
@@ -80,31 +79,42 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                // Display DI choices:
+                Text('$storeTypeSelected - $serverTypeSelected'),
+
                 TextField(
                   controller: _controller,
                   decoration: const InputDecoration(labelText: 'Enter string'),
                   onSubmitted: (_) => _updateFromUser(), // Keyboard submit clears as well
                 ),
+
                 const SizedBox(height: 16),
+
                 ElevatedButton(
                   onPressed: _updateFromUser,
                   child: const Text('Update from User'),
                 ),
+
                 const SizedBox(height: 16),
+
                 ElevatedButton(
                   onPressed: _updateFromServer,
                   child: const Text('Update from Server'),
                 ),
+
                 const SizedBox(height: 32),
+
                 BlocBuilder<MyStringBloc, MyStringState>(
                   bloc: _bloc,
                   builder: (context, state) {
                     if (state is MyStringLoading) {
                       return const CircularProgressIndicator();
                     } else if (state is MyStringLoaded) {
-                      return Text('Value: ${state.value}', style: const TextStyle(fontSize: 18));
+                      return Text('Value:\n${state.value}', style: const
+                      TextStyle(fontSize: 18));
                     } else if (state is MyStringError) {
-                      return Text('Error: ${state.message}', style: const TextStyle(color: Colors.red));
+                      return Text('Error:\n${state.message}', style: const
+                      TextStyle(color: Colors.red));
                     }
                     return const Text('Enter or load a string to begin');
                   },
