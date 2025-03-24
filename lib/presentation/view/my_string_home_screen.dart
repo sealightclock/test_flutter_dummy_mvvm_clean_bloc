@@ -1,114 +1,98 @@
 import 'package:flutter/material.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/local/get_my_string_from_local_use_case.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/local/store_my_string_to_local_use_case.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/remote/get_my_string_from_remote_use_case.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/intent/my_string_intent.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/bloc/my_string_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/viewmodel/my_string_viewmodel.dart';
 
 import '../../data/di/my_string_dependency_injection.dart';
 import '../../data/repository/my_string_repository_impl.dart';
+import '../../domain/usecase/local/get_my_string_from_local_use_case.dart';
+import '../../domain/usecase/local/store_my_string_to_local_use_case.dart';
+import '../../domain/usecase/remote/get_my_string_from_remote_use_case.dart';
 
 class MyStringHomeScreen extends StatefulWidget {
-  const MyStringHomeScreen({super.key}); // Fix: Added key parameter to avoid
-  // a warning about a named 'key' parameter
+  final MyStringViewModel viewModel;
+
+  const MyStringHomeScreen({super.key, required this.viewModel});
 
   @override
-  MyStringHomeScreenState createState() => MyStringHomeScreenState();
+  State<MyStringHomeScreen> createState() => _MyStringHomeScreenState();
 }
 
-class MyStringHomeScreenState extends State<MyStringHomeScreen> {
+class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   late MyStringViewModel viewModel;
-  late TextEditingController _controller;
-  bool _isDataLoaded = false; // Ensures UI updates after data loads
+  late final MyStringBloc _bloc;
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _bloc = MyStringBloc();
 
-    final localDataSource = createLocalDataSource(storeTypeSelected);
-    final remoteDataSource = createRemoteDataSource(serverTypeSelected);
-
-    final repository = MyStringRepositoryImpl(
-      localDataSource: localDataSource,
-      remoteDataSource: remoteDataSource,
-    );
-
-    final getLocalUseCase = GetMyStringFromLocalUseCase(repository);
-    final storeLocalUseCase = StoreMyStringToLocalUseCase(repository);
-    final getRemoteUseCase = GetMyStringFromRemoteUseCase(repository: repository);
-
-    viewModel = MyStringViewModel(
-      getLocalUseCase: getLocalUseCase,
-      storeLocalUseCase: storeLocalUseCase,
-      getRemoteUseCase: getRemoteUseCase,
-    );
-
-    _controller = TextEditingController();
-
-    /// Ensure UI updates properly after data loads
-    viewModel.loadInitialValue().then((_) {
-      setState(() {
-        _isDataLoaded = true;
-        // Clear controller text for immediate use:
-        _controller.clear();
-      });
+    widget.viewModel.loadMyStringFromLocal().then((value) {
+      _controller.text = value;
+      _bloc.add(UpdateMyStringFromUser(value));
     });
   }
 
-  /// Handles updating value from user input.
-  void _handleUserUpdate() {
-    setState(() {
-      viewModel.handleIntent(UpdateFromUserIntent(_controller.text));
-      _controller.clear();
-    });
+  void _updateFromUser() {
+    final value = _controller.text.trim();
+    if (value.isNotEmpty) {
+      _bloc.add(UpdateMyStringFromUser(value));
+      widget.viewModel.saveMyStringToLocal(value);
+    }
+  }
+
+  void _updateFromServer() {
+    _bloc.add(UpdateMyStringFromServer(() async {
+      final value = await widget.viewModel.fetchMyStringFromRemote();
+      widget.viewModel.saveMyStringToLocal(value);
+      return value;
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Demo Flutter App with MVI')),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: _isDataLoaded
-              ? Column(
-            children: [
-              Text('$storeTypeSelected - $serverTypeSelected'),
-
-              TextField(
-                controller: _controller,
-                decoration: const InputDecoration(labelText: 'Enter value'),
-                onSubmitted: (value) => _handleUserUpdate(), // 👈 Handles Return key
-              ),
-
-              ElevatedButton(
-                onPressed: _handleUserUpdate,
-                child: const Text('Update from User'),
-              ),
-
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    viewModel.handleIntent(UpdateFromServerIntent()).then((_) {
-                      setState(() {});
-                    });
-                  });
-                },
-                child: viewModel.isLoadingDataFromRemoteServer
-                    ? const CircularProgressIndicator()
-                    : const Text('Update from Server'),
-              ),
-
-              const SizedBox(height: 20),
-
-              Text(
-                'Current Value:\n${viewModel.myString}',
-                style: const TextStyle(fontSize: 18),
-              ),
-            ],
-          )
-              : const Center(child: CircularProgressIndicator()), // Show loading only initially
-        ),
+      appBar: AppBar(title: const Text('My String Manager')),
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _controller,
+                  decoration: const InputDecoration(labelText: 'Enter string'),
+                  onSubmitted: (_) => _updateFromUser(),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _updateFromUser,
+                  child: const Text('Update from User'),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _updateFromServer,
+                  child: const Text('Update from Server'),
+                ),
+                const SizedBox(height: 32),
+                BlocBuilder<MyStringBloc, MyStringState>(
+                  bloc: _bloc,
+                  builder: (context, state) {
+                    if (state is MyStringLoading) {
+                      return const CircularProgressIndicator();
+                    } else if (state is MyStringLoaded) {
+                      return Text('Value: ${state.value}', style: const TextStyle(fontSize: 18));
+                    } else if (state is MyStringError) {
+                      return Text('Error: ${state.message}', style: const TextStyle(color: Colors.red));
+                    }
+                    return const Text('Enter or load a string to begin');
+                  },
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
