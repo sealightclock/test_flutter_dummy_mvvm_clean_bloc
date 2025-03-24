@@ -14,16 +14,16 @@ class MyStringViewModel {
     required this.getRemoteUseCase,
   });
 
-  Future<String> loadMyStringFromLocal() async {
+  Future<String> getMyStringFromLocal() async {
     final entity = await getLocalUseCase.execute();
     return entity.value;
   }
 
-  Future<void> saveMyStringToLocal(String value) async {
+  Future<void> storeMyStringToLocal(String value) async {
     await storeLocalUseCase.execute(MyStringEntity(value));
   }
 
-  Future<String> fetchMyStringFromRemote() async {
+  Future<String> getMyStringFromRemote() async {
     final entity = await getRemoteUseCase.execute();
     return entity.value;
   }

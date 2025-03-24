@@ -5,12 +5,12 @@ import 'my_string_local_data_source.dart';
 
 /// Data source handler to handle local data persistence using Hive.
 class MyStringHiveDataSource implements MyStringLocalDataSource {
-  //  Box
+  // Box
   static const String hiveBoxName = 'my_string_hive_box';
-  //  Key
+  // Key
   static const String myStringKey = 'my_string_key';
 
-  //  Initialization:
+  // Initialization:
   static bool _isInitialized = false;
   static Box<String>? _box;
 

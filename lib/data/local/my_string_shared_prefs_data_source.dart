@@ -7,12 +7,12 @@ import 'my_string_local_data_source.dart';
 /// SharedPreferences.
 /// Implements a singleton pattern to avoid repeated `getInstance()` calls.
 class MyStringSharedPrefsDataSource implements MyStringLocalDataSource {
-  //  Key:
+  // Key
   static const String myStringKey = 'my_string_key';
 
-  //  Initialization
+  // Initialization
   static SharedPreferences? _prefs;
-  //  Initializes SharedPreferences once to prevent redundant calls.
+  // Initializes SharedPreferences once to prevent redundant calls.
   static Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
   }

@@ -1,9 +1,10 @@
 # test_flutter_dummy_mvvm_clean_bloc
 
 ## Introduction
-This is a dummy Flutter app built with the MVI architecture, for testing and learning purposes.
+This is a dummy Flutter app built with the "MVVM Clean + Bloc" architecture, for testing and 
+learning purposes.
 
-It handles a single string: 'MyString'.
+It handles a single string: 'my_string'.
 
 ## Technologies used
 This Flutter app uses the following technologies:
@@ -15,12 +16,12 @@ These are the latest technologies used in developing a multiplatform app:
 
 ### Specialized technologies
 This Flutter app uses the following specialized technologies:
-- MVI: for managing state and handling intents
-- SharedPreferences / Hive: for storing key-value pair user preferences locally
-- Dio / HTTP: for making HTTP requests
+- MVVM Clean + Bloc: for clean architecture with Bloc for state management
+- SharedPreferences / Hive: for storing data locally to achieve data persistence.
+- Dio / Http: for making HTTP requests to remote servers
 
 ## UI/UX
-The UI should be intuitive. 'MyString' can be modified by:
+The UI should be intuitive. 'my_string' can be modified by:
 - the user input
 - the backend server
 - the local storage
@@ -34,9 +35,13 @@ The file structure is as follows:
 
 ------ my_string_home_screen.dart
 
----- **intent**/ 
+---- **bloc**/ 
 
------- my_string_intent.dart
+------ my_string_bloc.dart
+
+------ my_string_event.dart
+
+------ my_string_state.dart
 
 ---- **viewmodel**/
 
@@ -94,9 +99,10 @@ The file structure is as follows:
 
 ------ my_string_dependency_injection.dart
 
-(together with some additional files/directories that are not specific to the MVI architecture)
+(together with some additional files/directories that are not specific to the MVVM Clean + Bloc 
+architecture)
 
-which reflects the chosen design pattern MVI.
+which reflects the chosen design pattern "MVVM Clean + Bloc".
 
 ## Testing
 This Flutter app needs to be tested on both Android and iOS devices with the following 

@@ -46,7 +46,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
 
     _bloc = MyStringBloc();
 
-    _viewModel.loadMyStringFromLocal().then((value) {
+    _viewModel.getMyStringFromLocal().then((value) {
       // Show the saved value in the state, but leave the input field empty
       _controller.clear();
       _bloc.add(UpdateMyStringFromUser(value));
@@ -57,14 +57,14 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     final value = _controller.text.trim();
 
     _bloc.add(UpdateMyStringFromUser(value));
-    _viewModel.saveMyStringToLocal(value);
-    _controller.clear(); // ✅ Clear after submission
+    _viewModel.storeMyStringToLocal(value);
+    _controller.clear(); // Clear after submission
   }
 
   void _updateFromServer() {
     _bloc.add(UpdateMyStringFromServer(() async {
-      final value = await _viewModel.fetchMyStringFromRemote();
-      _viewModel.saveMyStringToLocal(value);
+      final value = await _viewModel.getMyStringFromRemote();
+      _viewModel.storeMyStringToLocal(value);
       return value;
     }));
   }
