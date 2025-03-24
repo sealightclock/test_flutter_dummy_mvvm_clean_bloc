@@ -47,7 +47,8 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     _bloc = MyStringBloc();
 
     _viewModel.loadMyStringFromLocal().then((value) {
-      _controller.text = value;
+      // Show the saved value in the state, but leave the input field empty
+      _controller.clear();
       _bloc.add(UpdateMyStringFromUser(value));
     });
   }
@@ -57,6 +58,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     if (value.isNotEmpty) {
       _bloc.add(UpdateMyStringFromUser(value));
       _viewModel.saveMyStringToLocal(value);
+      _controller.clear(); // ✅ Clear after submission
     }
   }
 
@@ -81,7 +83,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 TextField(
                   controller: _controller,
                   decoration: const InputDecoration(labelText: 'Enter string'),
-                  onSubmitted: (_) => _updateFromUser(),
+                  onSubmitted: (_) => _updateFromUser(), // Keyboard submit clears as well
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
