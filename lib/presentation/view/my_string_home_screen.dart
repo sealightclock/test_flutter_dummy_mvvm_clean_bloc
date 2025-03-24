@@ -10,25 +10,43 @@ import '../../domain/usecase/local/store_my_string_to_local_use_case.dart';
 import '../../domain/usecase/remote/get_my_string_from_remote_use_case.dart';
 
 class MyStringHomeScreen extends StatefulWidget {
-  final MyStringViewModel viewModel;
-
-  const MyStringHomeScreen({super.key, required this.viewModel});
+  const MyStringHomeScreen({super.key});
 
   @override
   State<MyStringHomeScreen> createState() => _MyStringHomeScreenState();
 }
 
 class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
-  late MyStringViewModel viewModel;
+  late final MyStringViewModel _viewModel;
   late final MyStringBloc _bloc;
   final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
+    // Create ViewModel using DI
+    final localDataSource = createLocalDataSource(storeTypeSelected);
+    final remoteDataSource = createRemoteDataSource(serverTypeSelected);
+
+    final repository = MyStringRepositoryImpl(
+      localDataSource: localDataSource,
+      remoteDataSource: remoteDataSource,
+    );
+
+    final getLocalUseCase = GetMyStringFromLocalUseCase(repository);
+    final storeLocalUseCase = StoreMyStringToLocalUseCase(repository);
+    final getRemoteUseCase = GetMyStringFromRemoteUseCase(repository: repository);
+
+    _viewModel = MyStringViewModel(
+      getLocalUseCase: getLocalUseCase,
+      storeLocalUseCase: storeLocalUseCase,
+      getRemoteUseCase: getRemoteUseCase,
+    );
+
     _bloc = MyStringBloc();
 
-    widget.viewModel.loadMyStringFromLocal().then((value) {
+    _viewModel.loadMyStringFromLocal().then((value) {
       _controller.text = value;
       _bloc.add(UpdateMyStringFromUser(value));
     });
@@ -38,14 +56,14 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     final value = _controller.text.trim();
     if (value.isNotEmpty) {
       _bloc.add(UpdateMyStringFromUser(value));
-      widget.viewModel.saveMyStringToLocal(value);
+      _viewModel.saveMyStringToLocal(value);
     }
   }
 
   void _updateFromServer() {
     _bloc.add(UpdateMyStringFromServer(() async {
-      final value = await widget.viewModel.fetchMyStringFromRemote();
-      widget.viewModel.saveMyStringToLocal(value);
+      final value = await _viewModel.fetchMyStringFromRemote();
+      _viewModel.saveMyStringToLocal(value);
       return value;
     }));
   }
@@ -53,7 +71,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My String Manager')),
+      appBar: AppBar(title: const Text('test_flutter_dummy_mvvm_clean_bloc')),
       body: OrientationBuilder(
         builder: (context, orientation) {
           return SingleChildScrollView(
