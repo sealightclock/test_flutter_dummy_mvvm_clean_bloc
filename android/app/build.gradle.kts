@@ -7,8 +7,8 @@ plugins {
 
 android {
     namespace = "com.example.jonathan.test_flutter_dummy_mvvm_clean_bloc"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 35
+    ndkVersion = "29.0.13113456 rc1"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
