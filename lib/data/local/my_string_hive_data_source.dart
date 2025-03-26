@@ -12,30 +12,30 @@ class MyStringHiveDataSource implements MyStringLocalDataSource {
 
   // Initialization:
   static bool _isInitialized = false;
-  static Box<String>? _box;
 
   /// Ensures Hive is initialized and the box is opened before usage.
   Future<void> _initialize() async {
     if (!_isInitialized) {
       await Hive.initFlutter();
-      _box = await Hive.openBox<String>(hiveBoxName);
       Hive.registerAdapter(MyStringEntityAdapter());
       _isInitialized = true;
     }
   }
 
-  /// Retrieves stored string value or assigns a default value if absent.
+  /// Retrieves stored MyStringEntity object or assigns a default value if absent.
   @override
   Future<MyStringEntity> getMyString() async {
     await _initialize(); // Ensure Hive is ready
-    var value = _box?.get(myStringKey, defaultValue: 'Default Value from Hive') ?? "Default Value from Hive";
-    return MyStringEntity(value: value);
+    final box = await Hive.openBox<MyStringEntity>(hiveBoxName);
+    return box.get(myStringKey) ?? MyStringEntity(value: 'Default Value from '
+        'Hive');
   }
 
-  /// Stores a string value into Hive Box.
+  /// Stores a MyStringEntity object into Hive Box.
   @override
   Future<void> storeMyString(MyStringEntity value) async {
     await _initialize(); // Ensure Hive is ready
-    await _box?.put(myStringKey, value.value);
+    final box = await Hive.openBox<MyStringEntity>(hiveBoxName);
+    await box.put(myStringKey, value);
   }
 }
