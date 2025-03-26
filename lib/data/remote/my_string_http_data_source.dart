@@ -11,7 +11,8 @@ class MyStringHttpDataSource implements MyStringRemoteDataSource {
   Future<MyStringEntity> getMyString() async {
     try {
       String content = await MyStringHttpApi().fetchContent();
-      return MyStringEntity('MyStringHttpDataSource: Server String: $content');
+      return MyStringEntity(value: 'MyStringHttpDataSource: Server String: '
+          '$content');
     } catch (e) {
       throw MyStringException('MyStringHttpDataSource: Server fetch failed: $e');
     }

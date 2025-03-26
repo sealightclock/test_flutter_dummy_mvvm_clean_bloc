@@ -20,7 +20,7 @@ class MyStringViewModel {
   }
 
   Future<void> storeMyStringToLocal(String value) async {
-    await storeLocalUseCase.execute(MyStringEntity(value));
+    await storeLocalUseCase.execute(MyStringEntity(value: value));
   }
 
   Future<String> getMyStringFromRemote() async {

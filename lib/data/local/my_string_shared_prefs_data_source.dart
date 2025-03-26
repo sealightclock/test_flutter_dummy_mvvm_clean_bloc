@@ -29,7 +29,7 @@ class MyStringSharedPrefsDataSource implements MyStringLocalDataSource {
       await _prefs?.setString(myStringKey, storedValue); // Store default value once.
     }
 
-    return MyStringEntity(storedValue);
+    return MyStringEntity(value: storedValue);
   }
 
   /// Stores a string value into SharedPreferences.

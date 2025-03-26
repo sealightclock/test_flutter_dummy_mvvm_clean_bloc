@@ -14,7 +14,8 @@ class MyStringDioDataSource implements MyStringRemoteDataSource {
   Future<MyStringEntity> getMyString() async {
     try {
       String content = await MyStringDioApi().fetchContent();
-      return MyStringEntity('MyStringDioDataSource: Server String: $content');
+      return MyStringEntity(value: 'MyStringDioDataSource: Server String: '
+          '$content');
     } catch (e) {
       throw MyStringException('MyStringDioDataSource: Server fetch failed: $e');
     }
