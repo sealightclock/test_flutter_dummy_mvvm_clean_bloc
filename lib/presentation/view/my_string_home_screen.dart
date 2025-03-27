@@ -19,48 +19,66 @@ class MyStringHomeScreen extends StatefulWidget {
 class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   late final MyStringViewModel _viewModel;
   late final MyStringBloc _bloc;
+  // This is to control the TextField:
   final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    // Create ViewModel using DI
+    // Create Bloc
+    _bloc = MyStringBloc();
+
+    // Create components used for ViewModel, from bottom up...
+
+    // Create Data Sources using DI
     final localDataSource = createLocalDataSource(storeTypeSelected);
     final remoteDataSource = createRemoteDataSource(serverTypeSelected);
 
+    // Create Repository
     final repository = MyStringRepositoryImpl(
       localDataSource: localDataSource,
       remoteDataSource: remoteDataSource,
     );
 
+    // Create Use Cases
     final getLocalUseCase = GetMyStringFromLocalUseCase(repository);
     final storeLocalUseCase = StoreMyStringToLocalUseCase(repository);
     final getRemoteUseCase = GetMyStringFromRemoteUseCase(repository: repository);
 
+    // Finally, create ViewModel
     _viewModel = MyStringViewModel(
       getLocalUseCase: getLocalUseCase,
       storeLocalUseCase: storeLocalUseCase,
       getRemoteUseCase: getRemoteUseCase,
     );
 
-    _bloc = MyStringBloc();
-
+    // At app launch, we want to load the value from the local store.
+    // [1] Get the value from the local store, then:
+    // [2]   Load the value into the state.
+    // [3]   Clear the TextField
     _viewModel.getMyStringFromLocal().then((value) {
-      // Show the saved value in the state, but leave the input field empty
-      _controller.clear();
       _bloc.add(UpdateMyStringFromUser(value));
+      _controller.clear();
     });
   }
 
+  /// When the user submits the string, we want to:
+  /// [1] Get the value from the TextField.
+  /// [2] Load the value into the state.
+  /// [3] Store the value into the local store.
+  /// [4] Clear the TextField.
   void _updateFromUser() {
     final value = _controller.text.trim();
-
     _bloc.add(UpdateMyStringFromUser(value));
     _viewModel.storeMyStringToLocal(value);
     _controller.clear(); // Clear after submission
   }
 
+  /// When the user requests the string from the server, we want to:
+  /// [1] Load the value into the state, but wait until:
+  /// [2]   Get the value from the server.
+  /// [3]   Store the value into the local store.
   void _updateFromServer() {
     _bloc.add(UpdateMyStringFromServer(() async {
       final value = await _viewModel.getMyStringFromRemote();
@@ -85,7 +103,11 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 TextField(
                   controller: _controller,
                   decoration: const InputDecoration(labelText: 'Enter string'),
-                  onSubmitted: (_) => _updateFromUser(), // Keyboard submit clears as well
+                  onEditingComplete: () {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _updateFromUser();
+                    });
+                  }, // Keyboard submit
                 ),
 
                 const SizedBox(height: 16),
