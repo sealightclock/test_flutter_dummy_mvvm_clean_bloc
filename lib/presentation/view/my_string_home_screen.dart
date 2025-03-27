@@ -29,8 +29,22 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     // Create Bloc
     _bloc = MyStringBloc();
 
-    // Create components used for ViewModel, from bottom up...
+    // Create ViewModel
+    _viewModel = _createViewModel();
 
+    // At app launch, we want to load the value from the local store.
+    // [1] Get the value from the local store, then:
+    // [2]   Load the value into the state.
+    // [3]   Clear the TextField
+    _viewModel.getMyStringFromLocal().then((value) {
+      _bloc.add(UpdateMyStringFromUser(value));
+      _controller.clear();
+    });
+  }
+
+  /// This creates the ViewModel from ground up:
+  /// Data Sources -> Repository -> Use Cases -> ViewModel
+  MyStringViewModel _createViewModel() {
     // Create Data Sources using DI
     final localDataSource = createLocalDataSource(storeTypeSelected);
     final remoteDataSource = createRemoteDataSource(serverTypeSelected);
@@ -42,25 +56,16 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     );
 
     // Create Use Cases
-    final getLocalUseCase = GetMyStringFromLocalUseCase(repository);
-    final storeLocalUseCase = StoreMyStringToLocalUseCase(repository);
+    final getLocalUseCase = GetMyStringFromLocalUseCase(repository: repository);
+    final storeLocalUseCase = StoreMyStringToLocalUseCase(repository: repository);
     final getRemoteUseCase = GetMyStringFromRemoteUseCase(repository: repository);
 
     // Finally, create ViewModel
-    _viewModel = MyStringViewModel(
+    return MyStringViewModel(
       getLocalUseCase: getLocalUseCase,
       storeLocalUseCase: storeLocalUseCase,
       getRemoteUseCase: getRemoteUseCase,
     );
-
-    // At app launch, we want to load the value from the local store.
-    // [1] Get the value from the local store, then:
-    // [2]   Load the value into the state.
-    // [3]   Clear the TextField
-    _viewModel.getMyStringFromLocal().then((value) {
-      _bloc.add(UpdateMyStringFromUser(value));
-      _controller.clear();
-    });
   }
 
   /// When the user submits the string, we want to:

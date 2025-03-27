@@ -6,7 +6,7 @@ import '../../../data/repository/my_string_repository.dart';
 class GetMyStringFromLocalUseCase {
   final MyStringRepository repository;
 
-  GetMyStringFromLocalUseCase(this.repository);
+  GetMyStringFromLocalUseCase({required this.repository});
 
   Future<MyStringEntity> execute() {
     return repository.getMyStringFromLocal();

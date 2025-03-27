@@ -5,7 +5,7 @@ import '../../entity/my_string_entity.dart';
 class StoreMyStringToLocalUseCase {
   final MyStringRepository repository;
 
-  StoreMyStringToLocalUseCase(this.repository);
+  StoreMyStringToLocalUseCase({required this.repository});
 
   Future<void> execute(MyStringEntity value) async {
     repository.storeMyStringToLocal(value);
