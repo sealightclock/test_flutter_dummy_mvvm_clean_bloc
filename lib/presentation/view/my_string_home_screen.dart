@@ -4,10 +4,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/bloc/my_string_b
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/viewmodel/my_string_viewmodel.dart';
 
 import '../../data/di/my_string_dependency_injection.dart';
-import '../../data/repository/my_string_repository_impl.dart';
-import '../../domain/usecase/local/get_my_string_from_local_use_case.dart';
-import '../../domain/usecase/local/store_my_string_to_local_use_case.dart';
-import '../../domain/usecase/remote/get_my_string_from_remote_use_case.dart';
+import '../factory/my_string_viewmodel_factory.dart';
 
 class MyStringHomeScreen extends StatefulWidget {
   const MyStringHomeScreen({super.key});
@@ -30,7 +27,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     _bloc = MyStringBloc();
 
     // Create ViewModel
-    _viewModel = _createViewModel();
+    _viewModel = createViewModel();
 
     // At app launch, we want to load the value from the local store.
     // [1] Get the value from the local store, then:
@@ -40,32 +37,6 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
       _bloc.add(UpdateMyStringFromUser(value));
       _controller.clear();
     });
-  }
-
-  /// This creates the ViewModel from ground up:
-  /// Data Sources -> Repository -> Use Cases -> ViewModel
-  MyStringViewModel _createViewModel() {
-    // Create Data Sources using DI
-    final localDataSource = createLocalDataSource(storeTypeSelected);
-    final remoteDataSource = createRemoteDataSource(serverTypeSelected);
-
-    // Create Repository
-    final repository = MyStringRepositoryImpl(
-      localDataSource: localDataSource,
-      remoteDataSource: remoteDataSource,
-    );
-
-    // Create Use Cases
-    final getLocalUseCase = GetMyStringFromLocalUseCase(repository: repository);
-    final storeLocalUseCase = StoreMyStringToLocalUseCase(repository: repository);
-    final getRemoteUseCase = GetMyStringFromRemoteUseCase(repository: repository);
-
-    // Finally, create ViewModel
-    return MyStringViewModel(
-      getLocalUseCase: getLocalUseCase,
-      storeLocalUseCase: storeLocalUseCase,
-      getRemoteUseCase: getRemoteUseCase,
-    );
   }
 
   /// When the user submits the string, we want to:

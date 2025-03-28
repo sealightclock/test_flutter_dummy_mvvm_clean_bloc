@@ -2,7 +2,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/entity/my_string_entit
 
 import '../../../data/repository/my_string_repository.dart';
 
-/// Use Case: Retrieve the latest string from a remote server.
+/// Use Case: Retrieve the latest my_string from a remote server.
 class GetMyStringFromRemoteUseCase {
   final MyStringRepository repository;
 

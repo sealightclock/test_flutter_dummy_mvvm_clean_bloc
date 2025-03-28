@@ -2,7 +2,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/entity/my_string_entit
 
 import '../../../data/repository/my_string_repository.dart';
 
-/// Use Case: Retrieve the stored string from a local store.
+/// Use Case: Retrieve the stored my_string from a local store.
 class GetMyStringFromLocalUseCase {
   final MyStringRepository repository;
 
