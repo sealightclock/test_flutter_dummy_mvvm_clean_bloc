@@ -47,11 +47,17 @@ The file structure is as follows:
 
 ------ my_string_viewmodel.dart
 
+---- factory/
+
+------ my_string_viewmodel_factory.dart
+
 ### -- ***domain***/ 
 
 ---- **entity**/
 
 ------ my_string_entity.dart
+
+------ my_string_entity.g.dart
 
 ---- **usecase**/
 
