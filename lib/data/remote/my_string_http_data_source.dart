@@ -5,12 +5,14 @@ import 'my_string_remote_data_source.dart';
 
 /// Data Source handler for fetching data from the backend server using http.
 class MyStringHttpDataSource implements MyStringRemoteDataSource {
+  final MyStringHttpApi _api = MyStringHttpApi(); // Created once
+
   /// Fetches data from the server.
   /// If fetching fails, throws `MyStringException`.
   @override
   Future<MyStringEntity> getMyString() async {
     try {
-      String content = await MyStringHttpApi().fetchContent();
+      String content = await _api.fetchContent();
       return MyStringEntity(value: 'MyStringHttpDataSource: Server String: '
           '$content');
     } catch (e) {
