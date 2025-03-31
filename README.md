@@ -124,5 +124,5 @@ combinations of configurations:
 
 It has been tested on Android devices (both physical and emulator ones).
 
-It will still need to be tested on iOS devices.
+It has been tested on iOS Simulators.
 
