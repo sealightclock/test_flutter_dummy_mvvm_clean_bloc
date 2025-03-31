@@ -14,28 +14,32 @@ class MyStringHomeScreen extends StatefulWidget {
 }
 
 class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
-  late final MyStringViewModel _viewModel;
-  late final MyStringBloc _bloc;
+  // Bloc to manage state.
+  late final MyStringBloc bloc;
+
+  // ViewModel to communicate with Use Cases.
+  late final MyStringViewModel viewModel;
+
   // This is to control the TextField:
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController textEditController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
     // Create Bloc
-    _bloc = MyStringBloc();
+    bloc = MyStringBloc();
 
     // Create ViewModel
-    _viewModel = createViewModel();
+    viewModel = createViewModel();
 
     // At app launch, we want to load the value from the local store.
     // [1] Get the value from the local store, then:
     // [2]   Load the value into the state.
     // [3]   Clear the TextField
-    _viewModel.getMyStringFromLocal().then((value) {
-      _bloc.add(UpdateMyStringFromUser(value));
-      _controller.clear();
+    viewModel.getMyStringFromLocal().then((value) {
+      bloc.add(UpdateMyStringFromUser(value));
+      textEditController.clear();
     });
   }
 
@@ -44,21 +48,21 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   /// [2] Load the value into the state.
   /// [3] Store the value into the local store.
   /// [4] Clear the TextField.
-  void _updateFromUser() {
-    final value = _controller.text.trim();
-    _bloc.add(UpdateMyStringFromUser(value));
-    _viewModel.storeMyStringToLocal(value);
-    _controller.clear(); // Clear after submission
+  void updateFromUser() {
+    final value = textEditController.text.trim();
+    bloc.add(UpdateMyStringFromUser(value));
+    viewModel.storeMyStringToLocal(value);
+    textEditController.clear(); // Clear after submission
   }
 
   /// When the user requests the string from the server, we want to:
   /// [1] Load the value into the state, but wait until:
   /// [2]   Get the value from the server.
   /// [3]   Store the value into the local store.
-  void _updateFromServer() {
-    _bloc.add(UpdateMyStringFromServer(() async {
-      final value = await _viewModel.getMyStringFromRemote();
-      _viewModel.storeMyStringToLocal(value);
+  void updateFromServer() {
+    bloc.add(UpdateMyStringFromServer(() async {
+      final value = await viewModel.getMyStringFromRemote();
+      viewModel.storeMyStringToLocal(value);
       return value;
     }));
   }
@@ -66,7 +70,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('test_flutter_dummy_mvvm_clean_bloc')),
+      appBar: AppBar(title: const Text('Flutter MVVM Clean + Bloc')),
       body: OrientationBuilder(
         builder: (context, orientation) {
           return SingleChildScrollView(
@@ -77,11 +81,11 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 Text('$storeTypeSelected - $serverTypeSelected'),
 
                 TextField(
-                  controller: _controller,
+                  controller: textEditController,
                   decoration: const InputDecoration(labelText: 'Enter string'),
                   onEditingComplete: () {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _updateFromUser();
+                      updateFromUser();
                     });
                   }, // Keyboard submit
                 ),
@@ -89,21 +93,21 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 const SizedBox(height: 16),
 
                 ElevatedButton(
-                  onPressed: _updateFromUser,
+                  onPressed: updateFromUser,
                   child: const Text('Update from User'),
                 ),
 
                 const SizedBox(height: 16),
 
                 ElevatedButton(
-                  onPressed: _updateFromServer,
+                  onPressed: updateFromServer,
                   child: const Text('Update from Server'),
                 ),
 
                 const SizedBox(height: 32),
 
                 BlocBuilder<MyStringBloc, MyStringState>(
-                  bloc: _bloc,
+                  bloc: bloc,
                   builder: (context, state) {
                     if (state is MyStringLoading) {
                       return const CircularProgressIndicator();
@@ -114,6 +118,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                       return Text('Error:\n${state.message}', style: const
                       TextStyle(color: Colors.red));
                     }
+                    // Just in case:
                     return const Text('Enter or load a string to begin');
                   },
                 ),
@@ -125,3 +130,4 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     );
   }
 }
+
