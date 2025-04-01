@@ -25,6 +25,12 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
       emit(MyStringLoading());
     });
 
+    // Handler for UpdateMyStringFromLocal event.
+    // Immediately emits a loaded state with the local value.
+    on<UpdateMyStringFromLocal>((event, emit) {
+      emit(MyStringLoaded(event.newValue));
+    });
+
     // Handler for UpdateMyStringFromUser event.
     // Immediately emits a loaded state with the new user-provided value.
     on<UpdateMyStringFromUser>((event, emit) {

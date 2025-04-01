@@ -38,7 +38,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     // [2]   Load the value into the state.
     // [3]   Clear the TextField
     viewModel.getMyStringFromLocal().then((value) {
-      bloc.add(UpdateMyStringFromUser(value));
+      bloc.add(UpdateMyStringFromLocal(value));
       textEditController.clear();
     });
   }

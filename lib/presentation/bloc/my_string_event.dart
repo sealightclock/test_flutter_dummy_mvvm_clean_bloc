@@ -22,6 +22,18 @@ class LoadMyString extends MyStringEvent {
   // No additional data is needed for this event.
 }
 
+class UpdateMyStringFromLocal extends MyStringEvent {
+  final String newValue; // The new value retrieved from the local store.
+
+  UpdateMyStringFromLocal(this.newValue); // Constructor to pass the local
+  // stored value
+
+  @override
+  List<Object?> get props => [newValue];
+// Including 'newValue' in props allows Bloc to compare events based on local
+// value.
+}
+
 /// Event: Triggered when the user manually updates the string via text field
 /// + "Update from User" button.
 class UpdateMyStringFromUser extends MyStringEvent {
