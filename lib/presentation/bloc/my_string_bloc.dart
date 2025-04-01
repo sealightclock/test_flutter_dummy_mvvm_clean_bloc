@@ -4,10 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 // Imports Equatable, which allows for value comparison of events and states.
 import 'package:equatable/equatable.dart';
 
+import 'package:logger/logger.dart';
+
 // These `part` directives link this file to the event and state files.
 // It makes their classes available to this file without separate imports.
 part 'my_string_event.dart';
 part 'my_string_state.dart';
+
+final logger = Logger();
 
 /// The main BLoC class for handling all business logic related to "my_string".
 ///

@@ -109,7 +109,10 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 BlocBuilder<MyStringBloc, MyStringState>(
                   bloc: bloc,
                   builder: (context, state) {
-                    if (state is MyStringLoadingState) {
+                    // Handle all known states:
+                    if (state is MyStringInitialState) {
+                      return const Text('Enter or load a string to begin'); // Or any default UI
+                    } else if (state is MyStringLoadingState) {
                       return const CircularProgressIndicator();
                     } else if (state is MyStringLoadedState) {
                       return Text('Value:\n${state.value}', style: const
@@ -118,8 +121,8 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                       return Text('Error:\n${state.message}', style: const
                       TextStyle(color: Colors.red));
                     }
-                    // Just in case:
-                    return const Text('Enter or load a string to begin');
+                    // Optional fallback for unexpected states
+                    return const SizedBox.shrink();
                   },
                 ),
               ],

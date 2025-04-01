@@ -22,12 +22,20 @@ abstract class MyStringState extends Equatable {
 /// Initial state of the BLoC (e.g., when the app or screen first loads).
 ///
 /// Typically used before any data is loaded or interaction happens.
-class MyStringInitialState extends MyStringState {}
+class MyStringInitialState extends MyStringState {
+  MyStringInitialState() {
+    logger.d('TFDB: MyStringInitialState: MyStringInitialState');
+  }
+}
 
 /// State when a loading process is in progress (e.g., fetching from server).
 ///
 /// UI can show a loading spinner or disabled buttons during this state.
-class MyStringLoadingState extends MyStringState {}
+class MyStringLoadingState extends MyStringState {
+  MyStringLoadingState()  {
+    logger.d('TFDB: MyStringLoadingState: MyStringLoadingState');
+  }
+}
 
 /// State when the string has been successfully loaded (from user or server).
 ///
@@ -35,7 +43,9 @@ class MyStringLoadingState extends MyStringState {}
 class MyStringLoadedState extends MyStringState {
   final String value; // The current value of the string
 
-  MyStringLoadedState(this.value); // Constructor to initialize the value
+  MyStringLoadedState(this.value) {
+    logger.d('TFDB: MyStringLoadedState: MyStringLoadedState: $value');
+  }
 
   @override
   List<Object?> get props => [value];
@@ -49,7 +59,9 @@ class MyStringLoadedState extends MyStringState {
 class MyStringErrorState extends MyStringState {
   final String message; // Description of what went wrong
 
-  MyStringErrorState(this.message); // Constructor to initialize the error message
+  MyStringErrorState(this.message) {
+    logger.d('TFDB: MyStringErrorState: MyStringErrorState: $message');
+  }
 
   @override
   List<Object?> get props => [message];
