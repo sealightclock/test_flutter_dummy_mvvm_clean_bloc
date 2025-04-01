@@ -13,23 +13,29 @@ abstract class MyStringState extends Equatable {
   // Subclasses override this to include their relevant fields.
 }
 
+// Typical states of a UI data:
+// - Initial state
+// - Loading state
+// - Loaded state
+// - Error state
+
 /// Initial state of the BLoC (e.g., when the app or screen first loads).
 ///
 /// Typically used before any data is loaded or interaction happens.
-class MyStringInitial extends MyStringState {}
+class MyStringInitialState extends MyStringState {}
 
 /// State when a loading process is in progress (e.g., fetching from server).
 ///
 /// UI can show a loading spinner or disabled buttons during this state.
-class MyStringLoading extends MyStringState {}
+class MyStringLoadingState extends MyStringState {}
 
 /// State when the string has been successfully loaded (from user or server).
 ///
 /// This state carries the actual string value.
-class MyStringLoaded extends MyStringState {
+class MyStringLoadedState extends MyStringState {
   final String value; // The current value of the string
 
-  MyStringLoaded(this.value); // Constructor to initialize the value
+  MyStringLoadedState(this.value); // Constructor to initialize the value
 
   @override
   List<Object?> get props => [value];
@@ -40,10 +46,10 @@ class MyStringLoaded extends MyStringState {
 /// State when something goes wrong (e.g., network error, invalid data).
 ///
 /// Carries an error message to show to the user or log.
-class MyStringError extends MyStringState {
+class MyStringErrorState extends MyStringState {
   final String message; // Description of what went wrong
 
-  MyStringError(this.message); // Constructor to initialize the error message
+  MyStringErrorState(this.message); // Constructor to initialize the error message
 
   @override
   List<Object?> get props => [message];

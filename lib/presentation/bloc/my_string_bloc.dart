@@ -16,43 +16,44 @@ part 'my_string_state.dart';
 /// BLoC is like a state machine: it receives events, performs logic, and emits new states.
 class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
   // Constructor: sets the initial state and registers event handlers.
-  MyStringBloc() : super(MyStringInitial()) {
+  MyStringBloc() : super(MyStringInitialState()) {
+    // Important: Each event must have a handler, otherwise
 
     // Handler for LoadMyString event.
     // When triggered, it simply emits a loading state.
     // In real apps, this could trigger loading from shared preferences or cache.
-    on<LoadMyString>((event, emit) {
-      emit(MyStringLoading());
+    on<LoadMyStringEvent>((event, emit) {
+      emit(MyStringLoadingState());
     });
 
     // Handler for UpdateMyStringFromLocal event.
     // Immediately emits a loaded state with the local value.
-    on<UpdateMyStringFromLocal>((event, emit) {
-      emit(MyStringLoaded(event.newValue));
+    on<UpdateMyStringFromLocalEvent>((event, emit) {
+      emit(MyStringLoadedState(event.newValue));
     });
 
     // Handler for UpdateMyStringFromUser event.
     // Immediately emits a loaded state with the new user-provided value.
-    on<UpdateMyStringFromUser>((event, emit) {
-      emit(MyStringLoaded(event.newValue));
+    on<UpdateMyStringFromUserEvent>((event, emit) {
+      emit(MyStringLoadedState(event.newValue));
     });
 
     // Handler for UpdateMyStringFromServer event.
     // Emits a loading state, then tries to fetch the value from the server.
     // If successful, emits a loaded state with the fetched value.
     // If an error occurs, emits an error state.
-    on<UpdateMyStringFromServer>((event, emit) async {
-      emit(MyStringLoading()); // Start with loading state
+    on<UpdateMyStringFromServerEvent>((event, emit) async {
+      emit(MyStringLoadingState()); // Start with loading state
 
       try {
         // Await the result from the provided fetch function
         final value = await event.fetchFromServer();
 
         // Emit the successfully loaded value
-        emit(MyStringLoaded(value));
+        emit(MyStringLoadedState(value));
       } catch (e) {
         // Emit an error state with a user-friendly error message
-        emit(MyStringError('Failed to fetch from server: $e'));
+        emit(MyStringErrorState('Failed to fetch from server: $e'));
       }
     });
   }

@@ -38,7 +38,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     // [2]   Load the value into the state.
     // [3]   Clear the TextField
     viewModel.getMyStringFromLocal().then((value) {
-      bloc.add(UpdateMyStringFromLocal(value));
+      bloc.add(UpdateMyStringFromLocalEvent(value));
       textEditController.clear();
     });
   }
@@ -50,7 +50,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   /// [4] Clear the TextField.
   void updateFromUser() {
     final value = textEditController.text.trim();
-    bloc.add(UpdateMyStringFromUser(value));
+    bloc.add(UpdateMyStringFromUserEvent(value));
     viewModel.storeMyStringToLocal(value);
     textEditController.clear(); // Clear after submission
   }
@@ -60,7 +60,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   /// [2]   Get the value from the server.
   /// [3]   Store the value into the local store.
   void updateFromServer() {
-    bloc.add(UpdateMyStringFromServer(() async {
+    bloc.add(UpdateMyStringFromServerEvent(() async {
       final value = await viewModel.getMyStringFromRemote();
       viewModel.storeMyStringToLocal(value);
       return value;
@@ -109,12 +109,12 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 BlocBuilder<MyStringBloc, MyStringState>(
                   bloc: bloc,
                   builder: (context, state) {
-                    if (state is MyStringLoading) {
+                    if (state is MyStringLoadingState) {
                       return const CircularProgressIndicator();
-                    } else if (state is MyStringLoaded) {
+                    } else if (state is MyStringLoadedState) {
                       return Text('Value:\n${state.value}', style: const
                       TextStyle(fontSize: 18));
-                    } else if (state is MyStringError) {
+                    } else if (state is MyStringErrorState) {
                       return Text('Error:\n${state.message}', style: const
                       TextStyle(color: Colors.red));
                     }

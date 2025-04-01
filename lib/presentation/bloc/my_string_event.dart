@@ -16,16 +16,22 @@ abstract class MyStringEvent extends Equatable {
   // Subclasses will override this to specify which fields matter for equality.
 }
 
+// There are 2 types of events for a UI view:
+// - system events (e.g., app launch)
+// - user events (e.g., button click)
+
 /// Event: Triggered when the app needs to load the string value.
 /// This might be called when the app starts or when the screen is opened.
-class LoadMyString extends MyStringEvent {
+class LoadMyStringEvent extends MyStringEvent {
   // No additional data is needed for this event.
 }
 
-class UpdateMyStringFromLocal extends MyStringEvent {
+/// Event: Triggered when the app launches and needs to load the string value.
+/// This is a system event.
+class UpdateMyStringFromLocalEvent extends MyStringEvent {
   final String newValue; // The new value retrieved from the local store.
 
-  UpdateMyStringFromLocal(this.newValue); // Constructor to pass the local
+  UpdateMyStringFromLocalEvent(this.newValue); // Constructor to pass the local
   // stored value
 
   @override
@@ -36,10 +42,10 @@ class UpdateMyStringFromLocal extends MyStringEvent {
 
 /// Event: Triggered when the user manually updates the string via text field
 /// + "Update from User" button.
-class UpdateMyStringFromUser extends MyStringEvent {
+class UpdateMyStringFromUserEvent extends MyStringEvent {
   final String newValue; // The new value entered by the user.
 
-  UpdateMyStringFromUser(this.newValue); // Constructor to pass the user input.
+  UpdateMyStringFromUserEvent(this.newValue); // Constructor to pass the user input.
 
   @override
   List<Object?> get props => [newValue];
@@ -50,10 +56,10 @@ class UpdateMyStringFromUser extends MyStringEvent {
 /// Event: Triggered when the user presses "Update from Server" button.
 /// The fetchFromServer function simulates a network call and returns a
 /// Future String.
-class UpdateMyStringFromServer extends MyStringEvent {
+class UpdateMyStringFromServerEvent extends MyStringEvent {
   final Future<String> Function() fetchFromServer;
 
-  UpdateMyStringFromServer(this.fetchFromServer); // Constructor to pass in the fetch function.
+  UpdateMyStringFromServerEvent(this.fetchFromServer); // Constructor to pass in the fetch function.
 
   @override
   List<Object?> get props => [];
