@@ -80,7 +80,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 // Display DI choices:
                 Text('$storeTypeSelected - $serverTypeSelected'),
 
-                // Input field and buttons — wrapped in BlocBuilder
+                // Boundle widgets that need state sharing together:
                 BlocBuilder<MyStringBloc, MyStringState>(
                   bloc: bloc,
                   builder: (context, state) {
@@ -101,6 +101,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
 
                         const SizedBox(height: 16),
 
+                        // Widget that needs the state of another widget
                         ElevatedButton(
                           onPressed: isLoading ? null : updateFromUser,
                           child: const Text('Update from User'),
@@ -108,35 +109,35 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
 
                         const SizedBox(height: 16),
 
+                        // Widget that needs the state of another widget
                         ElevatedButton(
                           onPressed: isLoading ? null : updateFromServer,
                           child: const Text('Update from Server'),
                         ),
+
+                        const SizedBox(height: 32),
+
+                        // Widget that has a state that needs to be shared by other widgets
+                        // Handle all known states:
+                        if (state is MyStringInitialState)
+                          const Text('Enter or load a string to begin') // Or any default UI
+                        else if (state is MyStringLoadingState)
+                          const CircularProgressIndicator()
+                        else if (state is MyStringLoadedState)
+                          Text(
+                            'Value:\n${state.value}',
+                            style: const TextStyle(fontSize: 18),
+                          )
+                        else if (state is MyStringErrorState)
+                          Text(
+                            'Error:\n${state.message}',
+                            style: const TextStyle(color: Colors.red),
+                          )
+                        else
+                          // Optional fallback for unexpected states
+                          const SizedBox.shrink(),
                       ],
                     );
-                  },
-                ),
-
-                const SizedBox(height: 32),
-
-                // Second BlocBuilder for displaying the value / loading / error
-                BlocBuilder<MyStringBloc, MyStringState>(
-                  bloc: bloc,
-                  builder: (context, state) {
-                    // Handle all known states:
-                    if (state is MyStringInitialState) {
-                      return const Text('Enter or load a string to begin'); // Or any default UI
-                    } else if (state is MyStringLoadingState) {
-                      return const CircularProgressIndicator();
-                    } else if (state is MyStringLoadedState) {
-                      return Text('Value:\n${state.value}', style: const
-                      TextStyle(fontSize: 18));
-                    } else if (state is MyStringErrorState) {
-                      return Text('Error:\n${state.message}', style: const
-                      TextStyle(color: Colors.red));
-                    }
-                    // Optional fallback for unexpected states
-                    return const SizedBox.shrink();
                   },
                 ),
               ],
