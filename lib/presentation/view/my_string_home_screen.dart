@@ -37,6 +37,10 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     // [1] Get the value from the local store, then:
     // [2]   Load the value into the state.
     // [3]   Clear the TextField
+    //
+    // You can see that ViewModel and Bloc work together:
+    // - ViewModel communicates with the Domain layer (Use Cases).
+    // - Bloc communicates with the View layer (UI) via events and states.
     viewModel.getMyStringFromLocal().then((value) {
       bloc.add(UpdateMyStringFromLocalEvent(value));
       textEditController.clear();
@@ -48,6 +52,9 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   /// [2] Load the value into the state.
   /// [3] Store the value into the local store.
   /// [4] Clear the TextField.
+  // You can see that ViewModel and Bloc work together:
+  // - ViewModel communicates with the Domain layer (Use Cases).
+  // - Bloc communicates with the View layer (UI) via events and states
   void updateFromUser() {
     final value = textEditController.text.trim();
     bloc.add(UpdateMyStringFromUserEvent(value));
@@ -59,12 +66,22 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   /// [1] Load the value into the state, but wait until:
   /// [2]   Get the value from the server.
   /// [3]   Store the value into the local store.
-  void updateFromServer() {
-    bloc.add(UpdateMyStringFromServerEvent(() async {
-      final value = await viewModel.getMyStringFromRemote();
-      viewModel.storeMyStringToLocal(value);
-      return value;
-    }));
+  // You can see that ViewModel and Bloc work together:
+  // - ViewModel communicates with the Domain layer (Use Cases).
+  // - Bloc communicates with the View layer (UI) via events and states
+  void updateFromServer() async {
+    // Step 1: Define the async callback that fetches from the server and saves locally
+    Future<String> fetchAndStore() async {
+      final String valueFromServer = await viewModel.getMyStringFromRemote();
+      viewModel.storeMyStringToLocal(valueFromServer);
+      return valueFromServer;
+    }
+
+    // Step 2: Build the event using the callback
+    final MyStringEvent event = UpdateMyStringFromServerEvent(fetchAndStore);
+
+    // Step 3: Add the event to the bloc
+    bloc.add(event);
   }
 
   @override
@@ -84,12 +101,15 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 BlocBuilder<MyStringBloc, MyStringState>(
                   bloc: bloc,
                   builder: (context, state) {
-                    // Loading state: disable buttons
+                    // Loading state: disable all widgets that may further
+                    // change the data:
                     final isLoading = state is MyStringLoadingState;
 
                     return Column(
                       children: [
+                        // Widget that needs the state of another widget
                         TextField(
+                          enabled: !isLoading,
                           controller: textEditController,
                           decoration: const InputDecoration(labelText: 'Enter string'),
                           onEditingComplete: () {
@@ -103,6 +123,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
 
                         // Widget that needs the state of another widget
                         ElevatedButton(
+                          // 'null' means the widget is disabled.
                           onPressed: isLoading ? null : updateFromUser,
                           child: const Text('Update from User'),
                         ),
@@ -117,8 +138,11 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
 
                         const SizedBox(height: 32),
 
-                        // Widget that has a state that needs to be shared by other widgets
-                        // Handle all known states:
+                        // Widget that has a state that needs to be shared
+                        // with other widgets.
+                        // Handle all known states.
+                        // In this declarative UI context, Dart does allow
+                        // if/else statements as elements inside a widget list.
                         if (state is MyStringInitialState)
                           const Text('Enter or load a string to begin') // Or any default UI
                         else if (state is MyStringLoadingState)
