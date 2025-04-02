@@ -44,4 +44,4 @@ MyStringRemoteDataSource createRemoteDataSource(RemoteServer serverType) {
 // There may be a better way.
 
 final storeTypeSelected = LocalStore.hive;
-final serverTypeSelected = RemoteServer.http;
+final serverTypeSelected = RemoteServer.simulator;
