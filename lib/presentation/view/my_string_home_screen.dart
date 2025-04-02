@@ -80,32 +80,46 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 // Display DI choices:
                 Text('$storeTypeSelected - $serverTypeSelected'),
 
-                TextField(
-                  controller: textEditController,
-                  decoration: const InputDecoration(labelText: 'Enter string'),
-                  onEditingComplete: () {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      updateFromUser();
-                    });
-                  }, // Keyboard submit
-                ),
+                // Input field and buttons — wrapped in BlocBuilder
+                BlocBuilder<MyStringBloc, MyStringState>(
+                  bloc: bloc,
+                  builder: (context, state) {
+                    // Loading state: disable buttons
+                    final isLoading = state is MyStringLoadingState;
 
-                const SizedBox(height: 16),
+                    return Column(
+                      children: [
+                        TextField(
+                          controller: textEditController,
+                          decoration: const InputDecoration(labelText: 'Enter string'),
+                          onEditingComplete: () {
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              updateFromUser();
+                            });
+                          },
+                        ),
 
-                ElevatedButton(
-                  onPressed: updateFromUser,
-                  child: const Text('Update from User'),
-                ),
+                        const SizedBox(height: 16),
 
-                const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: isLoading ? null : updateFromUser,
+                          child: const Text('Update from User'),
+                        ),
 
-                ElevatedButton(
-                  onPressed: updateFromServer,
-                  child: const Text('Update from Server'),
+                        const SizedBox(height: 16),
+
+                        ElevatedButton(
+                          onPressed: isLoading ? null : updateFromServer,
+                          child: const Text('Update from Server'),
+                        ),
+                      ],
+                    );
+                  },
                 ),
 
                 const SizedBox(height: 32),
 
+                // Second BlocBuilder for displaying the value / loading / error
                 BlocBuilder<MyStringBloc, MyStringState>(
                   bloc: bloc,
                   builder: (context, state) {
