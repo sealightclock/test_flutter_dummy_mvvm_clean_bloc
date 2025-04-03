@@ -7,7 +7,15 @@ import '../../data/di/my_string_dependency_injection.dart';
 import '../factory/my_string_viewmodel_factory.dart';
 
 class MyStringHomeScreen extends StatefulWidget {
-  const MyStringHomeScreen({super.key});
+  // Write testable code.
+  final MyStringViewModel? injectedViewModel;
+  final MyStringBloc? injectedBloc;
+
+  const MyStringHomeScreen({
+    super.key,
+    this.injectedViewModel,
+    this.injectedBloc,
+  });
 
   @override
   State<MyStringHomeScreen> createState() => _MyStringHomeScreenState();
@@ -27,11 +35,10 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   void initState() {
     super.initState();
 
-    // Create Bloc
-    bloc = MyStringBloc();
-
-    // Create ViewModel
-    viewModel = createViewModel();
+    // Write testable code.
+    // Use injected or default instances
+    bloc = widget.injectedBloc ?? MyStringBloc();
+    viewModel = widget.injectedViewModel ?? createViewModel();
 
     // At app launch, we want to load the value from the local store.
     // [1] Get the value from the local store, then:
@@ -162,6 +169,8 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                                     // Widget that needs the state of another widget
                                     Expanded(
                                       child: ElevatedButton.icon(
+                                        // Added key for easier widget UI unit testing:
+                                        key: const Key('updateFromUserButton'),
                                         // 'null' means the widget is disabled.
                                         onPressed: isLoading ? null : updateFromUser,
                                         icon: const Icon(Icons.person),
@@ -174,6 +183,8 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                                     // Widget that needs the state of another widget
                                     Expanded(
                                       child: ElevatedButton.icon(
+                                        // Added key for easier widget UI unit testing:
+                                        key: const Key('updateFromServerButton'),
                                         // 'null' means the widget is disabled.
                                         onPressed: isLoading ? null : updateFromServer,
                                         icon: const Icon(Icons.cloud_download),
