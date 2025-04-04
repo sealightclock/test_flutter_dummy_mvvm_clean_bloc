@@ -6,11 +6,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RootRestorationScope( // ✅ Wrap your app
+    // Testability for integration testing
+    return RootRestorationScope(
       restorationId: 'root',
       child: MaterialApp(
         title: 'MVVM Clean + Bloc Demo',
-        restorationScopeId: 'app', // ✅ Add this line
+        restorationScopeId: 'app', // Testability for integration testing
         theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
         home: const MyStringHomeScreen(),
       ),

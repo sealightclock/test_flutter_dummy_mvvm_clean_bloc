@@ -7,7 +7,7 @@ import '../../data/di/my_string_dependency_injection.dart';
 import '../factory/my_string_viewmodel_factory.dart';
 
 class MyStringHomeScreen extends StatefulWidget {
-  // Write testable code.
+  // Testability for widget testing
   final MyStringViewModel? injectedViewModel;
   final MyStringBloc? injectedBloc;
 
@@ -35,7 +35,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   void initState() {
     super.initState();
 
-    // Write testable code.
+    // Testability for widget testing
     // Use injected or default instances
     bloc = widget.injectedBloc ?? MyStringBloc();
     viewModel = widget.injectedViewModel ?? createViewModel();
@@ -66,13 +66,12 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     final value = textEditController.text.trim();
     bloc.add(UpdateMyStringFromUserEvent(value));
     viewModel.storeMyStringToLocal(value);
+    textEditController.clear(); // Clear after submission
 
     // Optional: Show feedback to the user
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Updated from User')),
     );
-
-    textEditController.clear(); // Clear after submission
   }
 
   /// When the user requests the string from the server, we want to:
@@ -135,8 +134,8 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                         // change the data:
                         final isLoading = state is MyStringLoadingState;
 
-                        // Since all of these widgets are used to handle 'my_s
-                        // tring', it's better to group them into a card:
+                        // Since all of these widgets are used to handle
+                        // 'my_string', it's better to group them into a card:
                         return Card(
                           elevation: 4,
                           shape: RoundedRectangleBorder(

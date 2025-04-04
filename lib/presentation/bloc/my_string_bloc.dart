@@ -21,43 +21,35 @@ final logger = Logger();
 class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
   // Constructor: sets the initial state and registers event handlers.
   MyStringBloc() : super(MyStringInitialState()) {
-    // Important: Each event must have a handler, otherwise
 
-    // Handler for LoadMyString event.
-    // When triggered, it simply emits a loading state.
-    // In real apps, this could trigger loading from shared preferences or cache.
-    on<LoadMyStringEvent>((event, emit) {
-      emit(MyStringLoadingState());
-    });
+    // Important: Each event must have a handler, otherwise the app may crash.
+    on<MyStringEvent>((event, emit) async {
+      // With MyStringEvent as a sealed class:
+      // 1. You don't need to write a default case;
+      // 2. You can't miss any events.
+      switch (event) {
+        case LoadMyStringEvent():
+          emit(MyStringLoadingState());
+          break;
+        case UpdateMyStringFromLocalEvent():
+          emit(MyStringLoadedState(event.newValue));
+          break;
+        case UpdateMyStringFromUserEvent():
+          emit(MyStringLoadedState(event.newValue));
+          break;
+        case UpdateMyStringFromServerEvent():
+          emit(MyStringLoadingState()); // Start with loading state
+          try {
+            // Await the result from the provided fetch function
+            final value = await event.fetchFromServer();
 
-    // Handler for UpdateMyStringFromLocal event.
-    // Immediately emits a loaded state with the local value.
-    on<UpdateMyStringFromLocalEvent>((event, emit) {
-      emit(MyStringLoadedState(event.newValue));
-    });
-
-    // Handler for UpdateMyStringFromUser event.
-    // Immediately emits a loaded state with the new user-provided value.
-    on<UpdateMyStringFromUserEvent>((event, emit) {
-      emit(MyStringLoadedState(event.newValue));
-    });
-
-    // Handler for UpdateMyStringFromServer event.
-    // Emits a loading state, then tries to fetch the value from the server.
-    // If successful, emits a loaded state with the fetched value.
-    // If an error occurs, emits an error state.
-    on<UpdateMyStringFromServerEvent>((event, emit) async {
-      emit(MyStringLoadingState()); // Start with loading state
-
-      try {
-        // Await the result from the provided fetch function
-        final value = await event.fetchFromServer();
-
-        // Emit the successfully loaded value
-        emit(MyStringLoadedState(value));
-      } catch (e) {
-        // Emit an error state with a user-friendly error message
-        emit(MyStringErrorState('Failed to fetch from server: $e'));
+            // Emit the successfully loaded value
+            emit(MyStringLoadedState(value));
+          } catch (e) {
+            // Emit an error state with a user-friendly error message
+            emit(MyStringErrorState('Failed to fetch from server: $e'));
+          }
+          break;
       }
     });
   }

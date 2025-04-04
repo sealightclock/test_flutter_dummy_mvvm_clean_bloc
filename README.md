@@ -22,9 +22,9 @@ This Flutter app uses the following specialized technologies:
 
 ## UI/UX
 The UI should be intuitive. 'my_string' can be modified by:
-- the user input
-- the backend server
-- the local storage
+- user input
+- backend server
+- local storage at app launch
 
 ## Source file structure
 The file structure is as follows:
@@ -111,6 +111,8 @@ architecture)
 which reflects the chosen design pattern "MVVM Clean + Bloc".
 
 ## Testing
+
+### Manual testing
 This Flutter app needs to be tested on both Android and iOS devices with the following 
 combinations of configurations:
 
@@ -118,11 +120,19 @@ combinations of configurations:
 
 (Http, Dio, Simulator) x
 
-('Update from User', 'Update from Server') x
+('Enter string', 'Update from User', 'Update from Server') x
 
 (Screen rotation, App relaunch, App upgrade, App removal then reinstall)
 
 It has been tested on Android devices (both physical and emulator ones).
 
 It has been tested on iOS Simulators.
+
+### Automated testing
+The following tests have been created:
+- Unit tests
+- Widget tests
+- Integration tests
+
+The source code has been slightly modified to accommodate these tests.
 

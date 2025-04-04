@@ -2,12 +2,17 @@
 // It's a Dart feature for organizing code across multiple files.
 part of 'my_string_bloc.dart';
 
-/// Base class for all events that can be sent to MyStringBloc.
+/// Sealed base class for all events that can be sent to MyStringBloc.
 /// Events represent user actions or system triggers that should result in
 /// state changes.
-abstract class MyStringEvent extends Equatable {
+///
+/// A sealed class allows the compiler to know all possible subclasses,
+/// enabling better type safety and exhaustive checks.
+sealed class MyStringEvent extends Equatable {
   // 'Equatable' helps with value comparison, which is useful when checking if two events are equal.
   // This is important for optimizing state management and preventing unnecessary rebuilds.
+
+  const MyStringEvent(); // Constructor for base class.
 
   @override
   List<Object?> get props => [];
@@ -22,30 +27,31 @@ abstract class MyStringEvent extends Equatable {
 
 /// Event: Triggered when the app needs to load the string value.
 /// This might be called when the app starts or when the screen is opened.
-class LoadMyStringEvent extends MyStringEvent {
+final class LoadMyStringEvent extends MyStringEvent {
+  const LoadMyStringEvent(); // Constructor with no parameters.
+
   // No additional data is needed for this event.
 }
 
 /// Event: Triggered when the app launches and needs to load the string value.
 /// This is a system event.
-class UpdateMyStringFromLocalEvent extends MyStringEvent {
+final class UpdateMyStringFromLocalEvent extends MyStringEvent {
   final String newValue; // The new value retrieved from the local store.
 
-  UpdateMyStringFromLocalEvent(this.newValue); // Constructor to pass the local
-  // stored value
+  const UpdateMyStringFromLocalEvent(this.newValue); // Constructor to pass the local stored value.
 
   @override
   List<Object?> get props => [newValue];
-// Including 'newValue' in props allows Bloc to compare events based on local
-// value.
+  // Including 'newValue' in props allows Bloc to compare events based on local
+  // value.
 }
 
 /// Event: Triggered when the user manually updates the string via text field
 /// + "Update from User" button.
-class UpdateMyStringFromUserEvent extends MyStringEvent {
+final class UpdateMyStringFromUserEvent extends MyStringEvent {
   final String newValue; // The new value entered by the user.
 
-  UpdateMyStringFromUserEvent(this.newValue); // Constructor to pass the user input.
+  const UpdateMyStringFromUserEvent(this.newValue); // Constructor to pass the user input.
 
   @override
   List<Object?> get props => [newValue];
@@ -55,11 +61,11 @@ class UpdateMyStringFromUserEvent extends MyStringEvent {
 
 /// Event: Triggered when the user presses "Update from Server" button.
 /// The fetchFromServer function simulates a network call and returns a
-/// Future String.
-class UpdateMyStringFromServerEvent extends MyStringEvent {
-  final Future<String> Function() fetchFromServer;
+/// Future of type String.
+final class UpdateMyStringFromServerEvent extends MyStringEvent {
+  final Future<String> Function() fetchFromServer; // The function to fetch value from server.
 
-  UpdateMyStringFromServerEvent(this.fetchFromServer); // Constructor to pass in the fetch function.
+  const UpdateMyStringFromServerEvent(this.fetchFromServer); // Constructor to pass in the fetch function.
 
   @override
   List<Object?> get props => [];
