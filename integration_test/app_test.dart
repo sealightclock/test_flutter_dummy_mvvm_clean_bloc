@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
 
 import 'package:test_flutter_dummy_mvvm_clean_bloc/main.dart' as app;
 
@@ -9,7 +10,7 @@ void main() {
 
   testWidgets('App lifecycle with Hive persistence test', (tester) async {
     // Step 1: Launch the app
-    await app.mainForTest();
+    await app.startApp(const MyApp());
     await tester.pumpAndSettle();
 
     // Step 2: Enter text and submit

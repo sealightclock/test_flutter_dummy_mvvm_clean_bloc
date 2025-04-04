@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
 
-Future<void> mainForTest() async {
+// Testability for integration testing
+Future<void> main() async {
   runApp(const MyApp());
 }
 
-// Still keep the real main() untouched
-void main() {
-  runApp(const MyApp());
+// Testability for integration testing
+Future<void> startApp(Widget app) async {
+  runApp(app);
 }

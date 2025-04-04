@@ -8,6 +8,8 @@ import '../remote/my_string_http_data_source.dart';
 import '../remote/my_string_simulator_data_source.dart';
 
 // Code for manual dependency injection is included here.
+//
+// For more complex apps, consider using a framework such as provider, riverpod.
 
 // =============================================================================
 // Local Store
@@ -40,8 +42,10 @@ MyStringRemoteDataSource createRemoteDataSource(RemoteServer serverType) {
 }
 
 // =============================================================================
-// TODO: Change these values if needed.
-// There may be a better way.
+// TODO: Change these values when choosing different solution providers.
+//
+// Furthermore, these choices can be stored somewhere else, such as in an
+// external configuration file.
 
 final storeTypeSelected = LocalStore.hive;
 final serverTypeSelected = RemoteServer.simulator;
