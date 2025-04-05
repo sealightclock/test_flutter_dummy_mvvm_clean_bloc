@@ -32,10 +32,10 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
           emit(MyStringLoadingState());
           break;
         case UpdateMyStringFromLocalEvent():
-          emit(MyStringLoadedState(event.newValue));
+          emit(MyStringSuccessState(event.newValue));
           break;
         case UpdateMyStringFromUserEvent():
-          emit(MyStringLoadedState(event.newValue));
+          emit(MyStringSuccessState(event.newValue));
           break;
         case UpdateMyStringFromServerEvent():
           emit(MyStringLoadingState()); // Start with loading state
@@ -44,7 +44,7 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
             final value = await event.fetchFromServer();
 
             // Emit the successfully loaded value
-            emit(MyStringLoadedState(value));
+            emit(MyStringSuccessState(value));
           } catch (e) {
             // Emit an error state with a user-friendly error message
             emit(MyStringErrorState('Failed to fetch from server: $e'));

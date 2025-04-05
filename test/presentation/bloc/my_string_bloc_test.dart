@@ -10,7 +10,7 @@ void main() {
       act: (bloc) => bloc.add(UpdateMyStringFromServerEvent(() async => 'Server Value')),
       expect: () => [
         isA<MyStringLoadingState>(),
-        isA<MyStringLoadedState>().having((s) => s.value, 'value', 'Server Value'),
+        isA<MyStringSuccessState>().having((s) => s.value, 'value', 'Server Value'),
       ],
     );
 
@@ -31,7 +31,7 @@ void main() {
       build: () => MyStringBloc(),
       act: (bloc) => bloc.add(UpdateMyStringFromUserEvent('User Input')),
       expect: () => [
-        isA<MyStringLoadedState>().having((s) => s.value, 'value', 'User Input'),
+        isA<MyStringSuccessState>().having((s) => s.value, 'value', 'User Input'),
       ],
     );
 
@@ -40,7 +40,7 @@ void main() {
       build: () => MyStringBloc(),
       act: (bloc) => bloc.add(UpdateMyStringFromLocalEvent('Local Value')),
       expect: () => [
-        isA<MyStringLoadedState>().having((s) => s.value, 'value', 'Local Value'),
+        isA<MyStringSuccessState>().having((s) => s.value, 'value', 'Local Value'),
       ],
     );
   });

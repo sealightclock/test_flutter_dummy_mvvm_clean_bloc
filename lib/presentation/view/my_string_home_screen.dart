@@ -207,13 +207,13 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                                   )
                                 else if (state is MyStringLoadingState)
                                   const Center(child: CircularProgressIndicator())
-                                else if (state is MyStringLoadedState)
+                                else if (state is MyStringSuccessState)
                                     Text(
                                       'Current Value:',
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold, fontSize: 16),
                                     ),
-                                if (state is MyStringLoadedState)
+                                if (state is MyStringSuccessState)
                                   Text(
                                     state.value,
                                     style: const TextStyle(
