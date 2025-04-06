@@ -1,30 +1,41 @@
 import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/entity/my_string_entity.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/local/get_my_string_from_local_use_case.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/local/store_my_string_to_local_use_case.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/remote/get_my_string_from_remote_use_case.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart';
 
+import '../../domain/usecase/local/get_my_string_from_local_use_case.dart';
+import '../../domain/usecase/local/store_my_string_to_local_use_case.dart';
+import '../../domain/usecase/remote/get_my_string_from_remote_use_case.dart';
+
+/// ViewModel that communicates with the Domain layer.
+///
+/// It provides simple methods that the Bloc/UI can call to trigger UseCases.
 class MyStringViewModel {
-  final GetMyStringFromLocalUseCase getLocalUseCase;
-  final StoreMyStringToLocalUseCase storeLocalUseCase;
-  final GetMyStringFromRemoteUseCase getRemoteUseCase;
+  final GetMyStringFromLocalUseCase getFromLocalUseCase;
+  final StoreMyStringToLocalUseCase storeToLocalUseCase;
+  final GetMyStringFromRemoteUseCase getFromRemoteUseCase;
 
   MyStringViewModel({
-    required this.getLocalUseCase,
-    required this.storeLocalUseCase,
-    required this.getRemoteUseCase,
+    required this.getFromLocalUseCase,
+    required this.storeToLocalUseCase,
+    required this.getFromRemoteUseCase,
   });
 
-  Future<String> getMyStringFromLocal() async {
-    final entity = await getLocalUseCase.execute();
-    return entity.value;
+  /// Fetch my_string from the local store.
+  Future<Result<MyStringEntity>> getMyStringFromLocal() async {
+    return await getFromLocalUseCase.execute();
   }
 
-  Future<void> storeMyStringToLocal(String value) async {
-    await storeLocalUseCase.execute(MyStringEntity(value: value));
+  /// Store my_string to the local store.
+  ///
+  /// Always returns a Result:
+  /// - Success on storing successfully
+  /// - Failure if storing failed
+  Future<Result<void>> storeMyStringToLocal(String value) async {
+    return await storeToLocalUseCase.execute(MyStringEntity
+      (value: value));
   }
 
-  Future<String> getMyStringFromRemote() async {
-    final entity = await getRemoteUseCase.execute();
-    return entity.value;
+  /// Fetch my_string from the remote server.
+  Future<Result<MyStringEntity>> getMyStringFromRemote() async {
+    return await getFromRemoteUseCase.execute();
   }
 }

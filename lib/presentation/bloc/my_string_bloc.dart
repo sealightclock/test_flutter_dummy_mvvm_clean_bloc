@@ -27,24 +27,37 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
       // With MyStringEvent as a sealed class:
       // 1. You don't need to write a default case;
       // 2. You can't miss any events.
+
       switch (event) {
         case LoadMyStringEvent():
           emit(MyStringLoadingState());
           break;
+
         case UpdateMyStringFromLocalEvent():
+        // Local event already contains the new value.
           emit(MyStringSuccessState(event.newValue));
           break;
+
         case UpdateMyStringFromUserEvent():
+        // User event already contains the new value.
           emit(MyStringSuccessState(event.newValue));
           break;
+
         case UpdateMyStringFromServerEvent():
+        // For server fetch, we simulate a network call.
           emit(MyStringLoadingState()); // Start with loading state
+
           try {
             // Await the result from the provided fetch function
             final value = await event.fetchFromServer();
 
-            // Emit the successfully loaded value
-            emit(MyStringSuccessState(value));
+            if (value.isNotEmpty) {
+              // Emit the successfully loaded value
+              emit(MyStringSuccessState(value));
+            } else {
+              // Empty value from server is treated as an error
+              emit(MyStringErrorState('Fetched value is empty.'));
+            }
           } catch (e) {
             // Emit an error state with a user-friendly error message
             emit(MyStringErrorState('Failed to fetch from server: $e'));

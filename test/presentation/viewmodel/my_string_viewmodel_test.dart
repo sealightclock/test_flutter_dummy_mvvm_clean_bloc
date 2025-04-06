@@ -5,6 +5,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/local/get_my_s
 import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/local/store_my_string_to_local_use_case.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/remote/get_my_string_from_remote_use_case.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/entity/my_string_entity.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart'; // <-- Important!
 
 class MockGetLocal extends Mock implements GetMyStringFromLocalUseCase {}
 class MockStoreLocal extends Mock implements StoreMyStringToLocalUseCase {}
@@ -26,23 +27,30 @@ void main() {
     mockGetRemote = MockGetRemote();
 
     viewModel = MyStringViewModel(
-      getLocalUseCase: mockGetLocal,
-      storeLocalUseCase: mockStoreLocal,
-      getRemoteUseCase: mockGetRemote,
+      getFromLocalUseCase: mockGetLocal,
+      storeToLocalUseCase: mockStoreLocal,
+      getFromRemoteUseCase: mockGetRemote,
     );
   });
 
   test('getMyStringFromLocal returns expected string', () async {
     when(() => mockGetLocal.execute())
-        .thenAnswer((_) async => MyStringEntity(value: 'Local String'));
+        .thenAnswer((_) async => Success(MyStringEntity(value: 'Local String')));
 
     final result = await viewModel.getMyStringFromLocal();
 
-    expect(result, 'Local String');
+    switch (result) {
+      case Success<MyStringEntity>(:final data):
+        expect(data.value, 'Local String');
+        break;
+      case Failure<MyStringEntity>(:final message):
+        fail('Expected Success but got Failure: $message');
+    }
   });
 
   test('storeMyStringToLocal executes use case correctly', () async {
-    when(() => mockStoreLocal.execute(any())).thenAnswer((_) async {});
+    when(() => mockStoreLocal.execute(any()))
+        .thenAnswer((_) async => const Success(null)); // <- important
 
     await viewModel.storeMyStringToLocal('Save Me');
 
@@ -53,10 +61,16 @@ void main() {
 
   test('getMyStringFromRemote returns expected string', () async {
     when(() => mockGetRemote.execute())
-        .thenAnswer((_) async => MyStringEntity(value: 'Remote String'));
+        .thenAnswer((_) async => Success(MyStringEntity(value: 'Remote String')));
 
     final result = await viewModel.getMyStringFromRemote();
 
-    expect(result, 'Remote String');
+    switch (result) {
+      case Success<MyStringEntity>(:final data):
+        expect(data.value, 'Remote String');
+        break;
+      case Failure<MyStringEntity>(:final message):
+        fail('Expected Success but got Failure: $message');
+    }
   });
 }

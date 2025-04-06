@@ -27,17 +27,16 @@ void main() {
     expect(find.text('Current Value:'), findsOneWidget);
     expect(find.text(testValue), findsOneWidget);
 
-    // Step 4: Wait a bit to ensure Hive fully saves before restart
-    await Future.delayed(const Duration(milliseconds: 10000)); // <-- Important
-    // on real devices!
+    // Step 4: Extra delay to allow Hive to fully write to disk
+    await Future.delayed(const Duration(seconds: 5)); // Reduced, but still safe
+    await tester.pump(const Duration(seconds: 5)); // Force pump again
 
     // Step 5: Restart the app (simulate lifecycle restart)
     await tester.restartAndRestore();
     await tester.pumpAndSettle();
 
     // Step 6: Wait again for Hive read completion
-    await tester.pump(const Duration(seconds: 10)); // Give Hive time to
-    // initialize
+    await tester.pump(const Duration(seconds: 5));
 
     // Step 7: Confirm the persisted value is still shown
     expect(find.text('Current Value:'), findsOneWidget);

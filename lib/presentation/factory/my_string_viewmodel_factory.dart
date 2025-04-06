@@ -8,7 +8,7 @@ import '../viewmodel/my_string_viewmodel.dart';
 /// This creates the ViewModel from ground up:
 /// Data Sources -> Repository -> Use Cases -> ViewModel
 MyStringViewModel createViewModel() {
-  // Create Data Sources using DI
+  // Create Data Sources using Dependency Injection (DI)
   final localDataSource = createLocalDataSource(storeTypeSelected);
   final remoteDataSource = createRemoteDataSource(serverTypeSelected);
 
@@ -19,14 +19,14 @@ MyStringViewModel createViewModel() {
   );
 
   // Create Use Cases
-  final getLocalUseCase = GetMyStringFromLocalUseCase(repository: repository);
-  final storeLocalUseCase = StoreMyStringToLocalUseCase(repository: repository);
-  final getRemoteUseCase = GetMyStringFromRemoteUseCase(repository: repository);
+  final getMyStringFromLocalUseCase = GetMyStringFromLocalUseCase(repository: repository);
+  final storeMyStringToLocalUseCase = StoreMyStringToLocalUseCase(repository: repository);
+  final getMyStringFromRemoteUseCase = GetMyStringFromRemoteUseCase(repository: repository);
 
   // Finally, create ViewModel
   return MyStringViewModel(
-    getLocalUseCase: getLocalUseCase,
-    storeLocalUseCase: storeLocalUseCase,
-    getRemoteUseCase: getRemoteUseCase,
+    getFromLocalUseCase: getMyStringFromLocalUseCase,
+    storeToLocalUseCase: storeMyStringToLocalUseCase,
+    getFromRemoteUseCase: getMyStringFromRemoteUseCase,
   );
 }

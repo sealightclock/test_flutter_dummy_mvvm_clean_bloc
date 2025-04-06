@@ -4,6 +4,8 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/bloc/my_string_b
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/viewmodel/my_string_viewmodel.dart';
 
 import '../../data/di/my_string_dependency_injection.dart';
+import '../../domain/entity/my_string_entity.dart';
+import '../../util/result.dart';
 import '../factory/my_string_viewmodel_factory.dart';
 
 class MyStringHomeScreen extends StatefulWidget {
@@ -28,7 +30,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   // ViewModel to communicate with Use Cases.
   late final MyStringViewModel viewModel;
 
-  // This is to control the TextField:
+  // Controller for TextField input.
   final TextEditingController textEditController = TextEditingController();
 
   @override
@@ -40,62 +42,68 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     bloc = widget.injectedBloc ?? MyStringBloc();
     viewModel = widget.injectedViewModel ?? createViewModel();
 
-    // At app launch, we want to load the value from the local store.
-    // [1] Get the value from the local store, then:
-    // [2]   Load the value into the state.
-    // [3]   Clear the TextField
-    //
-    // You can see that ViewModel and Bloc work together:
-    // - ViewModel communicates with the Domain layer (Use Cases).
-    // - Bloc communicates with the View layer (UI) via events and states.
-    viewModel.getMyStringFromLocal().then((value) {
-      bloc.add(UpdateMyStringFromLocalEvent(value));
+    // Load value from local store at app start
+    viewModel.getMyStringFromLocal().then((result) {
+      switch (result) {
+        case Success<MyStringEntity>(:final data):
+          bloc.add(UpdateMyStringFromLocalEvent(data.value));
+          break;
+        case Failure<MyStringEntity>(:final message):
+          bloc.add(UpdateMyStringFromLocalEvent('Error loading: $message'));
+          break;
+      }
       textEditController.clear();
     });
   }
 
-  /// When the user submits the string, we want to:
-  /// [1] Get the value from the TextField.
-  /// [2] Load the value into the state.
-  /// [3] Store the value into the local store.
-  /// [4] Clear the TextField.
-  // You can see that ViewModel and Bloc work together:
-  // - ViewModel communicates with the Domain layer (Use Cases).
-  // - Bloc communicates with the View layer (UI) via events and states
-  void updateFromUser() {
+  /// Handles user submitting a new string:
+  /// [1] Save the string into the local store.
+  /// [2] Only after successful save, update the Bloc state.
+  /// [3] Clear the TextField and show a SnackBar.
+  void updateFromUser() async {
     final value = textEditController.text.trim();
-    bloc.add(UpdateMyStringFromUserEvent(value));
-    viewModel.storeMyStringToLocal(value);
-    textEditController.clear(); // Clear after submission
 
-    // Optional: Show feedback to the user
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Updated from User')),
-    );
+    // Step 1: Save to local store first
+    final result = await viewModel.storeMyStringToLocal(value);
+
+    switch (result) {
+      case Success():
+      // Step 2: Only after successful saving, update Bloc
+        bloc.add(UpdateMyStringFromUserEvent(value));
+
+        textEditController.clear(); // Clear after successful submission
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Updated from User')),
+        );
+        break;
+      case Failure(:final message):
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save: $message')),
+        );
+        break;
+    }
   }
 
-  /// When the user requests the string from the server, we want to:
-  /// [1] Load the value into the state, but wait until:
-  /// [2]   Get the value from the server.
-  /// [3]   Store the value into the local store.
-  // You can see that ViewModel and Bloc work together:
-  // - ViewModel communicates with the Domain layer (Use Cases).
-  // - Bloc communicates with the View layer (UI) via events and states
+  /// Handles user requesting a string from server:
+  /// [1] Fetch string from server.
+  /// [2] Save string to local store.
+  /// [3] Update Bloc state.
   void updateFromServer() async {
-    // Step 1: Define the async callback that fetches from the server and saves locally
     Future<String> fetchAndStore() async {
-      final String valueFromServer = await viewModel.getMyStringFromRemote();
-      viewModel.storeMyStringToLocal(valueFromServer);
-      return valueFromServer;
+      final result = await viewModel.getMyStringFromRemote();
+      switch (result) {
+        case Success<MyStringEntity>(:final data):
+          await viewModel.storeMyStringToLocal(data.value);
+          return data.value;
+        case Failure<MyStringEntity>(:final message):
+          return 'Error fetching from server: $message';
+      }
     }
 
-    // Step 2: Build the event using the callback
-    final MyStringEvent event = UpdateMyStringFromServerEvent(fetchAndStore);
-
-    // Step 3: Add the event to the bloc
+    final event = UpdateMyStringFromServerEvent(fetchAndStore);
     bloc.add(event);
 
-    // Optional: Show feedback to the user
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Fetching from Server...')),
     );
@@ -118,7 +126,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Display DI choices:
+                    // Display selected DI choices
                     Text(
                       '$storeTypeSelected - $serverTypeSelected',
                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
@@ -130,8 +138,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                     BlocBuilder<MyStringBloc, MyStringState>(
                       bloc: bloc,
                       builder: (context, state) {
-                        // Loading state: disable all widgets that may further
-                        // change the data:
+                        // Determine loading state
                         final isLoading = state is MyStringLoadingState;
 
                         // Since all of these widgets are used to handle
@@ -207,29 +214,31 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                                   )
                                 else if (state is MyStringLoadingState)
                                   const Center(child: CircularProgressIndicator())
-                                else if (state is MyStringSuccessState)
+                                else if (state is MyStringSuccessState) ...[
                                     Text(
                                       'Current Value:',
                                       style: const TextStyle(
-                                          fontWeight: FontWeight.bold, fontSize: 16),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                if (state is MyStringSuccessState)
-                                  Text(
-                                    state.value,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.w500,
+                                    Text(
+                                      state.value,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.blueAccent,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  )
-                                else if (state is MyStringErrorState)
-                                  Text(
-                                    'Error: ${state.message}',
-                                    style: const TextStyle(color: Colors.red),
-                                  )
-                                else
-                                  // Optional fallback for unexpected states
-                                  const SizedBox.shrink(),
+                                  ]
+                                  else if (state is MyStringErrorState)
+                                      Text(
+                                        'Error: ${state.message}',
+                                        style: const TextStyle(color: Colors.red),
+                                      )
+                                    else
+                                      // Optional fallback for unexpected states
+                                      const SizedBox.shrink(), // Fallback empty widget
                               ],
                             ),
                           ),
@@ -246,4 +255,3 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     );
   }
 }
-

@@ -1,4 +1,8 @@
+// This UseCase file is responsible for retrieving "my_string" from a local store,
+// using the Domain Layer and clean error handling.
+
 import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/entity/my_string_entity.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart';
 
 import '../../../data/repository/my_string_repository.dart';
 
@@ -8,7 +12,17 @@ class GetMyStringFromLocalUseCase {
 
   GetMyStringFromLocalUseCase({required this.repository});
 
-  Future<MyStringEntity> execute() {
-    return repository.getMyStringFromLocal();
+  /// Executes the use case.
+  ///
+  /// Always returns a Result:
+  /// - Success with MyStringEntity on success
+  /// - Failure with error message on failure
+  Future<Result<MyStringEntity>> execute() async {
+    try {
+      final entity = await repository.getMyStringFromLocal();
+      return Success(entity);
+    } catch (e) {
+      return Failure('Failed to get my_string from local: $e');
+    }
   }
 }

@@ -4,6 +4,9 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/view/my_string_home_screen.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/viewmodel/my_string_viewmodel.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart'; // <-- Important!
+
+import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/entity/my_string_entity.dart'; // <-- Also needed!
 
 class MockMyStringViewModel extends Mock implements MyStringViewModel {}
 
@@ -12,9 +15,12 @@ void main() {
     // Step 1: Set up mock ViewModel
     final mockViewModel = MockMyStringViewModel();
 
-    when(() => mockViewModel.getMyStringFromLocal()).thenAnswer((_) async => '');
-    when(() => mockViewModel.storeMyStringToLocal(any())).thenAnswer((_) async {});
-    when(() => mockViewModel.getMyStringFromRemote()).thenAnswer((_) async => 'From Server');
+    when(() => mockViewModel.getMyStringFromLocal())
+        .thenAnswer((_) async => Success(MyStringEntity(value: '')));
+    when(() => mockViewModel.storeMyStringToLocal(any()))
+        .thenAnswer((_) async => const Success(null));
+    when(() => mockViewModel.getMyStringFromRemote())
+        .thenAnswer((_) async => Success(MyStringEntity(value: 'From Server')));
 
     // Step 2: Pump the widget with the mock ViewModel injected
     await tester.pumpWidget(
