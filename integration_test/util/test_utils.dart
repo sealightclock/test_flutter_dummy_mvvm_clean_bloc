@@ -51,3 +51,17 @@ Future<void> waitForBlocState<B extends BlocBase<S>, S>(
 
   throw Exception('Timeout: Expected Bloc state not found within ${timeout.inSeconds} seconds.');
 }
+
+/// Pumps the widget tree until a specific widget is found, or timeout.
+Future<void> pumpUntilFoundWidget(WidgetTester tester, Finder finder, {Duration timeout = const Duration(seconds: 10)}) async {
+  final endTime = DateTime.now().add(timeout);
+
+  while (DateTime.now().isBefore(endTime)) {
+    await tester.pump(const Duration(milliseconds: 100));
+    if (finder.evaluate().isNotEmpty) {
+      return;
+    }
+  }
+
+  throw Exception('Timeout: Widget not found: $finder');
+}
