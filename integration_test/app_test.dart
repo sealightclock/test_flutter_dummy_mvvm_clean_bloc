@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/main.dart' as app;
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/bloc/my_string_bloc.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/view/my_string_home_screen.dart';
 
 import 'util/test_utils.dart';
+import 'util/test_app_launcher.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('App lifecycle with Hive persistence test', (tester) async {
-    // Step 1: Launch the app
-    await app.startApp(const MyApp());
-    await tester.pumpAndSettle();
+    // Step 1: Launch app using TestAppLauncher
+    final launcher = TestAppLauncher(tester);
+    await launcher.launchApp();
 
-    // Step 2: Find HomeScreen and its Bloc
-    final homeScreenFinder = find.byType(MyStringHomeScreen);
-    expect(homeScreenFinder, findsOneWidget);
-
-    final state = tester.state<MyStringHomeScreenState>(homeScreenFinder);
-    final bloc = state.exposedBloc;
+    // Step 2: Use launcher.bloc safely
+    final bloc = launcher.bloc;
 
     // Step 3: Enter text and submit
     const testValue = 'Persistent String';
@@ -34,7 +28,7 @@ void main() {
     await tester.tap(userButton);
     await tester.pumpAndSettle();
 
-    // Step 4: Wait until Bloc emits success with correct value
+    // Step 4: Wait until Bloc emits success
     await waitForBlocState<MyStringBloc, MyStringState>(
       tester,
       bloc,
@@ -45,7 +39,7 @@ void main() {
     await tester.restartAndRestore();
     await tester.pumpAndSettle();
 
-    // Step 6: Wait again for Bloc to emit correct value after restart
+    // Step 6: Wait again after restart
     await waitForBlocState<MyStringBloc, MyStringState>(
       tester,
       bloc,
