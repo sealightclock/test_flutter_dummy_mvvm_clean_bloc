@@ -5,7 +5,8 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/local/get_my_s
 import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/local/store_my_string_to_local_use_case.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/usecase/remote/get_my_string_from_remote_use_case.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/entity/my_string_entity.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart'; // <-- Important!
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result_handler.dart'; // <-- Important!
 
 class MockGetLocal extends Mock implements GetMyStringFromLocalUseCase {}
 class MockStoreLocal extends Mock implements StoreMyStringToLocalUseCase {}
@@ -65,12 +66,15 @@ void main() {
 
     final result = await viewModel.getMyStringFromRemote();
 
-    switch (result) {
-      case Success<MyStringEntity>(:final data):
+    handleResult<MyStringEntity>(
+      Future.value(result),
+      onSuccess: (data) {
         expect(data.value, 'Remote String');
-        break;
-      case Failure<MyStringEntity>(:final message):
-        fail('Expected Success but got Failure: $message');
-    }
+        expect(data, isA<MyStringEntity>());
+      },
+      onFailure: (message) {
+        fail('Expected success but got failure: $message');
+      },
+    );
   });
 }

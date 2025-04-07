@@ -6,6 +6,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/viewmodel/my_str
 import '../../data/di/my_string_dependency_injection.dart';
 import '../../domain/entity/my_string_entity.dart';
 import '../../util/result.dart';
+import '../../util/result_handler.dart';
 import '../factory/my_string_viewmodel_factory.dart';
 
 class MyStringHomeScreen extends StatefulWidget {
@@ -63,26 +64,22 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   void updateFromUser() async {
     final value = textEditController.text.trim();
 
-    // Step 1: Save to local store first
-    final result = await viewModel.storeMyStringToLocal(value);
-
-    switch (result) {
-      case Success():
-      // Step 2: Only after successful saving, update Bloc
+    await handleResult<void>(
+      viewModel.storeMyStringToLocal(value),
+      onSuccess: (_) {
         bloc.add(UpdateMyStringFromUserEvent(value));
-
-        textEditController.clear(); // Clear after successful submission
+        textEditController.clear();
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Updated from User')),
         );
-        break;
-      case Failure(:final message):
+      },
+      onFailure: (message) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to save: $message')),
         );
-        break;
-    }
+      },
+    );
   }
 
   /// Handles user requesting a string from server:
@@ -90,20 +87,34 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
   /// [2] Save string to local store.
   /// [3] Update Bloc state.
   void updateFromServer() async {
+    // This function will be passed into the Bloc event
     Future<String> fetchAndStore() async {
+      // Step 1: Fetch from remote server
       final result = await viewModel.getMyStringFromRemote();
-      switch (result) {
-        case Success<MyStringEntity>(:final data):
-          await viewModel.storeMyStringToLocal(data.value);
-          return data.value;
-        case Failure<MyStringEntity>(:final message):
-          return 'Error fetching from server: $message';
+
+      // Step 2: Handle result
+      final value = await handleResultReturning<MyStringEntity, String>(
+        Future.value(result),
+        onSuccess: (data) => data.value, // Just return the successful value
+        onFailure: (message) => 'Error fetching from server: $message', // Return error message
+      );
+
+      // Step 3: If fetch succeeded, also store it locally
+      if (!value.startsWith('Error')) {
+        await viewModel.storeMyStringToLocal(value);
       }
+
+      // Step 4: Always return the value (success or error)
+      return value;
     }
 
+    // Step 5: Create event with the fetch function
     final event = UpdateMyStringFromServerEvent(fetchAndStore);
+
+    // Step 6: Add event to Bloc
     bloc.add(event);
 
+    // Step 7: Show a SnackBar while loading
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Fetching from Server...')),
     );

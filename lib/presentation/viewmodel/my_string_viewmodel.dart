@@ -1,5 +1,6 @@
 import 'package:test_flutter_dummy_mvvm_clean_bloc/domain/entity/my_string_entity.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result_handler.dart'; // <-- Add this import!
 
 import '../../domain/usecase/local/get_my_string_from_local_use_case.dart';
 import '../../domain/usecase/local/store_my_string_to_local_use_case.dart';
@@ -20,6 +21,8 @@ class MyStringViewModel {
   });
 
   /// Fetch my_string from the local store.
+  ///
+  /// You can handle the result easily using [handleResult] if needed.
   Future<Result<MyStringEntity>> getMyStringFromLocal() async {
     return await getFromLocalUseCase.execute();
   }
@@ -30,11 +33,12 @@ class MyStringViewModel {
   /// - Success on storing successfully
   /// - Failure if storing failed
   Future<Result<void>> storeMyStringToLocal(String value) async {
-    return await storeToLocalUseCase.execute(MyStringEntity
-      (value: value));
+    return await storeToLocalUseCase.execute(MyStringEntity(value: value));
   }
 
   /// Fetch my_string from the remote server.
+  ///
+  /// You can handle the result easily using [handleResult] if needed.
   Future<Result<MyStringEntity>> getMyStringFromRemote() async {
     return await getFromRemoteUseCase.execute();
   }
