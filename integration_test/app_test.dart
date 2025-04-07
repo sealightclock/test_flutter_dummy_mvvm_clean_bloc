@@ -4,18 +4,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/main.dart' as app;
 
-/// Helper function to wait until a widget with given text is found.
-Future<void> pumpUntilFound(WidgetTester tester, String text, {Duration timeout = const Duration(seconds: 10)}) async {
-  final endTime = DateTime.now().add(timeout);
-
-  while (DateTime.now().isBefore(endTime)) {
-    await tester.pump(const Duration(milliseconds: 200)); // Small pump to allow UI to rebuild
-    if (find.text(text).evaluate().isNotEmpty) {
-      return; // Text found, return
-    }
-  }
-  throw Exception('Timeout: Text "$text" not found within ${timeout.inSeconds} seconds');
-}
+import 'util/test_utils.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -40,11 +29,14 @@ void main() {
     await pumpUntilFound(tester, 'Current Value:');
     await pumpUntilFound(tester, testValue);
 
-    // Step 4: Restart the app (simulate lifecycle restart)
+    // Step 4: ✨ Additional pump to wait for Hive saving to complete
+    await tester.pump(const Duration(seconds: 2)); // <-- Important! Give Hive time to persist data
+
+    // Step 5: Restart the app (simulate lifecycle restart)
     await tester.restartAndRestore();
     await tester.pumpAndSettle();
 
-    // Step 5: Confirm the persisted value is still shown after restart
+    // Step 6: Confirm the persisted value is still shown after restart
     await pumpUntilFound(tester, 'Current Value:');
     await pumpUntilFound(tester, testValue);
   });

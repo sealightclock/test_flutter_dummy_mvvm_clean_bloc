@@ -68,6 +68,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
     await handleResult<void>(
       viewModel.storeMyStringToLocal(value),
       onSuccess: (_) {
+        // Only after successful save to local storage:
         bloc.add(UpdateMyStringFromUserEvent(value));
         textEditController.clear();
 
