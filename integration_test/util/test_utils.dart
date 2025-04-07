@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Helper function to wait until a widget with a specific text appears.
 ///
@@ -26,4 +27,27 @@ Future<void> pumpUntilFound(
 
   // If text is not found after timeout
   throw Exception('Timeout: Text "$text" not found within ${timeout.inSeconds} seconds');
+}
+
+/// Helper function to wait until a Bloc emits a specific state.
+///
+/// [matcher] is a function that returns true if the state is the one we want.
+/// [timeout] is how long to wait before failing the test.
+Future<void> waitForBlocState<B extends BlocBase<S>, S>(
+    WidgetTester tester,
+    B bloc,
+    bool Function(S) matcher, {
+      Duration timeout = const Duration(seconds: 10),
+    }) async {
+  final endTime = DateTime.now().add(timeout);
+
+  while (DateTime.now().isBefore(endTime)) {
+    await tester.pump(const Duration(milliseconds: 200));
+
+    if (matcher(bloc.state)) {
+      return; // State matched!
+    }
+  }
+
+  throw Exception('Timeout: Expected Bloc state not found within ${timeout.inSeconds} seconds.');
 }

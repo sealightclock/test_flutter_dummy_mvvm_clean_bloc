@@ -22,12 +22,15 @@ class MyStringHomeScreen extends StatefulWidget {
   });
 
   @override
-  State<MyStringHomeScreen> createState() => _MyStringHomeScreenState();
+  State<MyStringHomeScreen> createState() => MyStringHomeScreenState();
 }
 
-class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
+/// For testing: expose the class
+class MyStringHomeScreenState extends State<MyStringHomeScreen> {
   // Bloc to manage state.
   late final MyStringBloc bloc;
+  @visibleForTesting
+  MyStringBloc get exposedBloc => bloc;
 
   // ViewModel to communicate with Use Cases.
   late final MyStringViewModel viewModel;

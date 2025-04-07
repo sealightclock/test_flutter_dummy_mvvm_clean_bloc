@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/main.dart' as app;
+import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/bloc/my_string_bloc.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/view/my_string_home_screen.dart';
 
 import 'util/test_utils.dart';
 
@@ -14,7 +16,14 @@ void main() {
     await app.startApp(const MyApp());
     await tester.pumpAndSettle();
 
-    // Step 2: Enter text and submit
+    // Step 2: Find HomeScreen and its Bloc
+    final homeScreenFinder = find.byType(MyStringHomeScreen);
+    expect(homeScreenFinder, findsOneWidget);
+
+    final state = tester.state<MyStringHomeScreenState>(homeScreenFinder);
+    final bloc = state.exposedBloc;
+
+    // Step 3: Enter text and submit
     const testValue = 'Persistent String';
     await tester.enterText(find.byType(TextField), testValue);
     await tester.pumpAndSettle();
@@ -25,19 +34,22 @@ void main() {
     await tester.tap(userButton);
     await tester.pumpAndSettle();
 
-    // Step 3: Confirm that the UI shows the new value
-    await pumpUntilFound(tester, 'Current Value:');
-    await pumpUntilFound(tester, testValue);
+    // Step 4: Wait until Bloc emits success with correct value
+    await waitForBlocState<MyStringBloc, MyStringState>(
+      tester,
+      bloc,
+          (state) => state is MyStringSuccessState && state.value == testValue,
+    );
 
-    // Step 4: ✨ Additional pump to wait for Hive saving to complete
-    await tester.pump(const Duration(seconds: 2)); // <-- Important! Give Hive time to persist data
-
-    // Step 5: Restart the app (simulate lifecycle restart)
+    // Step 5: Restart app
     await tester.restartAndRestore();
     await tester.pumpAndSettle();
 
-    // Step 6: Confirm the persisted value is still shown after restart
-    await pumpUntilFound(tester, 'Current Value:');
-    await pumpUntilFound(tester, testValue);
+    // Step 6: Wait again for Bloc to emit correct value after restart
+    await waitForBlocState<MyStringBloc, MyStringState>(
+      tester,
+      bloc,
+          (state) => state is MyStringSuccessState && state.value == testValue,
+    );
   });
 }
