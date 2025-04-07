@@ -130,18 +130,23 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
       ),
       body: OrientationBuilder(
         builder: (context, orientation) {
+          // Calculate dynamic constraints and padding
+          final isLandscape = orientation == Orientation.landscape;
+          final maxContentWidth = isLandscape ? 500.0 : 600.0;
+          final horizontalPadding = isLandscape ? AppDimens.screenPadding * 2 : AppDimens.screenPadding;
+
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(AppDimens.screenPadding),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: AppDimens.screenPadding),
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 600),
+                constraints: BoxConstraints(maxWidth: maxContentWidth),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Display selected DI choices
                     Text(
                       '$storeTypeSelected - $serverTypeSelected',
-                      style: AppTextStyles.small, // <-- Use shared style
+                      style: AppTextStyles.small, // Shared small style
                     ),
                     const SizedBox(height: AppDimens.screenPadding),
 
@@ -182,6 +187,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
 
                                 const SizedBox(height: AppDimens.buttonSpacing),
 
+                                // Buttons Row
                                 Row(
                                   children: [
                                     // Widget that needs the state of another widget
@@ -222,24 +228,24 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                                 if (state is MyStringInitialState)
                                   Text(
                                     'Enter or load a string to begin',
-                                    style: AppTextStyles.italicHint, // <-- shared italic style
+                                    style: AppTextStyles.italicHint, // Shared italic style
                                   )
                                 else if (state is MyStringLoadingState)
                                   const Center(child: CircularProgressIndicator())
                                 else if (state is MyStringSuccessState) ...[
                                     Text(
                                       'Current Value:',
-                                      style: AppTextStyles.medium, // <-- shared medium style
+                                      style: AppTextStyles.medium, // Shared medium style
                                     ),
                                     Text(
                                       state.value,
-                                      style: AppTextStyles.large, // <-- shared large style
+                                      style: AppTextStyles.large, // Shared large style
                                     ),
                                   ]
                                   else if (state is MyStringErrorState)
                                       Text(
                                         'Error: ${state.message}',
-                                        style: AppTextStyles.error, // <-- shared error style
+                                        style: AppTextStyles.error, // Shared error style
                                       )
                                     else
                                       // Optional fallback for unexpected states

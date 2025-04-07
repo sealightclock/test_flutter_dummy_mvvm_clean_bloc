@@ -4,6 +4,19 @@ import 'package:integration_test/integration_test.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/main.dart' as app;
 
+/// Helper function to wait until a widget with given text is found.
+Future<void> pumpUntilFound(WidgetTester tester, String text, {Duration timeout = const Duration(seconds: 10)}) async {
+  final endTime = DateTime.now().add(timeout);
+
+  while (DateTime.now().isBefore(endTime)) {
+    await tester.pump(const Duration(milliseconds: 200)); // Small pump to allow UI to rebuild
+    if (find.text(text).evaluate().isNotEmpty) {
+      return; // Text found, return
+    }
+  }
+  throw Exception('Timeout: Text "$text" not found within ${timeout.inSeconds} seconds');
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -24,22 +37,15 @@ void main() {
     await tester.pumpAndSettle();
 
     // Step 3: Confirm that the UI shows the new value
-    expect(find.text('Current Value:'), findsOneWidget);
-    expect(find.text(testValue), findsOneWidget);
+    await pumpUntilFound(tester, 'Current Value:');
+    await pumpUntilFound(tester, testValue);
 
-    // Step 4: Extra delay to allow Hive to fully write to disk
-    await Future.delayed(const Duration(seconds: 5)); // Reduced, but still safe
-    await tester.pump(const Duration(seconds: 5)); // Force pump again
-
-    // Step 5: Restart the app (simulate lifecycle restart)
+    // Step 4: Restart the app (simulate lifecycle restart)
     await tester.restartAndRestore();
     await tester.pumpAndSettle();
 
-    // Step 6: Wait again for Hive read completion
-    await tester.pump(const Duration(seconds: 5));
-
-    // Step 7: Confirm the persisted value is still shown
-    expect(find.text('Current Value:'), findsOneWidget);
-    expect(find.text(testValue), findsOneWidget);
+    // Step 5: Confirm the persisted value is still shown after restart
+    await pumpUntilFound(tester, 'Current Value:');
+    await pumpUntilFound(tester, testValue);
   });
 }
