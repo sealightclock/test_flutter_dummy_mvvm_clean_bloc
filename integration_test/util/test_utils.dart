@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -64,4 +65,26 @@ Future<void> pumpUntilFoundWidget(WidgetTester tester, Finder finder, {Duration 
   }
 
   throw Exception('Timeout: Widget not found: $finder');
+}
+
+/// Waits until a widget of given type appears in the widget tree.
+///
+/// [T] is the widget type to wait for, e.g., MyStringHomeScreen.
+/// [timeoutSeconds] is the maximum time to wait before giving up.
+///
+/// Throws an exception if the widget is not found within timeout.
+Future<void> waitForWidgetReady<T extends Widget>(
+    WidgetTester tester, {
+      int timeoutSeconds = 10,
+    }) async {
+  final finder = find.byType(T);
+  final endTime = DateTime.now().add(Duration(seconds: timeoutSeconds));
+
+  while (DateTime.now().isBefore(endTime)) {
+    await tester.pump(const Duration(milliseconds: 100));
+    if (finder.evaluate().isNotEmpty) {
+      return; // Found the widget
+    }
+  }
+  throw Exception('Timeout: Widget of type $T not found within $timeoutSeconds seconds.');
 }

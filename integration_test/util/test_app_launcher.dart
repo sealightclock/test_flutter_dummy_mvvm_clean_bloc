@@ -1,35 +1,39 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/main.dart' as app;
-import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/view/my_string_home_screen.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/bloc/my_string_bloc.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/view/my_string_home_screen.dart';
 
-import 'test_utils.dart'; // <-- for pumpUntilFound
+import 'test_utils.dart'; // Make sure waitForWidgetReady() is here
 
-/// A small helper class to launch the app and expose useful testing elements.
 class TestAppLauncher {
   final WidgetTester tester;
-  late final MyStringBloc bloc;
 
   TestAppLauncher(this.tester);
 
-  /// Launches the app, waits for HomeScreen ready, and finds necessary widgets.
+  // The MyStringBloc instance for direct access in the test
+  late MyStringBloc bloc;
+
+  /// Launch the app and wait for MyStringHomeScreen to appear.
   Future<void> launchApp() async {
-    await app.startApp(const MyApp());
+    await tester.pumpWidget(const MyApp());
 
-    // Instead of full settle, do a quick pump
-    await tester.pump(const Duration(milliseconds: 500));
+    // 💡 Wait until MyStringHomeScreen is ready!
+    await waitForWidgetReady<MyStringHomeScreen>(tester);
 
-    // Then wait until HomeScreen is found
-    await pumpUntilFoundWidget(tester, find.byType(MyStringHomeScreen));
-
-    // Find the HomeScreen
+    // Now it's guaranteed safe to find bloc
     final homeScreenFinder = find.byType(MyStringHomeScreen);
-    expect(homeScreenFinder, findsOneWidget);
-
-    // Access the bloc via the exposed getter
     final state = tester.state<MyStringHomeScreenState>(homeScreenFinder);
-    bloc = state.exposedBloc;
+
+    bloc = state.bloc;
+  }
+
+  /// Refresh the bloc after app restart.
+  Future<void> refreshAfterRestart() async {
+    await waitForWidgetReady<MyStringHomeScreen>(tester);
+
+    final homeScreenFinder = find.byType(MyStringHomeScreen);
+    final state = tester.state<MyStringHomeScreenState>(homeScreenFinder);
+
+    bloc = state.bloc;
   }
 }
