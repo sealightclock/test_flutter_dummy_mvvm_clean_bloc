@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/bloc/my_string_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/viewmodel/my_string_viewmodel.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/theme/app_styles.dart'; // <-- NEW import for shared styles
 
 import '../../data/di/my_string_dependency_injection.dart';
 import '../../domain/entity/my_string_entity.dart';
@@ -130,7 +131,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
       body: OrientationBuilder(
         builder: (context, orientation) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppDimens.screenPadding),
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 600),
@@ -140,9 +141,9 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                     // Display selected DI choices
                     Text(
                       '$storeTypeSelected - $serverTypeSelected',
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: AppTextStyles.small, // <-- Use shared style
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppDimens.screenPadding),
 
                     // Bloc handles state-based UI
                     // Bundle widgets that need state sharing together:
@@ -155,12 +156,12 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                         // Since all of these widgets are used to handle
                         // 'my_string', it's better to group them into a card:
                         return Card(
-                          elevation: 4,
+                          elevation: AppDimens.cardElevation,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppDimens.cardCornerRadius),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(AppDimens.screenPadding),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -179,7 +180,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                                   },
                                 ),
 
-                                const SizedBox(height: 16),
+                                const SizedBox(height: AppDimens.buttonSpacing),
 
                                 Row(
                                   children: [
@@ -195,7 +196,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                                       ),
                                     ),
 
-                                    const SizedBox(width: 12),
+                                    const SizedBox(width: AppDimens.buttonSpacing),
 
                                     // Widget that needs the state of another widget
                                     Expanded(
@@ -211,7 +212,7 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                                   ],
                                 ),
 
-                                const SizedBox(height: 32),
+                                const SizedBox(height: AppDimens.screenPadding * 2),
 
                                 // Widget that has a state that needs to be shared
                                 // with other widgets.
@@ -219,33 +220,26 @@ class _MyStringHomeScreenState extends State<MyStringHomeScreen> {
                                 // In this declarative UI context, Dart does allow
                                 // if/else statements as elements inside a widget list.
                                 if (state is MyStringInitialState)
-                                  const Text(
-                                    'Enter or load a string to begin', // Or any default UI
-                                    style: TextStyle(fontStyle: FontStyle.italic),
+                                  Text(
+                                    'Enter or load a string to begin',
+                                    style: AppTextStyles.italicHint, // <-- shared italic style
                                   )
                                 else if (state is MyStringLoadingState)
                                   const Center(child: CircularProgressIndicator())
                                 else if (state is MyStringSuccessState) ...[
                                     Text(
                                       'Current Value:',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
+                                      style: AppTextStyles.medium, // <-- shared medium style
                                     ),
                                     Text(
                                       state.value,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.blueAccent,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                      style: AppTextStyles.large, // <-- shared large style
                                     ),
                                   ]
                                   else if (state is MyStringErrorState)
                                       Text(
                                         'Error: ${state.message}',
-                                        style: const TextStyle(color: Colors.red),
+                                        style: AppTextStyles.error, // <-- shared error style
                                       )
                                     else
                                       // Optional fallback for unexpected states
