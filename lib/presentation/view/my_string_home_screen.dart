@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/bloc/my_string_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/viewmodel/my_string_viewmodel.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/theme/app_styles.dart'; // <-- NEW import for shared styles
+import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/theme/app_styles.dart'; // Shared styles
 
 import '../../data/di/my_string_dependency_injection.dart';
 import '../../domain/entity/my_string_entity.dart';
@@ -26,7 +26,8 @@ class MyStringHomeScreen extends StatefulWidget {
 }
 
 /// For testing: expose the class
-class MyStringHomeScreenState extends State<MyStringHomeScreen> {
+/// This State class now listens to App Lifecycle events (e.g., paused, resumed).
+class MyStringHomeScreenState extends State<MyStringHomeScreen> with WidgetsBindingObserver {
   // Bloc to manage state.
   late final MyStringBloc bloc;
   @visibleForTesting
@@ -41,6 +42,9 @@ class MyStringHomeScreenState extends State<MyStringHomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    // Register lifecycle observer
+    WidgetsBinding.instance.addObserver(this);
 
     // Testability for widget testing
     // Use injected or default instances
@@ -59,6 +63,39 @@ class MyStringHomeScreenState extends State<MyStringHomeScreen> {
       }
       textEditController.clear();
     });
+  }
+
+  @override
+  void dispose() {
+    // Unregister lifecycle observer
+    WidgetsBinding.instance.removeObserver(this);
+
+    textEditController.dispose();
+    super.dispose();
+  }
+
+  /// This function automatically reacts to app lifecycle changes.
+  ///
+  /// For example:
+  /// - Paused = user switched app
+  /// - Resumed = user came back
+  /// - Inactive = incoming call, etc.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      // App is going to background or inactive:
+      _saveCurrentText();
+    }
+  }
+
+  /// Saves the current TextField value into the local store (optimistically).
+  void _saveCurrentText() {
+    final text = textEditController.text.trim();
+    if (text.isNotEmpty) {
+      viewModel.storeMyStringToLocal(text);
+    }
   }
 
   /// Handles user submitting a new string with Optimistic UI Update:
