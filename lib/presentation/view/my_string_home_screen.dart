@@ -61,25 +61,40 @@ class MyStringHomeScreenState extends State<MyStringHomeScreen> {
     });
   }
 
-  /// Handles user submitting a new string:
-  /// [1] Save the string into the local store.
-  /// [2] Only after successful save, update the Bloc state.
-  /// [3] Clear the TextField and show a SnackBar.
+  /// Handles user submitting a new string with Optimistic UI Update:
+  ///
+  /// [1] Immediately update Bloc with user's value (optimistic update).
+  /// [2] Save the string into the local store.
+  /// [3] If saving succeeds: do nothing more (happy path).
+  /// [4] If saving fails: rollback to previous value and show error.
   void updateFromUser() async {
-    final value = textEditController.text.trim();
+    final newValue = textEditController.text.trim();
 
+    // Step 1: Save current state before optimistic update (for rollback)
+    final previousState = bloc.state;
+
+    // Step 2: Optimistically update the UI immediately
+    bloc.add(UpdateMyStringFromUserEvent(newValue));
+
+    // Step 3: Try to save the new value into the local store
     await handleResult<void>(
-      viewModel.storeMyStringToLocal(value),
+      viewModel.storeMyStringToLocal(newValue),
       onSuccess: (_) {
-        // Only after successful save to local storage:
-        bloc.add(UpdateMyStringFromUserEvent(value));
-        textEditController.clear();
-
+        // Save succeeded! 🎉
+        // Nothing more to do because UI already shows the new value.
+        textEditController.clear(); // Clear input after successful save
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Updated from User')),
         );
       },
       onFailure: (message) {
+        // Save failed! 😱
+        // Step 4: Rollback UI to previous state
+        if (previousState is MyStringSuccessState) {
+          bloc.add(UpdateMyStringFromUserEvent(previousState.value));
+        }
+
+        // Step 5: Show error message to user
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to save: $message')),
         );
