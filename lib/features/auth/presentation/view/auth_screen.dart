@@ -26,35 +26,74 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
-
     _viewModel = AuthViewModelFactory.create();
     _bloc = AuthBloc();
-    _bloc.attachViewModel(_viewModel);
 
     _checkAuthStatus();
   }
 
   Future<void> _checkAuthStatus() async {
-    final user = await _viewModel.getUserAuthStatus();
-    if (user != null && user.isLoggedIn) {
-      _bloc.add(CheckAuthStatus());
+    try {
+      final user = await _viewModel.getUserAuthStatus();
+      if (user != null && user.isLoggedIn) {
+        _bloc.add(AuthAuthenticatedEvent(user: user));
+      } else {
+        _bloc.add(AuthUnauthenticatedEvent());
+      }
+    } catch (e) {
+      _bloc.add(AuthUnauthenticatedEvent());
     }
   }
 
-  void _login() {
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
-    _bloc.add(LoginRequested(username: username, password: password));
+  void _login() async {
+    _bloc.add(AuthLoadingEvent());
+    try {
+      await _viewModel.login(
+        _usernameController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      final user = await _viewModel.getUserAuthStatus();
+      if (user != null) {
+        _bloc.add(AuthAuthenticatedEvent(user: user));
+      } else {
+        _bloc.add(AuthUnauthenticatedEvent());
+      }
+    } catch (e) {
+      _bloc.add(AuthErrorEvent(message: e.toString()));
+    }
   }
 
-  void _signUp() {
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
-    _bloc.add(SignUpRequested(username: username, password: password));
+  void _signUp() async {
+    _bloc.add(AuthLoadingEvent());
+    try {
+      await _viewModel.signUp(
+        _usernameController.text.trim(),
+        _passwordController.text.trim(),
+      );
+      final user = await _viewModel.getUserAuthStatus();
+      if (user != null) {
+        _bloc.add(AuthAuthenticatedEvent(user: user));
+      } else {
+        _bloc.add(AuthUnauthenticatedEvent());
+      }
+    } catch (e) {
+      _bloc.add(AuthErrorEvent(message: e.toString()));
+    }
   }
 
-  void _guestLogin() {
-    _bloc.add(GuestLoginRequested());
+  void _guestLogin() async {
+    _bloc.add(AuthLoadingEvent());
+    try {
+      await _viewModel.guestLogin();
+      final user = await _viewModel.getUserAuthStatus();
+      if (user != null) {
+        _bloc.add(AuthAuthenticatedEvent(user: user));
+      } else {
+        _bloc.add(AuthUnauthenticatedEvent());
+      }
+    } catch (e) {
+      _bloc.add(AuthErrorEvent(message: e.toString()));
+    }
   }
 
   void _showError(String errorMsg) {
