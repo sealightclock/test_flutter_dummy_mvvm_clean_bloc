@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../my_string/presentation/view/my_string_home_screen.dart';
 import '../bloc/auth_bloc.dart';
+import '../factory/auth_viewmodel_factory.dart';
 import '../viewmodel/auth_viewmodel.dart';
 
 class AuthScreen extends StatefulWidget {
-  final AuthViewModel viewModel;
-
-  const AuthScreen({super.key, required this.viewModel});
+  const AuthScreen({super.key});
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  late AuthViewModel _viewModel;
+
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _showMoreOptions = false;
@@ -21,11 +23,14 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
+
+    _viewModel = AuthViewModelFactory.create();
+
     _checkAuthStatus();
   }
 
   Future<void> _checkAuthStatus() async {
-    final user = await widget.viewModel.getUserAuthStatus();
+    final user = await _viewModel.getUserAuthStatus();
     if (user != null && user.isLoggedIn) {
       Navigator.pushReplacement(
         context,
@@ -37,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void _login() async {
     try {
       context.read<AuthCubit>().showLoading();
-      await widget.viewModel.login(
+      await _viewModel.login(
         _usernameController.text,
         _passwordController.text,
       );
@@ -55,7 +60,7 @@ class _AuthScreenState extends State<AuthScreen> {
   void _signUp() async {
     try {
       context.read<AuthCubit>().showLoading();
-      await widget.viewModel.signUp(
+      await _viewModel.signUp(
         _usernameController.text,
         _passwordController.text,
       );
@@ -71,7 +76,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _guestLogin() async {
-    await widget.viewModel.guestLogin();
+    await _viewModel.guestLogin();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const MyStringHomeScreen()),
