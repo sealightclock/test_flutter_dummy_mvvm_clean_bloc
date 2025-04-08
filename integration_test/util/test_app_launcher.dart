@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_bloc.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/view/my_string_home_screen.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/view/my_string_screen.dart';
 
 import 'test_utils.dart'; // Make sure waitForWidgetReady() is here
 
@@ -23,20 +23,20 @@ class TestAppLauncher {
 
   /// Call this manually **AFTER** you have navigated to MyStringHomeScreen
   Future<void> prepareBloc() async {
-    await waitForWidgetReady<MyStringHomeScreen>(tester);
+    await waitForWidgetReady<MyStringScreen>(tester);
 
-    final homeScreenFinder = find.byType(MyStringHomeScreen);
-    final state = tester.state<MyStringHomeScreenState>(homeScreenFinder);
+    final homeScreenFinder = find.byType(MyStringScreen);
+    final state = tester.state<MyStringScreenState>(homeScreenFinder);
 
     bloc = state.bloc;
   }
 
   /// Refresh the bloc after app restart (same as before)
   Future<void> refreshAfterRestart() async {
-    await waitForWidgetReady<MyStringHomeScreen>(tester);
+    await waitForWidgetReady<MyStringScreen>(tester);
 
-    final homeScreenFinder = find.byType(MyStringHomeScreen);
-    final state = tester.state<MyStringHomeScreenState>(homeScreenFinder);
+    final homeScreenFinder = find.byType(MyStringScreen);
+    final state = tester.state<MyStringScreenState>(homeScreenFinder);
 
     bloc = state.bloc;
   }

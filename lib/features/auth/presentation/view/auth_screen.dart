@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../my_string/presentation/view/my_string_home_screen.dart';
+import '../../../my_string/presentation/view/my_string_screen.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -115,7 +115,7 @@ class _AuthScreenState extends State<AuthScreen> {
             if (state is AuthAuthenticated) {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const MyStringHomeScreen()),
+                MaterialPageRoute(builder: (_) => const MyStringScreen()),
               );
             } else if (state is AuthError) {
               _showError(state.message);

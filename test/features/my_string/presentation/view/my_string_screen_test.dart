@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/entity/my_string_entity.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/view/my_string_home_screen.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/view/my_string_screen.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/viewmodel/my_string_viewmodel.dart';
 
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart'; // <-- Important!
@@ -24,7 +24,7 @@ void main() {
     // Step 2: Pump the widget with the mock ViewModel injected
     await tester.pumpWidget(
       MaterialApp(
-        home: MyStringHomeScreen(injectedViewModel: mockViewModel),
+        home: MyStringScreen(injectedViewModel: mockViewModel),
       ),
     );
 

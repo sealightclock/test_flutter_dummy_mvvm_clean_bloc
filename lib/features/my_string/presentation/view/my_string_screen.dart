@@ -10,24 +10,24 @@ import '../factory/my_string_viewmodel_factory.dart';
 import '../theme/app_styles.dart';
 import '../viewmodel/my_string_viewmodel.dart'; // Shared styles
 
-class MyStringHomeScreen extends StatefulWidget {
+class MyStringScreen extends StatefulWidget {
   // Testability for widget testing
   final MyStringViewModel? injectedViewModel;
   final MyStringBloc? injectedBloc;
 
-  const MyStringHomeScreen({
+  const MyStringScreen({
     super.key,
     this.injectedViewModel,
     this.injectedBloc,
   });
 
   @override
-  State<MyStringHomeScreen> createState() => MyStringHomeScreenState();
+  State<MyStringScreen> createState() => MyStringScreenState();
 }
 
 /// For testing: expose the class
 /// This State class now listens to App Lifecycle events (e.g., paused, resumed).
-class MyStringHomeScreenState extends State<MyStringHomeScreen> with WidgetsBindingObserver {
+class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObserver {
   // Bloc to manage state.
   late final MyStringBloc bloc;
   @visibleForTesting

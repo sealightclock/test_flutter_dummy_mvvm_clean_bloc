@@ -4,7 +4,7 @@
 This is a dummy Flutter app built with the "MVVM Clean + Bloc" architecture, for testing and 
 learning purposes.
 
-It handles a single string: 'my_string'.
+Initially, it handles a single string: 'my_string'.
 
 ## Technologies used
 This Flutter app uses the following technologies:
@@ -40,7 +40,7 @@ The file structure is as follows:
 
 ---- **view**/
 
------- my_string_home_screen.dart
+------ my_string_screen.dart
 
 ---- **bloc**/ 
 
@@ -117,10 +117,6 @@ architecture)
 
 which reflects the chosen design pattern "MVVM Clean + Bloc".
 
-More recently, another feature named "auth" has been added to the app to demonstrate the 
-scalability of this architecture. Both features are implemented using the same "MVVM Clean + 
-Bloc" design pattern and a similar file structure.
-
 ## Testing
 
 ### Manual testing
@@ -145,5 +141,17 @@ The following tests have been created:
 - Widget tests
 - Integration tests
 
-The source code has been slightly modified to accommodate these tests.
+#### Testability Infrastructure
+The source code has been slightly modified to accommodate automated testing with widget and 
+integration tests. These additions are not for production features.
 
+The "MVVM Clean + Bloc" architecture also helps to support unit testing.
+
+## Scalability
+With the "MVVM Clean + Bloc" architecture, it is relatively easy to add more features to the app.
+
+More recently, another feature named "auth" has been added to the app to demonstrate the
+scalability of this architecture.
+
+Both features "my_string" and "auth" have been implemented using the same "MVVM Clean +
+Bloc" design pattern and a similar file structure.
