@@ -29,7 +29,14 @@ The UI should be intuitive. 'my_string' can be modified by:
 ## Source file structure
 The file structure is as follows:
 
-### -- **presentation**/
+### util/
+-- my_string_exception.dart
+
+-- result.dart
+
+-- result_handler.dart
+### features/my_string/
+#### -- **presentation**/
 
 ---- **view**/
 
@@ -51,7 +58,7 @@ The file structure is as follows:
 
 ------ my_string_viewmodel_factory.dart
 
-### -- ***domain***/ 
+#### -- ***domain***/ 
 
 ---- **entity**/
 
@@ -71,7 +78,7 @@ The file structure is as follows:
 
 -------- get_my_string_from_remote_use_case.dart
 
-### -- ***data***/
+#### -- ***data***/
 
 ---- **repository**/
 

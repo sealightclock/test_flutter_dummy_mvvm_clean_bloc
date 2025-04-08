@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/view/my_string_home_screen.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/presentation/theme/app_theme.dart'; // <-- NEW import for shared theme
+
+import 'features/my_string/presentation/theme/app_theme.dart';
+import 'features/my_string/presentation/view/my_string_home_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
