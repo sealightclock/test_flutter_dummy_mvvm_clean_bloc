@@ -1,65 +1,32 @@
-import 'package:hive_flutter/hive_flutter.dart';
 import '../../domain/entity/user_auth_entity.dart';
+import '../local/auth_local_data_source.dart';
+import '../remote/auth_remote_data_source.dart';
 
-/// Repository to handle authentication data persistence using Hive.
+/// Repository to coordinate between local and remote authentication data sources.
 class AuthRepository {
-  static const String _userBoxName = 'user_auth_box'; // Box name for Hive
+  final AuthLocalDataSource _localDataSource = AuthLocalDataSource();
+  final AuthRemoteDataSource _remoteDataSource = AuthRemoteDataSource();
 
-  // Initialization:
-  static bool _isInitialized = false;
-
-  /// Ensures Hive is initialized and the box is opened before usage.
-  Future<void> _initialize() async {
-    if (!_isInitialized) {
-      await Hive.initFlutter();
-      // No custom adapter needed for simple Map storage
-      _isInitialized = true;
-    }
-  }
-
-  /// Signs up a new user by storing username, password and logged-in status into Hive.
+  /// Signup a new user remotely and store locally.
   Future<void> signUp(String username, String password) async {
-    await _initialize(); // Ensure Hive is ready
-    final box = await Hive.openBox(_userBoxName);
-    final user = UserAuthEntity(username: username, password: password, isLoggedIn: true);
-    await box.put('user', user.toMap());
+    final user = await _remoteDataSource.signup(username, password);
+    await _localDataSource.storeUser(user);
   }
 
-  /// Logs in an existing user by validating credentials.
+  /// Login an existing user remotely and store locally.
   Future<void> login(String username, String password) async {
-    await _initialize(); // Ensure Hive is ready
-    final box = await Hive.openBox(_userBoxName);
-    final userMap = box.get('user');
-
-    if (userMap == null) {
-      throw Exception('User not found. Please sign up first.');
-    }
-
-    final storedUser = UserAuthEntity.fromMap(Map<String, dynamic>.from(userMap));
-    if (storedUser.username == username && storedUser.password == password) {
-      final updatedUser = UserAuthEntity(username: username, password: password, isLoggedIn: true);
-      await box.put('user', updatedUser.toMap());
-    } else {
-      throw Exception('Invalid username or password.');
-    }
+    final user = await _remoteDataSource.login(username, password);
+    await _localDataSource.storeUser(user);
   }
 
-  /// Allows guest login without requiring username or password.
+  /// Guest login remotely and store locally.
   Future<void> guestLogin() async {
-    await _initialize(); // Ensure Hive is ready
-    final box = await Hive.openBox(_userBoxName);
-    final guestUser = UserAuthEntity(username: 'Guest', password: '', isLoggedIn: true);
-    await box.put('user', guestUser.toMap());
+    final user = await _remoteDataSource.guestLogin();
+    await _localDataSource.storeUser(user);
   }
 
-  /// Retrieves current user authentication status from Hive.
+  /// Get current user authentication status from local storage.
   Future<UserAuthEntity?> getUserAuthStatus() async {
-    await _initialize(); // Ensure Hive is ready
-    final box = await Hive.openBox(_userBoxName);
-    final userMap = box.get('user');
-
-    if (userMap == null) return null;
-
-    return UserAuthEntity.fromMap(Map<String, dynamic>.from(userMap));
+    return await _localDataSource.getUser();
   }
 }
