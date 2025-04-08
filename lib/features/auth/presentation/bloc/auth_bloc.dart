@@ -1,21 +1,79 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../viewmodel/auth_viewmodel.dart';
+import 'auth_event.dart';
+import 'auth_state.dart';
 
-enum AuthState {
-  initial,
-  loading,
-  authenticated,
-  unauthenticated,
-  error,
-}
+/// Bloc that manages authentication states by calling ViewModel methods.
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  late AuthViewModel _viewModel;
 
-class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(AuthState.initial);
+  AuthBloc() : super(AuthInitial()) {
+    on<CheckAuthStatus>(_onCheckAuthStatus);
+    on<SignUpRequested>(_onSignUpRequested);
+    on<LoginRequested>(_onLoginRequested);
+    on<GuestLoginRequested>(_onGuestLoginRequested);
+  }
 
-  void showLoading() => emit(AuthState.loading);
+  /// Allow ViewModel injection after Bloc creation
+  void attachViewModel(AuthViewModel viewModel) {
+    _viewModel = viewModel;
+  }
 
-  void authenticate() => emit(AuthState.authenticated);
+  Future<void> _onCheckAuthStatus(CheckAuthStatus event, Emitter<AuthState> emit) async {
+    try {
+      final user = await _viewModel.getUserAuthStatus();
+      if (user != null && user.isLoggedIn) {
+        emit(AuthAuthenticated(user: user));
+      } else {
+        emit(AuthUnauthenticated());
+      }
+    } catch (e) {
+      emit(AuthUnauthenticated());
+    }
+  }
 
-  void unauthenticate() => emit(AuthState.unauthenticated);
+  Future<void> _onSignUpRequested(SignUpRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await _viewModel.signUp(event.username, event.password);
+      final user = await _viewModel.getUserAuthStatus();
+      if (user != null) {
+        emit(AuthAuthenticated(user: user));
+      } else {
+        emit(AuthUnauthenticated());
+      }
+    } catch (e) {
+      emit(AuthError(message: e.toString()));
+    }
+  }
 
-  void showError() => emit(AuthState.error);
+  Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await _viewModel.login(event.username, event.password);
+      final user = await _viewModel.getUserAuthStatus();
+      if (user != null) {
+        emit(AuthAuthenticated(user: user));
+      } else {
+        emit(AuthUnauthenticated());
+      }
+    } catch (e) {
+      emit(AuthError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onGuestLoginRequested(GuestLoginRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await _viewModel.guestLogin();
+      final user = await _viewModel.getUserAuthStatus();
+      if (user != null) {
+        emit(AuthAuthenticated(user: user));
+      } else {
+        emit(AuthUnauthenticated());
+      }
+    } catch (e) {
+      emit(AuthError(message: e.toString()));
+    }
+  }
 }
