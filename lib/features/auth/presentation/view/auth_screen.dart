@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../my_string/presentation/view/my_string_home_screen.dart';
 import '../bloc/auth_bloc.dart';
 import '../viewmodel/auth_viewmodel.dart';
-import '../../../my_string_home_screen.dart'; // adjust this import to match your project
 
 class AuthScreen extends StatefulWidget {
   final AuthViewModel viewModel;
