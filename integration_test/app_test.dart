@@ -6,12 +6,16 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentati
 import 'util/test_utils.dart';
 import 'util/test_app_launcher.dart';
 import 'util/test_timer.dart'; // For measuring test time
+import 'util/reset_hive.dart'; // Import resetHive
 
 void main() {
   // Bind integration test environment
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Full app lifecycle with Auth and MyString persistence', (tester) async {
+    // Step 0: Reset Hive for a fresh start
+    await resetHive();
+
     // Step 1: Start timer
     final timer = TestTimer('Full app lifecycle with Auth and MyString persistence');
     timer.start();

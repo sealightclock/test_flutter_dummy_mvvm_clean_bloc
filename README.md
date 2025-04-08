@@ -117,6 +117,10 @@ architecture)
 
 which reflects the chosen design pattern "MVVM Clean + Bloc".
 
+More recently, another feature named "auth" has been added to the app to demonstrate the 
+scalability of this architecture. Both features are implemented using the same "MVVM Clean + 
+Bloc" design pattern and a similar file structure.
+
 ## Testing
 
 ### Manual testing
