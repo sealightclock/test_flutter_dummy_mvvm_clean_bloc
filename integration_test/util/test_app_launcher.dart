@@ -13,21 +13,25 @@ class TestAppLauncher {
   // The MyStringBloc instance for direct access in the test
   late MyStringBloc bloc;
 
-  /// Launch the app and wait for MyStringHomeScreen to appear.
+  /// Launch the app, but don't assume MyStringHomeScreen immediately.
   Future<void> launchApp() async {
     await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
+    // No waiting for MyStringHomeScreen yet
+    // Test code will control navigation to MyString screen
+  }
 
-    // 💡 Wait until MyStringHomeScreen is ready!
+  /// Call this manually **AFTER** you have navigated to MyStringHomeScreen
+  Future<void> prepareBloc() async {
     await waitForWidgetReady<MyStringHomeScreen>(tester);
 
-    // Now it's guaranteed safe to find bloc
     final homeScreenFinder = find.byType(MyStringHomeScreen);
     final state = tester.state<MyStringHomeScreenState>(homeScreenFinder);
 
     bloc = state.bloc;
   }
 
-  /// Refresh the bloc after app restart.
+  /// Refresh the bloc after app restart (same as before)
   Future<void> refreshAfterRestart() async {
     await waitForWidgetReady<MyStringHomeScreen>(tester);
 

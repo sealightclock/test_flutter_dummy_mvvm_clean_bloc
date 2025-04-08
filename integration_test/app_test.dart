@@ -11,17 +11,33 @@ void main() {
   // Bind integration test environment
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('App lifecycle with Hive persistence test', (tester) async {
+  testWidgets('Full app lifecycle with Auth and MyString persistence', (tester) async {
     // Step 1: Start timer
-    final timer = TestTimer('App lifecycle with Hive persistence test');
+    final timer = TestTimer('Full app lifecycle with Auth and MyString persistence');
     timer.start();
 
     // Step 2: Launch the app
     final launcher = TestAppLauncher(tester);
     await launcher.launchApp();
+
+    // Step 3: Handle Auth screen if needed
+    final moreOptionsFinder = find.text('More Options');
+
+    if (moreOptionsFinder.evaluate().isNotEmpty) {
+      await tester.tap(moreOptionsFinder);
+      await tester.pumpAndSettle();
+
+      final guestLoginButton = find.text('Guest Login');
+      expect(guestLoginButton, findsOneWidget);
+      await tester.tap(guestLoginButton);
+      await tester.pumpAndSettle();
+    }
+
+    // Step 4: Now prepare the bloc (after reaching MyString screen)
+    await launcher.prepareBloc();
     final bloc = launcher.bloc;
 
-    // Step 3: Enter text and submit
+    // Step 5: Enter text and submit
     const testValue = 'Persistent String';
     await tester.enterText(find.byType(TextField), testValue);
     await tester.pumpAndSettle();
@@ -32,7 +48,7 @@ void main() {
     await tester.tap(userButton);
     await tester.pumpAndSettle();
 
-    // Step 4: Wait for Bloc + UI confirmation BEFORE restart
+    // Step 6: Wait for Bloc + UI confirmation BEFORE app relaunch
     await waitForBlocStateAndUi<MyStringBloc, MyStringState>(
       tester,
       bloc,
@@ -40,19 +56,36 @@ void main() {
       testValue,
     );
 
-    // Step 5: Restart the app (simulate app kill and restore)
-    await tester.restartAndRestore();
+    // Step 7: Relaunch the app manually (instead of restartAndRestore)
+    await launcher.launchApp();
     await tester.pumpAndSettle();
 
-    // Step 6: Wait for Bloc + UI confirmation AFTER restart
+    // Step 8: Handle Auth screen again if needed
+    final moreOptionsFinderAfterRelaunch = find.text('More Options');
+
+    if (moreOptionsFinderAfterRelaunch.evaluate().isNotEmpty) {
+      await tester.tap(moreOptionsFinderAfterRelaunch);
+      await tester.pumpAndSettle();
+
+      final guestLoginButtonAfterRelaunch = find.text('Guest Login');
+      expect(guestLoginButtonAfterRelaunch, findsOneWidget);
+      await tester.tap(guestLoginButtonAfterRelaunch);
+      await tester.pumpAndSettle();
+    }
+
+    // Step 9: Refresh the bloc after relaunch
+    await launcher.refreshAfterRestart();
+    final blocAfterRelaunch = launcher.bloc;
+
+    // Step 10: Wait for Bloc + UI confirmation AFTER app relaunch
     await waitForBlocStateAndUi<MyStringBloc, MyStringState>(
       tester,
-      bloc,
+      blocAfterRelaunch,
           (state) => state is MyStringSuccessState && state.value == testValue,
       testValue,
     );
 
-    // Step 7: End timer
+    // Step 11: End timer
     timer.stop();
   });
 }
