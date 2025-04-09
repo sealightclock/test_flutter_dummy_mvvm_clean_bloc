@@ -1,39 +1,21 @@
-import 'package:equatable/equatable.dart';
 import '../../domain/entity/user_auth_entity.dart';
 
-/// States emitted by AuthBloc.
-abstract class AuthState extends Equatable {
-  const AuthState();
+sealed class AuthState {}
 
-  @override
-  List<Object?> get props => [];
-}
+class AuthInitialState extends AuthState {}
 
-/// Initial state before any action.
-class AuthInitial extends AuthState {}
+class AuthLoadingState extends AuthState {}
 
-/// Loading state during signup, login or guest login.
-class AuthLoading extends AuthState {}
-
-/// Authenticated state with user details.
-class AuthAuthenticated extends AuthState {
+class AuthAuthenticatedState extends AuthState {
   final UserAuthEntity user;
-
-  const AuthAuthenticated({required this.user});
-
-  @override
-  List<Object?> get props => [user];
+  AuthAuthenticatedState({required this.user});
 }
 
-/// Unauthenticated state (no user logged in).
-class AuthUnauthenticated extends AuthState {}
+class AuthGuestLoginState extends AuthState {} // 👈 Add this class
 
-/// Error state with error message.
-class AuthError extends AuthState {
+class AuthUnauthenticatedState extends AuthState {}
+
+class AuthErrorState extends AuthState {
   final String message;
-
-  const AuthError({required this.message});
-
-  @override
-  List<Object?> get props => [message];
+  AuthErrorState({required this.message});
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../util/result.dart';
+import '../../../my_string/presentation/bloc/my_string_bloc.dart';
 import '../../../my_string/presentation/view/my_string_screen.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -9,97 +11,57 @@ import '../factory/auth_viewmodel_factory.dart';
 import '../viewmodel/auth_viewmodel.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+  final AuthViewModel? injectedViewModel;
+  final AuthBloc? injectedBloc;
+
+  const AuthScreen({
+    super.key,
+    this.injectedViewModel,
+    this.injectedBloc,
+  });
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
-  late AuthViewModel _viewModel;
-  late AuthBloc _bloc;
-
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _showMoreOptions = false;
+class _AuthScreenState extends State<AuthScreen> with WidgetsBindingObserver {
+  late final AuthViewModel _viewModel;
+  late final AuthBloc _bloc;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = AuthViewModelFactory.create();
-    _bloc = AuthBloc();
+    WidgetsBinding.instance.addObserver(this);
+
+    _viewModel = widget.injectedViewModel ?? AuthViewModelFactory.create();
+    _bloc = widget.injectedBloc ?? AuthBloc();
 
     _checkAuthStatus();
   }
 
   Future<void> _checkAuthStatus() async {
-    try {
-      final user = await _viewModel.getUserAuthStatus();
-      if (user != null && user.isLoggedIn) {
-        _bloc.add(AuthAuthenticatedEvent(user: user));
-      } else {
-        _bloc.add(AuthUnauthenticatedEvent());
-      }
-    } catch (e) {
-      _bloc.add(AuthUnauthenticatedEvent());
+    final result = await _viewModel.getUserAuthStatus();
+
+    if (result?.isLoggedIn == true) {
+      _navigateToMyStringScreen();
     }
   }
 
-  void _login() async {
-    _bloc.add(AuthLoadingEvent());
-    try {
-      await _viewModel.login(
-        _usernameController.text.trim(),
-        _passwordController.text.trim(),
-      );
-      final user = await _viewModel.getUserAuthStatus();
-      if (user != null) {
-        _bloc.add(AuthAuthenticatedEvent(user: user));
-      } else {
-        _bloc.add(AuthUnauthenticatedEvent());
-      }
-    } catch (e) {
-      _bloc.add(AuthErrorEvent(message: e.toString()));
-    }
-  }
-
-  void _signUp() async {
-    _bloc.add(AuthLoadingEvent());
-    try {
-      await _viewModel.signUp(
-        _usernameController.text.trim(),
-        _passwordController.text.trim(),
-      );
-      final user = await _viewModel.getUserAuthStatus();
-      if (user != null) {
-        _bloc.add(AuthAuthenticatedEvent(user: user));
-      } else {
-        _bloc.add(AuthUnauthenticatedEvent());
-      }
-    } catch (e) {
-      _bloc.add(AuthErrorEvent(message: e.toString()));
-    }
-  }
-
-  void _guestLogin() async {
-    _bloc.add(AuthLoadingEvent());
-    try {
-      await _viewModel.guestLogin();
-      final user = await _viewModel.getUserAuthStatus();
-      if (user != null) {
-        _bloc.add(AuthAuthenticatedEvent(user: user));
-      } else {
-        _bloc.add(AuthUnauthenticatedEvent());
-      }
-    } catch (e) {
-      _bloc.add(AuthErrorEvent(message: e.toString()));
-    }
-  }
-
-  void _showError(String errorMsg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(errorMsg)),
+  void _navigateToMyStringScreen() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider<MyStringBloc>(
+          create: (_) => MyStringBloc(),
+          child: const MyStringScreen(),
+        ),
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -109,75 +71,73 @@ class _AuthScreenState extends State<AuthScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Authentication'),
+          centerTitle: true,
         ),
-        body: BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is AuthAuthenticated) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const MyStringScreen()),
-              );
-            } else if (state is AuthError) {
-              _showError(state.message);
+        body: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthLoadingState) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is AuthAuthenticatedState) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _navigateToMyStringScreen();
+              });
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is AuthErrorState) {
+              return Center(child: Text('Error: ${state.message}'));
+            } else {
+              return _buildAuthOptions();
             }
           },
-          child: BlocBuilder<AuthBloc, AuthState>(
-            builder: (context, state) {
-              if (state is AuthLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: _usernameController,
-                      decoration: const InputDecoration(labelText: 'Username'),
-                    ),
-                    TextField(
-                      controller: _passwordController,
-                      decoration: const InputDecoration(labelText: 'Password'),
-                      obscureText: true,
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _login,
-                      child: const Text('Login'),
-                    ),
-                    ElevatedButton(
-                      onPressed: _signUp,
-                      child: const Text('Sign Up'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _showMoreOptions = !_showMoreOptions;
-                        });
-                      },
-                      child: const Text('More Options'),
-                    ),
-                    if (_showMoreOptions)
-                      Column(
-                        children: [
-                          ElevatedButton(
-                            onPressed: _guestLogin,
-                            child: const Text('Guest Login'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              _showError('Contact us at support@example.com');
-                            },
-                            child: const Text('Contact Us'),
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
-              );
-            },
-          ),
         ),
       ),
     );
+  }
+
+  Widget _buildAuthOptions() {
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              _bloc.add(AuthLoadingEvent());
+              final result = await _viewModel.login('test_user', 'password');
+              await _handleResult(result);
+            },
+            child: const Text('Login'),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () async {
+              _bloc.add(AuthLoadingEvent());
+              final result = await _viewModel.signUp('test_user', 'password');
+              await _handleResult(result);
+            },
+            child: const Text('Sign Up'),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () async {
+              _bloc.add(AuthLoadingEvent());
+              final result = await _viewModel.guestLogin();
+              await _handleResult(result);
+            },
+            child: const Text('More Options'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _handleResult(Result<void> result) async {
+    if (result is Success) {
+      final user = await _viewModel.getUserAuthStatus();
+      if (user != null) {
+        _bloc.add(AuthAuthenticatedEvent(user: user));
+      }
+    } else if (result is Failure) {
+      _bloc.add(AuthErrorEvent(message: result.message));
+    }
   }
 }
