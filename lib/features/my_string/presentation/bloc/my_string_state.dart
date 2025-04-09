@@ -1,6 +1,7 @@
-// This line marks this file as part of 'my_string_bloc.dart'.
-// It allows splitting the BLoC code into multiple organized files.
-part of 'my_string_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:logger/logger.dart';
+
+final logger = Logger();
 
 /// Sealed base class for all states emitted by MyStringBloc.
 ///

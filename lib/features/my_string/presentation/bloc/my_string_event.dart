@@ -1,6 +1,4 @@
-// This line allows this file to be a part of the 'my_string_bloc.dart' file.
-// It's a Dart feature for organizing code across multiple files.
-part of 'my_string_bloc.dart';
+import 'package:equatable/equatable.dart';
 
 /// Sealed base class for all events that can be sent to MyStringBloc.
 /// Events represent user actions or system triggers that should result in
