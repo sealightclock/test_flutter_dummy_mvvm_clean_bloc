@@ -1,18 +1,22 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entity/user_auth_entity.dart';
 
-/// Events that drive Auth UI state.
-abstract class AuthEvent extends Equatable {
+/// Sealed class for Authentication Events.
+///
+/// Only specific subclasses are allowed for type safety.
+sealed class AuthEvent extends Equatable {
   const AuthEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-/// Show loading spinner
-class AuthLoadingEvent extends AuthEvent {}
+/// Event when authentication process starts (loading indicator)
+class AuthLoadingEvent extends AuthEvent {
+  const AuthLoadingEvent();
+}
 
-/// Show authenticated user
+/// Event when user successfully authenticates
 class AuthAuthenticatedEvent extends AuthEvent {
   final UserAuthEntity user;
 
@@ -22,10 +26,12 @@ class AuthAuthenticatedEvent extends AuthEvent {
   List<Object?> get props => [user];
 }
 
-/// Show unauthenticated state
-class AuthUnauthenticatedEvent extends AuthEvent {}
+/// Event when user is not authenticated
+class AuthUnauthenticatedEvent extends AuthEvent {
+  const AuthUnauthenticatedEvent();
+}
 
-/// Show error message
+/// Event when there is an authentication error
 class AuthErrorEvent extends AuthEvent {
   final String message;
 

@@ -1,21 +1,27 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entity/user_auth_entity.dart';
 
-/// States emitted by AuthBloc.
-abstract class AuthState extends Equatable {
+/// Sealed class for Authentication States.
+///
+/// Only specific subclasses are allowed for type safety.
+sealed class AuthState extends Equatable {
   const AuthState();
 
   @override
   List<Object?> get props => [];
 }
 
-/// Initial state before any action.
-class AuthInitial extends AuthState {}
+/// Initial state when app starts
+class AuthInitial extends AuthState {
+  const AuthInitial();
+}
 
-/// Loading state during signup, login or guest login.
-class AuthLoading extends AuthState {}
+/// State when authentication is in progress (loading spinner)
+class AuthLoading extends AuthState {
+  const AuthLoading();
+}
 
-/// Authenticated state with user details.
+/// State when user is successfully authenticated
 class AuthAuthenticated extends AuthState {
   final UserAuthEntity user;
 
@@ -25,10 +31,12 @@ class AuthAuthenticated extends AuthState {
   List<Object?> get props => [user];
 }
 
-/// Unauthenticated state (no user logged in).
-class AuthUnauthenticated extends AuthState {}
+/// State when user is not authenticated
+class AuthUnauthenticated extends AuthState {
+  const AuthUnauthenticated();
+}
 
-/// Error state with error message.
+/// State when an authentication error occurs
 class AuthError extends AuthState {
   final String message;
 
