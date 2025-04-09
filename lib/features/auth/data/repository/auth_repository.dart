@@ -1,40 +1,31 @@
-import '../../../../util/result.dart';
 import '../../domain/entity/user_auth_entity.dart';
 import '../local/auth_local_data_source.dart';
+import '../remote/auth_remote_data_source.dart';
 
+/// Repository to coordinate between local and remote authentication data sources.
 class AuthRepository {
   final AuthLocalDataSource _localDataSource = AuthLocalDataSource();
+  final AuthRemoteDataSource _remoteDataSource = AuthRemoteDataSource();
 
-  Future<Result<void>> login(String username, String password) async {
-    try {
-      // Simulate a login API call or database call
-      await Future.delayed(const Duration(seconds: 1));
-
-      // You assume login is successful for now
-      return Success(null);
-    } catch (e) {
-      return Failure('Login failed: $e');
-    }
+  /// Signup a new user remotely and store locally.
+  Future<void> signUp(String username, String password) async {
+    final user = await _remoteDataSource.signup(username, password);
+    await _localDataSource.storeUser(user);
   }
 
-  Future<Result<void>> signUp(String username, String password) async {
-    try {
-      await Future.delayed(const Duration(seconds: 1));
-      return Success(null);
-    } catch (e) {
-      return Failure('Signup failed: $e');
-    }
+  /// Login an existing user remotely and store locally.
+  Future<void> login(String username, String password) async {
+    final user = await _remoteDataSource.login(username, password);
+    await _localDataSource.storeUser(user);
   }
 
-  Future<Result<void>> guestLogin() async {
-    try {
-      await Future.delayed(const Duration(seconds: 1));
-      return Success(null);
-    } catch (e) {
-      return Failure('Guest login failed: $e');
-    }
+  /// Guest login remotely and store locally.
+  Future<void> guestLogin() async {
+    final user = await _remoteDataSource.guestLogin();
+    await _localDataSource.storeUser(user);
   }
 
+  /// Get current user authentication status from local storage.
   Future<UserAuthEntity?> getUserAuthStatus() async {
     return await _localDataSource.getUser();
   }

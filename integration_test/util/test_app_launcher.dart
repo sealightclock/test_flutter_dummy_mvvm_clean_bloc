@@ -1,63 +1,43 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/presentation/view/auth_screen.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_bloc.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/view/my_string_screen.dart';
 
-import 'test_auth_viewmodel.dart';
-import 'test_utils.dart';
+import 'test_utils.dart'; // Make sure waitForWidgetReady() is here
 
-/// Utility class to launch and prepare the app during integration tests.
 class TestAppLauncher {
   final WidgetTester tester;
-  late MyStringBloc bloc;
 
   TestAppLauncher(this.tester);
 
-  /// Launches the app and waits for the initial widget to be ready
+  // The MyStringBloc instance for direct access in the test
+  late MyStringBloc bloc;
+
+  /// Launch the app, but don't assume MyStringHomeScreen immediately.
   Future<void> launchApp() async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: AuthScreen(
-          injectedViewModel: TestAuthViewModel(),
-        ),
-      ),
-    );
+    await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
-
-    // 🛠️ Wait for AuthScreen or MyStringScreen
-    await tester.pumpUntilFound(
-      find.byType(Scaffold),
-      timeout: const Duration(seconds: 15),
-    );
-
-    // ✅ Auto-login via guest if needed
-    final moreOptionsButton = find.text('More Options');
-    if (moreOptionsButton.evaluate().isNotEmpty) {
-      await tester.tap(moreOptionsButton);
-      await tester.pumpAndSettle();
-
-      final guestLoginButton = find.text('Guest Login');
-      if (guestLoginButton.evaluate().isNotEmpty) {
-        await tester.tap(guestLoginButton);
-        await tester.pumpAndSettle();
-      }
-    }
-
-    // ✅ Wait until MyStringScreen is visible
-    await tester.pumpUntilFound(
-      find.byType(TextField),
-      timeout: const Duration(seconds: 10),
-    );
+    // No waiting for MyStringHomeScreen yet
+    // Test code will control navigation to MyString screen
   }
 
-  /// Prepare the bloc after reaching MyString screen
+  /// Call this manually **AFTER** you have navigated to MyStringHomeScreen
   Future<void> prepareBloc() async {
-    bloc = Provider.of<MyStringBloc>(tester.element(find.byType(TextField)), listen: false);
+    await waitForWidgetReady<MyStringScreen>(tester);
+
+    final homeScreenFinder = find.byType(MyStringScreen);
+    final state = tester.state<MyStringScreenState>(homeScreenFinder);
+
+    bloc = state.bloc;
   }
 
-  /// Refresh bloc after app restart
+  /// Refresh the bloc after app restart (same as before)
   Future<void> refreshAfterRestart() async {
-    await prepareBloc();
+    await waitForWidgetReady<MyStringScreen>(tester);
+
+    final homeScreenFinder = find.byType(MyStringScreen);
+    final state = tester.state<MyStringScreenState>(homeScreenFinder);
+
+    bloc = state.bloc;
   }
 }

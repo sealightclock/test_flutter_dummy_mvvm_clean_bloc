@@ -6,7 +6,7 @@ class GetUserAuthStatusUseCase {
 
   GetUserAuthStatusUseCase(this.repository);
 
-  Future<UserAuthEntity?> execute() async {
+  Future<UserAuthEntity?> call() async {
     return await repository.getUserAuthStatus();
   }
 }

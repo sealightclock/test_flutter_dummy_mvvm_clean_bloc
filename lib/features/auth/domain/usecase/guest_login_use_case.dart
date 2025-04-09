@@ -1,4 +1,3 @@
-import '../../../../util/result.dart';
 import '../../data/repository/auth_repository.dart';
 
 class GuestLoginUseCase {
@@ -6,7 +5,7 @@ class GuestLoginUseCase {
 
   GuestLoginUseCase(this.repository);
 
-  Future<Result<void>> execute() async {
-    return repository.guestLogin();
+  Future<void> call() async {
+    await repository.guestLogin();
   }
 }
