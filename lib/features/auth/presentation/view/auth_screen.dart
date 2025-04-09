@@ -22,6 +22,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _showMoreOptions = false; // Controls visibility of more options
+  bool _checkingAuthStatus = true; // Controls whether we are still checking auth status
 
   @override
   void initState() {
@@ -42,6 +43,11 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } catch (e) {
       _bloc.add(AuthUnauthenticatedEvent());
+    } finally {
+      // After checking auth status, update the flag to stop showing loading spinner
+      setState(() {
+        _checkingAuthStatus = false;
+      });
     }
   }
 
@@ -123,9 +129,16 @@ class _AuthScreenState extends State<AuthScreen> {
           },
           child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
+              // Show loading spinner if checking auth status
+              if (_checkingAuthStatus) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
               if (state is AuthLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
+
+              // Show normal authentication UI after checking is done
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
