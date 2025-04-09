@@ -12,35 +12,35 @@ sealed class AuthState extends Equatable {
 }
 
 /// Initial state when app starts
-class AuthInitial extends AuthState {
-  const AuthInitial();
+class AuthInitialState extends AuthState {
+  const AuthInitialState();
 }
 
 /// State when authentication is in progress (loading spinner)
-class AuthLoading extends AuthState {
-  const AuthLoading();
+class AuthLoadingState extends AuthState {
+  const AuthLoadingState();
 }
 
 /// State when user is successfully authenticated
-class AuthAuthenticated extends AuthState {
+class AuthAuthenticatedState extends AuthState {
   final UserAuthEntity user;
 
-  const AuthAuthenticated({required this.user});
+  const AuthAuthenticatedState({required this.user});
 
   @override
   List<Object?> get props => [user];
 }
 
 /// State when user is not authenticated
-class AuthUnauthenticated extends AuthState {
-  const AuthUnauthenticated();
+class AuthUnauthenticatedState extends AuthState {
+  const AuthUnauthenticatedState();
 }
 
 /// State when an authentication error occurs
-class AuthError extends AuthState {
+class AuthErrorState extends AuthState {
   final String message;
 
-  const AuthError({required this.message});
+  const AuthErrorState({required this.message});
 
   @override
   List<Object?> get props => [message];

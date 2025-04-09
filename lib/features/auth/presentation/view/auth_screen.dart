@@ -118,12 +118,12 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         body: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
-            if (state is AuthAuthenticated) {
+            if (state is AuthAuthenticatedState) {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) => const MyStringScreen()),
               );
-            } else if (state is AuthError) {
+            } else if (state is AuthErrorState) {
               _showError(state.message);
             }
           },
@@ -134,7 +134,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is AuthLoading) {
+              if (state is AuthLoadingState) {
                 return const Center(child: CircularProgressIndicator());
               }
 
