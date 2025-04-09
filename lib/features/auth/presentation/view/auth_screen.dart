@@ -21,7 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _showMoreOptions = false;
+  bool _showMoreOptions = false; // Controls visibility of more options
 
   @override
   void initState() {
@@ -148,13 +148,17 @@ class _AuthScreenState extends State<AuthScreen> {
                       onPressed: _signUp,
                       child: const Text('Sign Up'),
                     ),
-                    TextButton(
+                    const SizedBox(height: 16),
+                    // OutlinedButton for More/Fewer Options
+                    OutlinedButton(
                       onPressed: () {
                         setState(() {
                           _showMoreOptions = !_showMoreOptions;
                         });
                       },
-                      child: const Text('More Options'),
+                      child: Text(
+                        _showMoreOptions ? 'Fewer Options' : 'More Options',
+                      ),
                     ),
                     if (_showMoreOptions)
                       Column(
