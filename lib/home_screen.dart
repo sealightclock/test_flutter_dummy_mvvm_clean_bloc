@@ -6,11 +6,13 @@ import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/view/auth_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
 
+/// Global flag to control initial tab when HomeScreen is rebuilt
+bool forceStartOnMyStringScreen = false;
+
 /// HomeScreen manages the bottom navigation bar and switching between screens.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  /// GlobalKey to allow external control
   static final GlobalKey<HomeScreenState> homeScreenKey = GlobalKey<HomeScreenState>();
 
   @override
@@ -19,28 +21,28 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  bool shouldAutoSwitchToMyString = false; // Auto-switch after login or guest login
+  bool shouldAutoSwitchToMyString = false;
 
-  // Color constants
   static const Color strongColor = Colors.blueAccent;
   static const Color mediumColor = Colors.blueGrey;
   static const Color lightColor = Colors.grey;
 
-  /// Public method to immediately jump to MyString tab
-  void jumpToMyStringTabImmediately() {
-    setState(() {
+  @override
+  void initState() {
+    super.initState();
+    // If forced by Guest Login, start directly on MyString tab
+    if (forceStartOnMyStringScreen) {
       _selectedIndex = 1;
-      shouldAutoSwitchToMyString = false;
-    });
+      forceStartOnMyStringScreen = false; // reset after using it
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        final bool isAuthenticated = state is AuthAuthenticatedState;
+        final bool isAuthenticated = state is AuthAuthenticatedState || state is AuthGuestAuthenticatedState;
 
-        // Auto-switch to MyString tab if needed (safety check)
         if (shouldAutoSwitchToMyString) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -52,7 +54,6 @@ class HomeScreenState extends State<HomeScreen> {
           });
         }
 
-        // Determine which screen to show
         Widget body;
         if (_selectedIndex == 0) {
           body = const AuthScreen();
@@ -103,7 +104,6 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Helper to build a BottomNavigationBarItem with dynamic color
   BottomNavigationBarItem _buildBottomNavigationBarItem({
     required int index,
     required String label,

@@ -5,24 +5,28 @@ import 'auth_state.dart';
 /// Bloc for handling authentication-related events and states
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(const AuthInitialState()) {
-    on<AuthLoadingEvent>((event, emit) async {
-      emit(const AuthLoadingState());
-    });
+    on<AuthEvent>((event, emit) async {
+      switch (event) {
+        case AuthLoadingEvent():
+          emit(const AuthLoadingState());
+          break;
 
-    on<AuthAuthenticatedEvent>((event, emit) async {
-      emit(AuthAuthenticatedState(user: event.user));
-    });
+        case AuthAuthenticatedEvent():
+          emit(AuthAuthenticatedState(user: event.user));
+          break;
 
-    on<AuthGuestAuthenticatedEvent>((event, emit) async {
-      emit(const AuthGuestAuthenticatedState());
-    });
+        case AuthGuestAuthenticatedEvent():
+          emit(const AuthGuestAuthenticatedState());
+          break;
 
-    on<AuthUnauthenticatedEvent>((event, emit) async {
-      emit(const AuthUnauthenticatedState());
-    });
+        case AuthUnauthenticatedEvent():
+          emit(const AuthUnauthenticatedState());
+          break;
 
-    on<AuthErrorEvent>((event, emit) async {
-      emit(AuthErrorState(message: event.message));
+        case AuthErrorEvent():
+          emit(AuthErrorState(message: event.message));
+          break;
+      }
     });
   }
 }

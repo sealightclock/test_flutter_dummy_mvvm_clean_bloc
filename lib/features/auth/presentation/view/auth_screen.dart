@@ -93,11 +93,15 @@ class AuthScreenState extends State<AuthScreen> {
     try {
       await _viewModel.guestLogin();
 
-      // Guest login succeeded — emit specialized guest auth event
       _bloc.add(const AuthGuestAuthenticatedEvent());
 
-      // Immediately switch to MyStringScreen
-      HomeScreen.homeScreenKey.currentState?.jumpToMyStringTabImmediately();
+      // Set global flag before rebuilding HomeScreen
+      forceStartOnMyStringScreen = true;
+
+      // Replace HomeScreen to immediately jump to MyString tab
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
     } catch (e) {
       _bloc.add(AuthErrorEvent(message: e.toString()));
     }
