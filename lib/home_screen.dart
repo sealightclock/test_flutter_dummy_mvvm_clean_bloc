@@ -10,7 +10,7 @@ import 'features/my_string/presentation/view/my_string_screen.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  /// GlobalKey to allow external control (optional for future use)
+  /// GlobalKey to allow external control
   static final GlobalKey<HomeScreenState> homeScreenKey = GlobalKey<HomeScreenState>();
 
   @override
@@ -19,6 +19,12 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  bool shouldAutoSwitchToMyString = false; // Auto-switch after login or guest login
+
+  // Define consistent colors
+  static const Color strongColor = Colors.blueAccent;
+  static const Color mediumColor = Colors.blueGrey;
+  static const Color lightColor = Colors.grey;
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +32,30 @@ class HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         final bool isAuthenticated = state is AuthAuthenticatedState;
 
-        // Determine which screen to show based on authentication status and selected tab
+        // Auto-switch to MyString tab if needed
+        if (shouldAutoSwitchToMyString) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                _selectedIndex = 1;
+                shouldAutoSwitchToMyString = false;
+              });
+            }
+          });
+        }
+
+        // Determine which screen to show
         Widget body;
-        if (!isAuthenticated) {
-          if (_selectedIndex == 0) {
-            body = const AuthScreen();
+        if (_selectedIndex == 0) {
+          body = const AuthScreen();
+        } else if (_selectedIndex == 1) {
+          if (isAuthenticated) {
+            body = const MyStringScreen();
           } else {
             body = const Center(child: Text('Please log in first.'));
           }
         } else {
-          if (_selectedIndex == 0) {
-            body = const AuthScreen();
-          } else {
-            body = const MyStringScreen();
-          }
+          body = const SizedBox.shrink();
         }
 
         return Scaffold(
@@ -47,27 +63,63 @@ class HomeScreenState extends State<HomeScreen> {
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _selectedIndex,
             onTap: (index) {
+              if (!isAuthenticated && index == 1) {
+                // Prevent tapping MyString if not authenticated
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please log in first')),
+                );
+                return;
+              }
               setState(() {
                 _selectedIndex = index;
               });
             },
-            selectedItemColor: Colors.blueAccent,
-            unselectedItemColor: Colors.grey,
-            elevation: 10,
             type: BottomNavigationBarType.fixed,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.lock),
+            elevation: 10,
+            items: [
+              _buildBottomNavigationBarItem(
+                index: 0,
                 label: 'Auth',
+                iconData: Icons.lock,
+                enabled: true,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.storage),
+              _buildBottomNavigationBarItem(
+                index: 1,
                 label: 'MyString',
+                iconData: Icons.storage,
+                enabled: isAuthenticated,
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  /// Helper to build a BottomNavigationBarItem with dynamic color
+  BottomNavigationBarItem _buildBottomNavigationBarItem({
+    required int index,
+    required String label,
+    required IconData iconData,
+    required bool enabled,
+  }) {
+    final bool isSelected = _selectedIndex == index;
+
+    Color color;
+    if (!enabled) {
+      color = lightColor;
+    } else if (isSelected) {
+      color = strongColor;
+    } else {
+      color = mediumColor;
+    }
+
+    return BottomNavigationBarItem(
+      icon: Icon(
+        iconData,
+        color: color,
+      ),
+      label: label,
     );
   }
 }

@@ -6,6 +6,7 @@ import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../factory/auth_viewmodel_factory.dart';
 import '../viewmodel/auth_viewmodel.dart';
+import '../../../../home_screen.dart'; // Import HomeScreen
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -59,6 +60,7 @@ class AuthScreenState extends State<AuthScreen> {
       final user = await _viewModel.getUserAuthStatus();
       if (user != null) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
+        HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
       } else {
         _bloc.add(const AuthUnauthenticatedEvent());
       }
@@ -77,6 +79,7 @@ class AuthScreenState extends State<AuthScreen> {
       final user = await _viewModel.getUserAuthStatus();
       if (user != null) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
+        HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
       } else {
         _bloc.add(const AuthUnauthenticatedEvent());
       }
@@ -92,6 +95,7 @@ class AuthScreenState extends State<AuthScreen> {
       final user = await _viewModel.getUserAuthStatus();
       if (user != null) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
+        HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
       } else {
         _bloc.add(const AuthUnauthenticatedEvent());
       }
