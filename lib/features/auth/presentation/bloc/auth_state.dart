@@ -1,9 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entity/user_auth_entity.dart';
 
-/// Sealed class for Authentication States.
-///
-/// Only specific subclasses are allowed for type safety.
+/// Sealed class for Authentication States
 sealed class AuthState extends Equatable {
   const AuthState();
 
@@ -16,12 +14,12 @@ class AuthInitialState extends AuthState {
   const AuthInitialState();
 }
 
-/// State when authentication is in progress (loading spinner)
+/// State when authentication is in progress
 class AuthLoadingState extends AuthState {
   const AuthLoadingState();
 }
 
-/// State when user is successfully authenticated
+/// State when a real user is successfully authenticated
 class AuthAuthenticatedState extends AuthState {
   final UserAuthEntity user;
 
@@ -29,6 +27,11 @@ class AuthAuthenticatedState extends AuthState {
 
   @override
   List<Object?> get props => [user];
+}
+
+/// State when a guest user is authenticated
+class AuthGuestAuthenticatedState extends AuthState {
+  const AuthGuestAuthenticatedState();
 }
 
 /// State when user is not authenticated

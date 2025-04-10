@@ -1,9 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entity/user_auth_entity.dart';
 
-/// Sealed class for Authentication Events.
-///
-/// Only specific subclasses are allowed for type safety.
+/// Sealed class for Authentication Events
 sealed class AuthEvent extends Equatable {
   const AuthEvent();
 
@@ -11,12 +9,12 @@ sealed class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Event when authentication process starts (loading indicator)
+/// Loading authentication (e.g., during login/signup/guest login)
 class AuthLoadingEvent extends AuthEvent {
   const AuthLoadingEvent();
 }
 
-/// Event when user successfully authenticates
+/// Successful real user authentication
 class AuthAuthenticatedEvent extends AuthEvent {
   final UserAuthEntity user;
 
@@ -26,12 +24,17 @@ class AuthAuthenticatedEvent extends AuthEvent {
   List<Object?> get props => [user];
 }
 
-/// Event when user is not authenticated
+/// Successful guest user authentication
+class AuthGuestAuthenticatedEvent extends AuthEvent {
+  const AuthGuestAuthenticatedEvent();
+}
+
+/// User not authenticated
 class AuthUnauthenticatedEvent extends AuthEvent {
   const AuthUnauthenticatedEvent();
 }
 
-/// Event when there is an authentication error
+/// Authentication error
 class AuthErrorEvent extends AuthEvent {
   final String message;
 

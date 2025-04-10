@@ -92,13 +92,12 @@ class AuthScreenState extends State<AuthScreen> {
     _bloc.add(const AuthLoadingEvent());
     try {
       await _viewModel.guestLogin();
-      final user = await _viewModel.getUserAuthStatus();
-      if (user != null) {
-        _bloc.add(AuthAuthenticatedEvent(user: user));
-        HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
-      } else {
-        _bloc.add(const AuthUnauthenticatedEvent());
-      }
+
+      // Guest login succeeded — emit specialized guest auth event
+      _bloc.add(const AuthGuestAuthenticatedEvent());
+
+      // Immediately switch to MyStringScreen
+      HomeScreen.homeScreenKey.currentState?.jumpToMyStringTabImmediately();
     } catch (e) {
       _bloc.add(AuthErrorEvent(message: e.toString()));
     }

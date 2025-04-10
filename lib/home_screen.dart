@@ -21,10 +21,18 @@ class HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool shouldAutoSwitchToMyString = false; // Auto-switch after login or guest login
 
-  // Define consistent colors
+  // Color constants
   static const Color strongColor = Colors.blueAccent;
   static const Color mediumColor = Colors.blueGrey;
   static const Color lightColor = Colors.grey;
+
+  /// Public method to immediately jump to MyString tab
+  void jumpToMyStringTabImmediately() {
+    setState(() {
+      _selectedIndex = 1;
+      shouldAutoSwitchToMyString = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +40,7 @@ class HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         final bool isAuthenticated = state is AuthAuthenticatedState;
 
-        // Auto-switch to MyString tab if needed
+        // Auto-switch to MyString tab if needed (safety check)
         if (shouldAutoSwitchToMyString) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
@@ -64,7 +72,6 @@ class HomeScreenState extends State<HomeScreen> {
             currentIndex: _selectedIndex,
             onTap: (index) {
               if (!isAuthenticated && index == 1) {
-                // Prevent tapping MyString if not authenticated
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Please log in first')),
                 );
