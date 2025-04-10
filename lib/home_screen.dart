@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/view/auth_screen.dart';
@@ -9,7 +10,7 @@ import 'features/my_string/presentation/view/my_string_screen.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  /// GlobalKey to allow external control (ex: from AuthScreen)
+  /// GlobalKey to allow external control (optional for future use)
   static final GlobalKey<HomeScreenState> homeScreenKey = GlobalKey<HomeScreenState>();
 
   @override
@@ -18,41 +19,26 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  bool _alreadyRedirected = false; // To prevent multiple redirects
-
-  /// Public method to manually switch to MyString tab
-  void switchToMyStringTab() {
-    setState(() {
-      _selectedIndex = 1;
-      _alreadyRedirected = true; // Also mark redirected
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        bool isAuthenticated = state is AuthAuthenticatedState;
+        final bool isAuthenticated = state is AuthAuthenticatedState;
 
-        // Auto-switch to MyString tab if authenticated and still on Auth tab
-        if (isAuthenticated && _selectedIndex == 0 && !_alreadyRedirected) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {
-              _selectedIndex = 1;
-              _alreadyRedirected = true;
-            });
-          });
-        }
-
-        // Determine which screen to show based on selected tab
+        // Determine which screen to show based on authentication status and selected tab
         Widget body;
-        if (_selectedIndex == 0) {
-          body = const AuthScreen();
-        } else {
-          if (isAuthenticated) {
-            body = const MyStringScreen();
+        if (!isAuthenticated) {
+          if (_selectedIndex == 0) {
+            body = const AuthScreen();
           } else {
             body = const Center(child: Text('Please log in first.'));
+          }
+        } else {
+          if (_selectedIndex == 0) {
+            body = const AuthScreen();
+          } else {
+            body = const MyStringScreen();
           }
         }
 
@@ -61,17 +47,9 @@ class HomeScreenState extends State<HomeScreen> {
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _selectedIndex,
             onTap: (index) {
-              if (index == 1 && !isAuthenticated) {
-                // Prevent unauthenticated access to MyString
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please log in first')),
-                );
-              } else {
-                setState(() {
-                  _selectedIndex = index;
-                  _alreadyRedirected = false; // Reset redirect flag when user manually navigates
-                });
-              }
+              setState(() {
+                _selectedIndex = index;
+              });
             },
             selectedItemColor: Colors.blueAccent,
             unselectedItemColor: Colors.grey,

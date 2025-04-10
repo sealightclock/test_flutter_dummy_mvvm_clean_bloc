@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../home_screen.dart'; // Import HomeScreen to control tab switching
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -109,25 +108,13 @@ class AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Watch AuthBloc state inside build
-    final authState = context.watch<AuthBloc>().state;
-
-    // If already authenticated but still on AuthScreen, auto-switch to MyString tab
-    if (authState is AuthAuthenticatedState) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        HomeScreen.homeScreenKey.currentState?.switchToMyStringTab();
-      });
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Authentication'),
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthAuthenticatedState) {
-            // Already handled above in build() for robustness
-          } else if (state is AuthErrorState) {
+          if (state is AuthErrorState) {
             _showError(state.message);
           }
         },
