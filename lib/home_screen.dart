@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
-import '../../../auth/presentation/bloc/auth_state.dart';
-import '../../../auth/presentation/view/auth_screen.dart';
-import '../../../my_string/presentation/view/my_string_screen.dart';
+import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/presentation/bloc/auth_state.dart';
+import 'features/auth/presentation/view/auth_screen.dart';
+import 'features/my_string/presentation/view/my_string_screen.dart';
 
 /// HomeScreen manages the bottom navigation bar and switching between screens.
 class HomeScreen extends StatefulWidget {

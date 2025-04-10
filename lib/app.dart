@@ -4,7 +4,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentati
 
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
-import 'features/home/presentation/view/home_screen.dart';
+import 'home_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
