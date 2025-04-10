@@ -51,7 +51,7 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
     // Testability for widget testing
     // Use injected or default instances
     bloc = widget.injectedBloc ?? MyStringBloc();
-    viewModel = widget.injectedViewModel ?? createViewModel();
+    viewModel = widget.injectedViewModel ?? MyStringViewModelFactory.create();
 
     // Load value from local store at app start
     viewModel.getMyStringFromLocal().then((result) {
