@@ -18,11 +18,13 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  bool _alreadyRedirected = false; // To prevent multiple redirects
 
-  /// Public method to switch to MyString tab programmatically
+  /// Public method to manually switch to MyString tab
   void switchToMyStringTab() {
     setState(() {
       _selectedIndex = 1;
+      _alreadyRedirected = true; // Also mark redirected
     });
   }
 
@@ -32,7 +34,17 @@ class HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         bool isAuthenticated = state is AuthAuthenticatedState;
 
-        // Choose which screen to display based on selected tab
+        // Auto-switch to MyString tab if authenticated and still on Auth tab
+        if (isAuthenticated && _selectedIndex == 0 && !_alreadyRedirected) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              _selectedIndex = 1;
+              _alreadyRedirected = true;
+            });
+          });
+        }
+
+        // Determine which screen to show based on selected tab
         Widget body;
         if (_selectedIndex == 0) {
           body = const AuthScreen();
@@ -50,13 +62,14 @@ class HomeScreenState extends State<HomeScreen> {
             currentIndex: _selectedIndex,
             onTap: (index) {
               if (index == 1 && !isAuthenticated) {
-                // Block unauthenticated access to MyString tab
+                // Prevent unauthenticated access to MyString
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Please log in first')),
                 );
               } else {
                 setState(() {
                   _selectedIndex = index;
+                  _alreadyRedirected = false; // Reset redirect flag when user manually navigates
                 });
               }
             },
