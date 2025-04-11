@@ -8,7 +8,6 @@ import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';
 import '../bloc/my_string_state.dart';
-import '../factory/my_string_viewmodel_factory.dart';
 import '../theme/app_styles.dart';
 import '../viewmodel/my_string_viewmodel.dart'; // Shared styles
 
@@ -35,9 +34,6 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
   @visibleForTesting
   MyStringBloc get exposedBloc => bloc;
 
-  // ViewModel to communicate with Use Cases.
-  late final MyStringViewModel viewModel;
-
   // Controller for TextField input.
   final TextEditingController textEditController = TextEditingController();
 
@@ -51,10 +47,10 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
     // Testability for widget testing
     // Use injected or default instances
     bloc = widget.injectedBloc ?? MyStringBloc();
-    viewModel = widget.injectedViewModel ?? MyStringViewModelFactory.create();
+    bloc.viewModel = widget.injectedViewModel ?? bloc.viewModel;
 
     // Load value from local store at app start
-    viewModel.getMyStringFromLocal().then((result) {
+    bloc.viewModel.getMyStringFromLocal().then((result) {
       switch (result) {
         case Success<MyStringEntity>(:final data):
           bloc.add(UpdateMyStringFromLocalEvent(data.value));
@@ -96,7 +92,7 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
   void _saveCurrentText() {
     final text = textEditController.text.trim();
     if (text.isNotEmpty) {
-      viewModel.storeMyStringToLocal(text);
+      bloc.viewModel.storeMyStringToLocal(text);
     }
   }
 
@@ -117,7 +113,7 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
 
     // Step 3: Try to save the new value into the local store
     await handleResult<void>(
-      viewModel.storeMyStringToLocal(newValue),
+      bloc.viewModel.storeMyStringToLocal(newValue),
       onSuccess: (_) {
         // Save succeeded! 🎉
         // Nothing more to do because UI already shows the new value.
@@ -149,7 +145,7 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
     // This function will be passed into the Bloc event
     Future<String> fetchAndStore() async {
       // Step 1: Fetch from remote server
-      final result = await viewModel.getMyStringFromRemote();
+      final result = await bloc.viewModel.getMyStringFromRemote();
 
       // Step 2: Handle result
       final value = await handleResultReturning<MyStringEntity, String>(
@@ -160,7 +156,7 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
 
       // Step 3: If fetch succeeded, also store it locally
       if (!value.startsWith('Error')) {
-        await viewModel.storeMyStringToLocal(value);
+        await bloc.viewModel.storeMyStringToLocal(value);
       }
 
       // Step 4: Always return the value (success or error)

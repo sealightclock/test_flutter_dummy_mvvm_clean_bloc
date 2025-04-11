@@ -1,6 +1,8 @@
 // Imports the Bloc package that provides Bloc and event/state management features.
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../factory/my_string_viewmodel_factory.dart';
+import '../viewmodel/my_string_viewmodel.dart';
 import 'my_string_event.dart';
 import 'my_string_state.dart';
 
@@ -10,8 +12,13 @@ import 'my_string_state.dart';
 ///
 /// BLoC is like a state machine: it receives events, performs logic, and emits new states.
 class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
+  // Use ViewModel to communicate with UseCase (It could change to DI).
+  late MyStringViewModel viewModel;
+
   // Constructor: sets the initial state and registers event handlers.
-  MyStringBloc() : super(MyStringInitialState()) {
+  MyStringBloc()
+      : viewModel = MyStringViewModelFactory.create(),
+        super(MyStringInitialState()) {
 
     // Important: Each event must have a handler, otherwise the app may crash.
     on<MyStringEvent>((event, emit) async {
