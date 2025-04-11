@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../home_screen.dart'; // Import HomeScreen
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../factory/auth_viewmodel_factory.dart';
-import '../viewmodel/auth_viewmodel.dart';
-import '../../../../home_screen.dart'; // Import HomeScreen
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -16,7 +15,6 @@ class AuthScreen extends StatefulWidget {
 }
 
 class AuthScreenState extends State<AuthScreen> {
-  late AuthViewModel _viewModel;
   late AuthBloc _bloc;
 
   final _usernameController = TextEditingController();
@@ -27,15 +25,15 @@ class AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
-    _viewModel = AuthViewModelFactory.create();
     _bloc = BlocProvider.of<AuthBloc>(context);
+    _bloc.viewModel = AuthViewModelFactory.create();
 
     _checkAuthStatus();
   }
 
   Future<void> _checkAuthStatus() async {
     try {
-      final user = await _viewModel.getUserAuthStatus();
+      final user = await _bloc.viewModel.getUserAuthStatus();
       if (user != null && user.isLoggedIn) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
       } else {
@@ -53,11 +51,11 @@ class AuthScreenState extends State<AuthScreen> {
   void _login() async {
     _bloc.add(const AuthLoadingEvent());
     try {
-      await _viewModel.login(
+      await _bloc.viewModel.login(
         _usernameController.text.trim(),
         _passwordController.text.trim(),
       );
-      final user = await _viewModel.getUserAuthStatus();
+      final user = await _bloc.viewModel.getUserAuthStatus();
       if (user != null) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
         HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
@@ -72,11 +70,11 @@ class AuthScreenState extends State<AuthScreen> {
   void _signUp() async {
     _bloc.add(const AuthLoadingEvent());
     try {
-      await _viewModel.signUp(
+      await _bloc.viewModel.signUp(
         _usernameController.text.trim(),
         _passwordController.text.trim(),
       );
-      final user = await _viewModel.getUserAuthStatus();
+      final user = await _bloc.viewModel.getUserAuthStatus();
       if (user != null) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
         HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
@@ -91,7 +89,7 @@ class AuthScreenState extends State<AuthScreen> {
   void _guestLogin() async {
     _bloc.add(const AuthLoadingEvent());
     try {
-      await _viewModel.guestLogin();
+      await _bloc.viewModel.guestLogin();
 
       _bloc.add(const AuthGuestAuthenticatedEvent());
 
