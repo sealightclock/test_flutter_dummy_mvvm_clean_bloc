@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../theme/app_styles.dart';
 import '../../../../util/result.dart';
 import '../../../../util/result_handler.dart';
 import '../../data/di/my_string_dependency_injection.dart';
@@ -8,7 +9,6 @@ import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';
 import '../bloc/my_string_state.dart';
-import '../theme/app_styles.dart';
 import '../viewmodel/my_string_viewmodel.dart'; // Shared styles
 
 class MyStringScreen extends StatefulWidget {

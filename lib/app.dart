@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/theme/app_theme.dart';
 
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'home_screen.dart';
+import 'theme/app_theme.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
