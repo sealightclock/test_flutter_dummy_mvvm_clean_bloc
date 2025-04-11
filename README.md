@@ -30,7 +30,7 @@ The UI should be intuitive. 'my_string' can be modified by:
 The file structure is as follows:
 
 ### util/
--- my_string_exception.dart
+-- app_exception.dart
 
 -- result.dart
 

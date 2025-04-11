@@ -1,8 +1,8 @@
 /// Exception class for handling predictable errors.
-class MyStringException implements Exception {
+class AppException implements Exception {
   final String message;
 
-  MyStringException(this.message);
+  AppException(this.message);
 
   @override
   String toString() => message;

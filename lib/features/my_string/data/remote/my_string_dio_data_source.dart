@@ -1,4 +1,4 @@
-import '../../../../util/my_string_exception.dart';
+import '../../../../util/app_exception.dart';
 import '../../domain/entity/my_string_entity.dart';
 import 'my_string_dio_api.dart';
 import 'my_string_remote_data_source.dart';
@@ -16,7 +16,7 @@ class MyStringDioDataSource implements MyStringRemoteDataSource {
       return MyStringEntity(value: 'MyStringDioDataSource: Server String: '
           '$content');
     } catch (e) {
-      throw MyStringException('MyStringDioDataSource: Server fetch failed: $e');
+      throw AppException('MyStringDioDataSource: Server fetch failed: $e');
     }
   }
 

@@ -96,6 +96,8 @@ class AuthScreenState extends State<AuthScreen> {
       // Set global flag before rebuilding HomeScreen
       forceStartOnMyStringScreen = true;
 
+      if (!mounted) return; // Check if the widget is still mounted)
+
       // Replace HomeScreen to immediately jump to MyString tab
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const HomeScreen()),

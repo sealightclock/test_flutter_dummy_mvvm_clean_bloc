@@ -9,8 +9,10 @@ import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';
 import '../bloc/my_string_state.dart';
-import '../viewmodel/my_string_viewmodel.dart'; // Shared styles
+import '../viewmodel/my_string_viewmodel.dart';
 
+/// This screen demonstrates how to apply MVVM Clean + Bloc architecture
+/// to manage a simple string stored locally and remotely.
 class MyStringScreen extends StatefulWidget {
   // Testability for widget testing
   final MyStringViewModel? injectedViewModel;
@@ -26,30 +28,30 @@ class MyStringScreen extends StatefulWidget {
   State<MyStringScreen> createState() => MyStringScreenState();
 }
 
-/// For testing: expose the class
-/// This State class now listens to App Lifecycle events (e.g., paused, resumed).
+/// State class for MyStringScreen
+/// - Manages lifecycle events
+/// - Observes Bloc states
+/// - Connects View <-> Bloc <-> ViewModel <-> UseCases
 class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObserver {
-  // Bloc to manage state.
-  late final MyStringBloc bloc;
-  @visibleForTesting
-  MyStringBloc get exposedBloc => bloc;
+  late final MyStringBloc bloc; // Bloc to manage "my_string" state
 
-  // Controller for TextField input.
-  final TextEditingController textEditController = TextEditingController();
+  @visibleForTesting
+  MyStringBloc get exposedBloc => bloc; // For widget testing access
+
+  final TextEditingController textEditController = TextEditingController(); // Controller for user input
 
   @override
   void initState() {
     super.initState();
 
-    // Register lifecycle observer
+    // Listen to app lifecycle (pause/resume)
     WidgetsBinding.instance.addObserver(this);
 
-    // Testability for widget testing
-    // Use injected or default instances
+    // Inject testable Bloc/ViewModel or use default
     bloc = widget.injectedBloc ?? MyStringBloc();
     bloc.viewModel = widget.injectedViewModel ?? bloc.viewModel;
 
-    // Load value from local store at app start
+    // Load existing string from local store on app start
     bloc.viewModel.getMyStringFromLocal().then((result) {
       switch (result) {
         case Success<MyStringEntity>(:final data):
@@ -59,36 +61,28 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
           bloc.add(UpdateMyStringFromLocalEvent('Error loading: $message'));
           break;
       }
-      textEditController.clear();
+      textEditController.clear(); // Clear input field after loading
     });
   }
 
   @override
   void dispose() {
-    // Unregister lifecycle observer
     WidgetsBinding.instance.removeObserver(this);
-
     textEditController.dispose();
     super.dispose();
   }
 
-  /// This function automatically reacts to app lifecycle changes.
-  ///
-  /// For example:
-  /// - Paused = user switched app
-  /// - Resumed = user came back
-  /// - Inactive = incoming call, etc.
+  /// React to app going to background/inactive
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
-      // App is going to background or inactive:
-      _saveCurrentText();
+      _saveCurrentText(); // Save any text before app goes background
     }
   }
 
-  /// Saves the current TextField value into the local store (optimistically).
+  /// Save current text optimistically when app goes background
   void _saveCurrentText() {
     final text = textEditController.text.trim();
     if (text.isNotEmpty) {
@@ -96,40 +90,27 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
     }
   }
 
-  /// Handles user submitting a new string with Optimistic UI Update:
-  ///
-  /// [1] Immediately update Bloc with user's value (optimistic update).
-  /// [2] Save the string into the local store.
-  /// [3] If saving succeeds: do nothing more (happy path).
-  /// [4] If saving fails: rollback to previous value and show error.
+  /// User wants to update the string from TextField (optimistic UI)
   void updateFromUser() async {
     final newValue = textEditController.text.trim();
+    final previousState = bloc.state; // Save previous state for rollback
 
-    // Step 1: Save current state before optimistic update (for rollback)
-    final previousState = bloc.state;
+    bloc.add(UpdateMyStringFromUserEvent(newValue)); // Optimistic update immediately
 
-    // Step 2: Optimistically update the UI immediately
-    bloc.add(UpdateMyStringFromUserEvent(newValue));
-
-    // Step 3: Try to save the new value into the local store
+    // Try saving new value to local store
     await handleResult<void>(
-      bloc.viewModel.storeMyStringToLocal(newValue),
+      futureResult: bloc.viewModel.storeMyStringToLocal(newValue),
       onSuccess: (_) {
-        // Save succeeded! 🎉
-        // Nothing more to do because UI already shows the new value.
-        textEditController.clear(); // Clear input after successful save
+        textEditController.clear();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Updated from User')),
         );
       },
       onFailure: (message) {
-        // Save failed! 😱
-        // Step 4: Rollback UI to previous state
+        // Rollback to previous value if save failed
         if (previousState is MyStringSuccessState) {
           bloc.add(UpdateMyStringFromUserEvent(previousState.value));
         }
-
-        // Step 5: Show error message to user
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to save: $message')),
         );
@@ -137,39 +118,30 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
     );
   }
 
-  /// Handles user requesting a string from server:
-  /// [1] Fetch string from server.
-  /// [2] Save string to local store.
-  /// [3] Update Bloc state.
+  /// User wants to fetch a string from server (simulate network call)
   void updateFromServer() async {
-    // This function will be passed into the Bloc event
+    // Define a future function for fetching and storing
     Future<String> fetchAndStore() async {
-      // Step 1: Fetch from remote server
       final result = await bloc.viewModel.getMyStringFromRemote();
 
-      // Step 2: Handle result
       final value = await handleResultReturning<MyStringEntity, String>(
-        Future.value(result),
-        onSuccess: (data) => data.value, // Just return the successful value
-        onFailure: (message) => 'Error fetching from server: $message', // Return error message
+        futureResult: Future.value(result),
+        onSuccess: (data) => data.value,
+        onFailure: (message) => 'Error fetching from server: $message',
       );
 
-      // Step 3: If fetch succeeded, also store it locally
       if (!value.startsWith('Error')) {
         await bloc.viewModel.storeMyStringToLocal(value);
       }
 
-      // Step 4: Always return the value (success or error)
       return value;
     }
 
-    // Step 5: Create event with the fetch function
+    // Dispatch event to Bloc
     final event = UpdateMyStringFromServerEvent(fetchAndStore);
-
-    // Step 6: Add event to Bloc
     bloc.add(event);
 
-    // Step 7: Show a SnackBar while loading
+    // Show loading message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Fetching from Server...')),
     );
@@ -184,7 +156,6 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
       ),
       body: OrientationBuilder(
         builder: (context, orientation) {
-          // Calculate dynamic constraints and padding
           final isLandscape = orientation == Orientation.landscape;
           final maxContentWidth = isLandscape ? 500.0 : 600.0;
           final horizontalPadding = isLandscape ? AppDimens.screenPadding * 2 : AppDimens.screenPadding;
@@ -197,23 +168,19 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Display selected DI choices
+                    // Display selected DI options
                     Text(
                       '$storeTypeSelected - $serverTypeSelected',
-                      style: AppTextStyles.small, // Shared small style
+                      style: AppTextStyles.small,
                     ),
                     const SizedBox(height: AppDimens.screenPadding),
 
-                    // Bloc handles state-based UI
-                    // Bundle widgets that need state sharing together:
+                    // Bloc UI
                     BlocBuilder<MyStringBloc, MyStringState>(
                       bloc: bloc,
                       builder: (context, state) {
-                        // Determine loading state
                         final isLoading = state is MyStringLoadingState;
 
-                        // Since all of these widgets are used to handle
-                        // 'my_string', it's better to group them into a card:
                         return Card(
                           elevation: AppDimens.cardElevation,
                           shape: RoundedRectangleBorder(
@@ -224,7 +191,7 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                // Widget that needs the state of another widget
+                                // User input TextField
                                 TextField(
                                   enabled: !isLoading,
                                   controller: textEditController,
@@ -241,29 +208,21 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
 
                                 const SizedBox(height: AppDimens.buttonSpacing),
 
-                                // Buttons Row
+                                // Buttons: Update from User and Server
                                 Row(
                                   children: [
-                                    // Widget that needs the state of another widget
                                     Expanded(
                                       child: ElevatedButton.icon(
-                                        // Added key for easier widget UI unit testing:
                                         key: const Key('updateFromUserButton'),
-                                        // 'null' means the widget is disabled.
                                         onPressed: isLoading ? null : updateFromUser,
                                         icon: const Icon(Icons.person),
                                         label: const Text('Update from User'),
                                       ),
                                     ),
-
                                     const SizedBox(width: AppDimens.buttonSpacing),
-
-                                    // Widget that needs the state of another widget
                                     Expanded(
                                       child: ElevatedButton.icon(
-                                        // Added key for easier widget UI unit testing:
                                         key: const Key('updateFromServerButton'),
-                                        // 'null' means the widget is disabled.
                                         onPressed: isLoading ? null : updateFromServer,
                                         icon: const Icon(Icons.cloud_download),
                                         label: const Text('Update from Server'),
@@ -274,36 +233,19 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
 
                                 const SizedBox(height: AppDimens.screenPadding * 2),
 
-                                // Widget that has a state that needs to be shared
-                                // with other widgets.
-                                // Handle all known states.
-                                // In this declarative UI context, Dart does allow
-                                // if/else statements as elements inside a widget list.
+                                // Render content based on state
                                 if (state is MyStringInitialState)
-                                  Text(
-                                    'Enter or load a string to begin',
-                                    style: AppTextStyles.italicHint, // Shared italic style
-                                  )
+                                  Text('Enter or load a string to begin', style: AppTextStyles.italicHint)
                                 else if (state is MyStringLoadingState)
                                   const Center(child: CircularProgressIndicator())
                                 else if (state is MyStringSuccessState) ...[
-                                    Text(
-                                      'Current Value:',
-                                      style: AppTextStyles.medium, // Shared medium style
-                                    ),
-                                    Text(
-                                      state.value,
-                                      style: AppTextStyles.large, // Shared large style
-                                    ),
+                                    Text('Current Value:', style: AppTextStyles.medium),
+                                    Text(state.value, style: AppTextStyles.large),
                                   ]
                                   else if (state is MyStringErrorState)
-                                      Text(
-                                        'Error: ${state.message}',
-                                        style: AppTextStyles.error, // Shared error style
-                                      )
+                                      Text('Error: ${state.message}', style: AppTextStyles.error)
                                     else
-                                      // Optional fallback for unexpected states
-                                      const SizedBox.shrink(), // Fallback empty widget
+                                      const SizedBox.shrink(), // Defensive fallback
                               ],
                             ),
                           ),

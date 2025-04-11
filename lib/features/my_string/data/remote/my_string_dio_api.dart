@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../../../../util/my_string_exception.dart';
+import '../../../../util/app_exception.dart';
 
 /// Handles API calls to the backend server using Dio.
 /// Includes timeout settings for reliability.
@@ -23,11 +23,11 @@ class MyStringDioApi {
       if (response.statusCode == 200) {
         return response.data.toString();
       } else {
-        throw MyStringException('MyStringDioApi: Failed to fetch content: ${response
+        throw AppException('MyStringDioApi: Failed to fetch content: ${response
             .statusCode}');
       }
     } catch (e) {
-      throw MyStringException('MyStringDioApi: Error fetching content: $e');
+      throw AppException('MyStringDioApi: Error fetching content: $e');
     }
   }
 }

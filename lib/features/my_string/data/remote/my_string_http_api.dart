@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 
-import '../../../../util/my_string_exception.dart';
+import '../../../../util/app_exception.dart';
 
 /// Handles API calls to the backend server using the http package.
 /// Includes timeout settings for reliability.
@@ -18,11 +18,11 @@ class MyStringHttpApi {
       if (response.statusCode == 200) {
         return response.body.toString();
       } else {
-        throw MyStringException('MyStringHttpApi: Failed to fetch content: ${response
+        throw AppException('MyStringHttpApi: Failed to fetch content: ${response
             .statusCode}');
       }
     } catch (e) {
-      throw MyStringException('MyStringHttpApi: Error fetching content: $e');
+      throw AppException('MyStringHttpApi: Error fetching content: $e');
     }
   }
 }
