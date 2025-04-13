@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../theme/app_styles.dart';
 import '../../../../util/result.dart';
 import '../../../../util/result_handler.dart';
-import '../../data/di/my_string_dependency_injection.dart';
 import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';
@@ -13,8 +12,8 @@ import '../viewmodel/my_string_viewmodel.dart';
 
 /// This screen demonstrates how to apply MVVM Clean + Bloc architecture
 /// to manage a simple string stored locally and remotely.
-class MyStringScreen extends StatefulWidget {
-  // Testability for widget testing
+class MyStringScreen extends StatelessWidget {
+  // Allow injecting custom ViewModel or Bloc for testing
   final MyStringViewModel? injectedViewModel;
   final MyStringBloc? injectedBloc;
 
@@ -25,15 +24,28 @@ class MyStringScreen extends StatefulWidget {
   });
 
   @override
-  State<MyStringScreen> createState() => MyStringScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<MyStringBloc>(
+      create: (_) {
+        final bloc = injectedBloc ?? MyStringBloc();
+        bloc.viewModel = injectedViewModel ?? bloc.viewModel;
+        return bloc;
+      },
+      child: const MyStringScreenBody(),
+    );
+  }
 }
 
-/// State class for MyStringScreen
-/// - Manages lifecycle events
-/// - Observes Bloc states
-/// - Connects View <-> Bloc <-> ViewModel <-> UseCases
-class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObserver {
-  late final MyStringBloc bloc; // Bloc to manage "my_string" state
+/// Actual screen body that interacts with the Bloc
+class MyStringScreenBody extends StatefulWidget {
+  const MyStringScreenBody({super.key});
+
+  @override
+  State<MyStringScreenBody> createState() => MyStringScreenBodyState();
+}
+
+class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBindingObserver {
+  late MyStringBloc bloc; // Bloc to manage "my_string" state
 
   @visibleForTesting
   MyStringBloc get exposedBloc => bloc; // For widget testing access
@@ -47,9 +59,7 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
     // Listen to app lifecycle (pause/resume)
     WidgetsBinding.instance.addObserver(this);
 
-    // Inject testable Bloc/ViewModel or use default
-    bloc = widget.injectedBloc ?? MyStringBloc();
-    bloc.viewModel = widget.injectedViewModel ?? bloc.viewModel;
+    bloc = BlocProvider.of<MyStringBloc>(context);
 
     // Load existing string from local store on app start
     bloc.viewModel.getMyStringFromLocal().then((result) {
@@ -157,96 +167,7 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints(maxWidth: maxContentWidth),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Display selected DI options
-                    Text(
-                      '$storeTypeSelected - $serverTypeSelected',
-                      style: AppTextStyles.small,
-                    ),
-                    const SizedBox(height: AppDimens.screenPadding),
-
-                    // Bloc UI
-                    BlocBuilder<MyStringBloc, MyStringState>(
-                      bloc: bloc,
-                      builder: (context, state) {
-                        final isLoading = state is MyStringLoadingState;
-
-                        return Card( // This card is for handling the same
-                          // my_string state
-                          elevation: AppDimens.cardElevation,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppDimens.cardCornerRadius),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(AppDimens.screenPadding),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                // User input TextField
-                                TextField(
-                                  enabled: !isLoading,
-                                  controller: textEditController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Enter string',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  onEditingComplete: () {
-                                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                                      updateFromUser();
-                                    });
-                                  },
-                                ),
-
-                                const SizedBox(height: AppDimens.buttonSpacing),
-
-                                // Buttons: Update from User and Server
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        key: const Key('updateFromUserButton'),
-                                        onPressed: isLoading ? null : updateFromUser,
-                                        icon: const Icon(Icons.person),
-                                        label: const Text('Update from User'),
-                                      ),
-                                    ),
-                                    const SizedBox(width: AppDimens.buttonSpacing),
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        key: const Key('updateFromServerButton'),
-                                        onPressed: isLoading ? null : updateFromServer,
-                                        icon: const Icon(Icons.cloud_download),
-                                        label: const Text('Update from Server'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                const SizedBox(height: AppDimens.screenPadding * 2),
-
-                                // Render content based on state
-                                if (state is MyStringInitialState)
-                                  Text('Enter or load a string to begin', style: AppTextStyles.italicHint)
-                                else if (state is MyStringLoadingState)
-                                  const Center(child: CircularProgressIndicator())
-                                else if (state is MyStringSuccessState) ...[
-                                    Text('Current Value:', style: AppTextStyles.medium),
-                                    Text(state.value, style: AppTextStyles.large),
-                                  ]
-                                  else if (state is MyStringErrorState)
-                                      Text('Error: ${state.message}', style: AppTextStyles.error)
-                                    else
-                                      const SizedBox.shrink(), // Defensive fallback
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                child: _buildBody(),
               ),
             ),
           );
@@ -254,4 +175,77 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
       ),
     );
   }
+
+  Widget _buildBody() {
+    return BlocBuilder<MyStringBloc, MyStringState>(
+      bloc: bloc,
+      builder: (context, state) {
+        final isLoading = state is MyStringLoadingState;
+
+        return Card(
+          elevation: AppDimens.cardElevation,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppDimens.cardCornerRadius),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(AppDimens.screenPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextField(
+                  enabled: !isLoading,
+                  controller: textEditController,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter string',
+                    border: OutlineInputBorder(),
+                  ),
+                  onEditingComplete: () {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      updateFromUser();
+                    });
+                  },
+                ),
+                const SizedBox(height: AppDimens.buttonSpacing),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        key: const Key('updateFromUserButton'),
+                        onPressed: isLoading ? null : updateFromUser,
+                        icon: const Icon(Icons.person),
+                        label: const Text('Update from User'),
+                      ),
+                    ),
+                    const SizedBox(width: AppDimens.buttonSpacing),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        key: const Key('updateFromServerButton'),
+                        onPressed: isLoading ? null : updateFromServer,
+                        icon: const Icon(Icons.cloud_download),
+                        label: const Text('Update from Server'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: AppDimens.screenPadding * 2),
+                if (state is MyStringInitialState)
+                  Text('Enter or load a string to begin', style: AppTextStyles.italicHint)
+                else if (state is MyStringLoadingState)
+                  const Center(child: CircularProgressIndicator())
+                else if (state is MyStringSuccessState) ...[
+                  Text('Current Value:', style: AppTextStyles.medium),
+                  Text(state.value, style: AppTextStyles.large),
+                ]
+                else if (state is MyStringErrorState)
+                  Text('Error: ${state.message}', style: AppTextStyles.error)
+                else
+                  const SizedBox.shrink(), // Defensive fallback
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
+

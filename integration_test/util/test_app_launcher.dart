@@ -1,43 +1,62 @@
+// Updated file: integration_test/util/test_app_launcher.dart
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/presentation/bloc/auth_bloc.dart'; // ✅ Need this for providing AuthBloc
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/view/my_string_screen.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/home_screen.dart';
 
-import 'test_utils.dart'; // Make sure waitForWidgetReady() is here
-
+/// Utility class to help launching the app during integration tests.
 class TestAppLauncher {
   final WidgetTester tester;
 
+  late MyStringBloc bloc; // MyStringBloc instance
+
   TestAppLauncher(this.tester);
 
-  // The MyStringBloc instance for direct access in the test
-  late MyStringBloc bloc;
-
-  /// Launch the app, but don't assume MyStringHomeScreen immediately.
+  /// Launch the app for testing.
   Future<void> launchApp() async {
-    await tester.pumpWidget(const MyApp());
+    // Start the app wrapped with a Provider for AuthBloc
+    await tester.pumpWidget(const MyAppForTesting());
     await tester.pumpAndSettle();
-    // No waiting for MyStringHomeScreen yet
-    // Test code will control navigation to MyString screen
   }
 
-  /// Call this manually **AFTER** you have navigated to MyStringHomeScreen
+  /// Prepare Bloc after navigating to MyStringScreen.
   Future<void> prepareBloc() async {
-    await waitForWidgetReady<MyStringScreen>(tester);
+    // Now find MyStringScreenBody instead of MyStringScreen!
+    final myStringBodyFinder = find.byType(MyStringScreenBody);
+    expect(myStringBodyFinder, findsOneWidget);
 
-    final homeScreenFinder = find.byType(MyStringScreen);
-    final state = tester.state<MyStringScreenState>(homeScreenFinder);
+    final myStringScreenState = tester.firstState<MyStringScreenBodyState>(myStringBodyFinder);
 
-    bloc = state.bloc;
+    bloc = myStringScreenState.exposedBloc;
   }
 
-  /// Refresh the bloc after app restart (same as before)
+  /// After app relaunch, refresh Bloc reference.
   Future<void> refreshAfterRestart() async {
-    await waitForWidgetReady<MyStringScreen>(tester);
+    final myStringBodyFinder = find.byType(MyStringScreenBody);
+    expect(myStringBodyFinder, findsOneWidget);
 
-    final homeScreenFinder = find.byType(MyStringScreen);
-    final state = tester.state<MyStringScreenState>(homeScreenFinder);
+    final myStringScreenState = tester.firstState<MyStringScreenBodyState>(myStringBodyFinder);
 
-    bloc = state.bloc;
+    bloc = myStringScreenState.exposedBloc;
+  }
+}
+
+/// Dummy app for testing.
+/// - Wrapped with `BlocProvider<AuthBloc>` so that HomeScreen works properly.
+class MyAppForTesting extends StatelessWidget {
+  const MyAppForTesting({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<AuthBloc>(
+      create: (_) => AuthBloc(), // Create AuthBloc needed for HomeScreen
+      child: const MaterialApp(
+        home: HomeScreen(),
+      ),
+    );
   }
 }
