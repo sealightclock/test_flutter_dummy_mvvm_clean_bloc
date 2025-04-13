@@ -23,12 +23,9 @@ void main() {
     when(() => mockRepo.getMyStringFromRemote())
         .thenAnswer((_) async => mockEntity);
 
-    // Act: Execute the use case
-    final result = await useCase.execute();
-
     // Assert: Use handleResult to verify behavior
     await handleResult<MyStringEntity>(
-      Future.value(result),
+      futureResult: useCase.execute(),
       onSuccess: (data) {
         expect(data.value, 'Remote Data');
         expect(data, isA<MyStringEntity>());

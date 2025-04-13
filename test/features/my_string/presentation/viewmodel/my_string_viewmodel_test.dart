@@ -64,10 +64,8 @@ void main() {
     when(() => mockGetRemote.execute())
         .thenAnswer((_) async => Success(MyStringEntity(value: 'Remote String')));
 
-    final result = await viewModel.getMyStringFromRemote();
-
     handleResult<MyStringEntity>(
-      Future.value(result),
+      futureResult: viewModel.getMyStringFromRemote(),
       onSuccess: (data) {
         expect(data.value, 'Remote String');
         expect(data, isA<MyStringEntity>());
