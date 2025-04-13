@@ -6,12 +6,12 @@ import 'auth_state.dart';
 
 /// Bloc for handling authentication-related events and states
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  // Use ViewModel to communicate with UseCase (It could change to DI).
+  // Use ViewModel to communicate with UseCase.
+  // It could change to DI. So don't make it final.
   late AuthViewModel viewModel;
 
-  AuthBloc()
-      : viewModel = AuthViewModelFactory.create(),
-        super(const AuthInitialState()) {
+  AuthBloc() : super(const AuthInitialState()) {
+    viewModel = AuthViewModelFactory.create();
 
     on<AuthEvent>((event, emit) async {
       switch (event) {

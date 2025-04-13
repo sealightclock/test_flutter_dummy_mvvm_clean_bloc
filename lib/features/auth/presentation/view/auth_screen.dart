@@ -36,11 +36,17 @@ class AuthScreenState extends State<AuthScreen> {
       final user = await _bloc.viewModel.getUserAuthStatus();
       if (user != null && user.isLoggedIn) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
+
+        _showSnackBarMessage('You have been authenticated.');
       } else {
         _bloc.add(const AuthUnauthenticatedEvent());
+
+        _showSnackBarMessage('You are not authenticated.');
       }
     } catch (e) {
       _bloc.add(const AuthUnauthenticatedEvent());
+
+      _showSnackBarMessage('Error checking authentication status: $e');
     } finally {
       setState(() {
         _checkingAuthStatus = false;
@@ -49,6 +55,9 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   void _login() async {
+    _showSnackBarMessage('You are logged in as a user. You should be able to use all '
+        'features.');
+
     _bloc.add(const AuthLoadingEvent());
     try {
       await _bloc.viewModel.login(
@@ -68,6 +77,8 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   void _signUp() async {
+    _showSnackBarMessage('You are signed up as a new user and logged in. You should be able to use all features.');
+
     _bloc.add(const AuthLoadingEvent());
     try {
       await _bloc.viewModel.signUp(
@@ -87,6 +98,8 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   void _guestLogin() async {
+    _showSnackBarMessage('You are logged in as a guest. Many features are disabled!');
+
     _bloc.add(const AuthLoadingEvent());
     try {
       await _bloc.viewModel.guestLogin();
@@ -107,9 +120,9 @@ class AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  void _showError(String errorMsg) {
+  void _showSnackBarMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(errorMsg)),
+      SnackBar(content: Text(message)),
     );
   }
 
@@ -122,7 +135,7 @@ class AuthScreenState extends State<AuthScreen> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthErrorState) {
-            _showError(state.message);
+            _showSnackBarMessage(state.message);
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -175,7 +188,7 @@ class AuthScreenState extends State<AuthScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            _showError('Contact us at support@example.com');
+                            _showSnackBarMessage('Contact us at info@jbmobility.io');
                           },
                           child: const Text('Contact Us'),
                         ),

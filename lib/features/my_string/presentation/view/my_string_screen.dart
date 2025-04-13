@@ -102,9 +102,6 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
       futureResult: bloc.viewModel.storeMyStringToLocal(newValue),
       onSuccess: (_) {
         textEditController.clear();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Updated from User')),
-        );
       },
       onFailure: (message) {
         // Rollback to previous value if save failed
@@ -140,11 +137,6 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
     // Dispatch event to Bloc
     final event = UpdateMyStringFromServerEvent(fetchAndStore);
     bloc.add(event);
-
-    // Show loading message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Fetching from Server...')),
-    );
   }
 
   @override
@@ -154,13 +146,13 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
         title: const Text('Flutter MVVM Clean + Bloc'),
         centerTitle: true,
       ),
-      body: OrientationBuilder(
+      body: OrientationBuilder( // Orientation-aware content
         builder: (context, orientation) {
           final isLandscape = orientation == Orientation.landscape;
           final maxContentWidth = isLandscape ? 500.0 : 600.0;
           final horizontalPadding = isLandscape ? AppDimens.screenPadding * 2 : AppDimens.screenPadding;
 
-          return SingleChildScrollView(
+          return SingleChildScrollView( // Scroll content
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: AppDimens.screenPadding),
             child: Center(
               child: ConstrainedBox(
@@ -181,7 +173,8 @@ class MyStringScreenState extends State<MyStringScreen> with WidgetsBindingObser
                       builder: (context, state) {
                         final isLoading = state is MyStringLoadingState;
 
-                        return Card(
+                        return Card( // This card is for handling the same
+                          // my_string state
                           elevation: AppDimens.cardElevation,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(AppDimens.cardCornerRadius),

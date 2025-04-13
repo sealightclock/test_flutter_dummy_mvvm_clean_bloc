@@ -12,13 +12,13 @@ import 'my_string_state.dart';
 ///
 /// BLoC is like a state machine: it receives events, performs logic, and emits new states.
 class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
-  // Use ViewModel to communicate with UseCase (It could change to DI).
+  // Use ViewModel to communicate with UseCase.
+  // It could change to DI. So don't make it final.
   late MyStringViewModel viewModel;
 
   // Constructor: sets the initial state and registers event handlers.
-  MyStringBloc()
-      : viewModel = MyStringViewModelFactory.create(),
-        super(MyStringInitialState()) {
+  MyStringBloc() : super(MyStringInitialState()) {
+    viewModel = MyStringViewModelFactory.create();
 
     // Important: Each event must have a handler, otherwise the app may crash.
     on<MyStringEvent>((event, emit) async {
