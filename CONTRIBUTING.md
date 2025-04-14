@@ -14,10 +14,14 @@ When adding or refactoring screens, please follow:
 ✅ Tip:
 Even if a screen starts small, prefer the split if you expect it to expand over time.
 
-🖼️ Visual Structure (for Complex Screens)
 
-[ MyFeatureScreen (StatelessWidget) ]
-         ↓ provides Bloc/ViewModel
-[ MyFeatureScreenBody (StatefulWidget) ]
-         ↓ manages lifecycle, user actions, listens to Bloc
-[ Bloc / ViewModel / UseCase / Repository ]
+📢 User Feedback Guidelines
+•	Use the global feedback handler located at lib/util/global_feedback_handler.dart.
+•	Always call:
+showFeedback(context, message, FeedbackType.type);
+•	Supported FeedbackType values:
+•	error: For critical issues.
+•	warning: For recoverable problems.
+•	info: For normal user notifications.
+
+✅ This ensures consistent Snackbar behavior, styling, and UX across the app.

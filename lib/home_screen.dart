@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/util/global_feedback_handler.dart';
 
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/view/auth_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
-import 'features/account/presentation/view/account_screen.dart'; // 🆕 Import AccountScreen
+import 'features/account/presentation/view/account_screen.dart'; // 🆕️ Import AccountScreen
 
 /// Global flag to control initial tab when HomeScreen is rebuilt
 bool forceStartOnMyStringScreen = false;
@@ -24,10 +23,6 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool shouldAutoSwitchToMyString = false;
-
-  static const Color strongColor = Colors.blueAccent;
-  static const Color mediumColor = Colors.blueGrey;
-  static const Color lightColor = Colors.grey;
 
   @override
   void initState() {
@@ -92,7 +87,9 @@ class HomeScreenState extends State<HomeScreen> {
             currentIndex: _selectedIndex,
             onTap: (index) {
               if (!isAuthenticated && (index == 1 || index == 2)) {
-                showFeedback(context, 'Please log in first', FeedbackType.warning);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please log in first')),
+                );
                 return;
               }
               setState(() {
@@ -103,18 +100,21 @@ class HomeScreenState extends State<HomeScreen> {
             elevation: 10,
             items: [
               _buildBottomNavigationBarItem(
+                context: context,
                 index: 0,
                 label: 'Auth',
                 iconData: Icons.lock,
                 enabled: true,
               ),
               _buildBottomNavigationBarItem(
+                context: context,
                 index: 1,
                 label: 'MyString',
                 iconData: Icons.storage,
                 enabled: isAuthenticated,
               ),
               _buildBottomNavigationBarItem(
+                context: context,
                 index: 2,
                 label: 'Account',
                 iconData: Icons.person,
@@ -128,6 +128,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   BottomNavigationBarItem _buildBottomNavigationBarItem({
+    required BuildContext context,
     required int index,
     required String label,
     required IconData iconData,
@@ -135,13 +136,16 @@ class HomeScreenState extends State<HomeScreen> {
   }) {
     final bool isSelected = _selectedIndex == index;
 
+    // 🟥️ Use theme colors instead of hardcoded colors
+    final colorScheme = Theme.of(context).colorScheme;
+
     Color color;
     if (!enabled) {
-      color = lightColor;
+      color = colorScheme.surfaceVariant; // For disabled
     } else if (isSelected) {
-      color = strongColor;
+      color = colorScheme.primary; // For selected item
     } else {
-      color = mediumColor;
+      color = colorScheme.onSurfaceVariant; // For unselected item
     }
 
     return BottomNavigationBarItem(
