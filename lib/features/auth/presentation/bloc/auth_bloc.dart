@@ -34,7 +34,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         case AuthErrorEvent():
           emit(AuthErrorState(message: event.message));
           break;
+
+        case AuthLogoutEvent():
+          emit(const AuthUnauthenticatedState());
+          break;
       }
     });
   }
 }
+

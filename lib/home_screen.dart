@@ -5,6 +5,7 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/view/auth_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
+import 'features/account/presentation/view/account_screen.dart'; // Import AccountScreen
 
 /// Global flag to control initial tab when HomeScreen is rebuilt
 bool forceStartOnMyStringScreen = false;
@@ -63,6 +64,8 @@ class HomeScreenState extends State<HomeScreen> {
           } else {
             body = const Center(child: Text('Please log in first.'));
           }
+        } else if (_selectedIndex == 2) {
+          body = const AccountScreen(); // New Account screen
         } else {
           body = const SizedBox.shrink();
         }
@@ -72,7 +75,7 @@ class HomeScreenState extends State<HomeScreen> {
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: _selectedIndex,
             onTap: (index) {
-              if (!isAuthenticated && index == 1) {
+              if (!isAuthenticated && (index == 1 || index == 2)) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Please log in first')),
                 );
@@ -95,6 +98,12 @@ class HomeScreenState extends State<HomeScreen> {
                 index: 1,
                 label: 'MyString',
                 iconData: Icons.storage,
+                enabled: isAuthenticated,
+              ),
+              _buildBottomNavigationBarItem(
+                index: 2,
+                label: 'Account',
+                iconData: Icons.person,
                 enabled: isAuthenticated,
               ),
             ],

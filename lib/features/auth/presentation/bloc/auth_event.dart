@@ -9,12 +9,12 @@ sealed class AuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Loading authentication (e.g., during login/signup/guest login)
+/// Event to start authentication loading
 class AuthLoadingEvent extends AuthEvent {
   const AuthLoadingEvent();
 }
 
-/// Successful real user authentication
+/// Event when a real user has authenticated
 class AuthAuthenticatedEvent extends AuthEvent {
   final UserAuthEntity user;
 
@@ -24,17 +24,17 @@ class AuthAuthenticatedEvent extends AuthEvent {
   List<Object?> get props => [user];
 }
 
-/// Successful guest user authentication
+/// Event when guest login is successful
 class AuthGuestAuthenticatedEvent extends AuthEvent {
   const AuthGuestAuthenticatedEvent();
 }
 
-/// User not authenticated
+/// Event when the user is unauthenticated
 class AuthUnauthenticatedEvent extends AuthEvent {
   const AuthUnauthenticatedEvent();
 }
 
-/// Authentication error
+/// Event when an authentication error occurs
 class AuthErrorEvent extends AuthEvent {
   final String message;
 
@@ -42,4 +42,9 @@ class AuthErrorEvent extends AuthEvent {
 
   @override
   List<Object?> get props => [message];
+}
+
+/// Event when user requests logout
+class AuthLogoutEvent extends AuthEvent {
+  const AuthLogoutEvent();
 }
