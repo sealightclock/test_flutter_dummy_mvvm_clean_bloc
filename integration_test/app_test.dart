@@ -14,7 +14,15 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Full app lifecycle with Auth and MyString persistence', (tester) async {
-    // Step 0: Reset Hive for a fresh start
+    // Step 0: Show splash screen while Hive resets
+    await tester.pumpWidget(const MaterialApp(
+      home: Scaffold(
+        body: Center(child: Text('🧹 Resetting Hive...')),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    // Step 0b: Reset Hive for a fresh start
     await resetHive();
 
     // Step 1: Start timer
@@ -27,7 +35,6 @@ void main() {
 
     // Step 3: Handle Auth screen if needed
     final moreOptionsFinder = find.text('More Options');
-
     if (moreOptionsFinder.evaluate().isNotEmpty) {
       await tester.tap(moreOptionsFinder);
       await tester.pumpAndSettle();
@@ -49,7 +56,6 @@ void main() {
 
     final userButton = find.byKey(const Key('updateFromUserButton'));
     expect(userButton, findsOneWidget);
-
     await tester.tap(userButton);
     await tester.pumpAndSettle();
 
@@ -67,7 +73,6 @@ void main() {
 
     // Step 8: Handle Auth screen again if needed
     final moreOptionsFinderAfterRelaunch = find.text('More Options');
-
     if (moreOptionsFinderAfterRelaunch.evaluate().isNotEmpty) {
       await tester.tap(moreOptionsFinderAfterRelaunch);
       await tester.pumpAndSettle();
