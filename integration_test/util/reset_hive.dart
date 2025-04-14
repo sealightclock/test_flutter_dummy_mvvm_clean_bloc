@@ -1,6 +1,9 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 /// Helper to reset Hive database for clean integration testing.
+///
+/// Dynamically clears + deletes known boxes.
+/// No reliance on removed APIs like `Hive.boxes`.
 Future<void> resetHive() async {
   // Initialize Hive (only if not already initialized)
   try {
@@ -9,22 +12,29 @@ Future<void> resetHive() async {
     // Ignore if already initialized
   }
 
-  // List of all known box names you use in the app
-  const boxNames = [
-    'user_auth_box', // Auth feature
-    'my_string_hive_box', // MyString feature
+  // ✅ List of manually known box names
+  const knownBoxNames = [
+    'user_auth_box',
+    'my_string_hive_box',
   ];
 
-  // Delete contents of each box
-  for (final boxName in boxNames) {
-    if (Hive.isBoxOpen(boxName)) {
-      final box = Hive.box(boxName);
-      await box.clear();
-      await box.close();
-    } else {
-      final box = await Hive.openBox(boxName);
-      await box.clear();
-      await box.close();
+  // Reset each box safely
+  for (final boxName in knownBoxNames) {
+    try {
+      if (Hive.isBoxOpen(boxName)) {
+        final box = Hive.box(boxName);
+        await box.clear();
+        await box.close();
+      } else {
+        final box = await Hive.openBox(boxName);
+        await box.clear();
+        await box.close();
+      }
+
+      // 🧹 Delete box file from disk to fully reset
+      await Hive.deleteBoxFromDisk(boxName);
+    } catch (e) {
+      // Ignore any missing/corrupted box errors
     }
   }
 }
