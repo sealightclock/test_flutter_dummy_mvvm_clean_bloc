@@ -31,7 +31,7 @@ class AuthLocalDataSource {
     return UserAuthEntity.fromMap(Map<String, dynamic>.from(userMap));
   }
 
-  /// Clear stored user data (optional future use).
+  /// Clear stored user data after logout.
   Future<void> clearUser() async {
     await _initialize();
     final box = await Hive.openBox(_userBoxName);

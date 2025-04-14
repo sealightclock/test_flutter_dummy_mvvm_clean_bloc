@@ -32,4 +32,10 @@ class AuthViewModel {
   Future<UserAuthEntity?> getUserAuthStatus() async {
     return await getUserAuthStatusUseCase();
   }
+
+  /// Clear user authentication status after logout.
+  Future<void> clearUserAuthStatus() async {
+    final repository = getUserAuthStatusUseCase.repository; // get reference
+    await repository.clearUserAuth();
+  }
 }

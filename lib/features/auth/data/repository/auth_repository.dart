@@ -29,4 +29,9 @@ class AuthRepository {
   Future<UserAuthEntity?> getUserAuthStatus() async {
     return await _localDataSource.getUser();
   }
+
+  /// Clear stored user authentication after logout.
+  Future<void> clearUserAuth() async {
+    await _localDataSource.clearUser();
+  }
 }

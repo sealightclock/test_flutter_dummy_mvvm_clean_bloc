@@ -5,7 +5,7 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/view/auth_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
-import 'features/account/presentation/view/account_screen.dart'; // Import AccountScreen
+import 'features/account/presentation/view/account_screen.dart'; // 🆕 Import AccountScreen
 
 /// Global flag to control initial tab when HomeScreen is rebuilt
 bool forceStartOnMyStringScreen = false;
@@ -55,6 +55,17 @@ class HomeScreenState extends State<HomeScreen> {
           });
         }
 
+        // 🛠️ NEW: Handle logout -> move back to Auth tab
+        if (state is AuthUnauthenticatedState && _selectedIndex != 0) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              setState(() {
+                _selectedIndex = 0;
+              });
+            }
+          });
+        }
+
         Widget body;
         if (_selectedIndex == 0) {
           body = const AuthScreen();
@@ -65,7 +76,11 @@ class HomeScreenState extends State<HomeScreen> {
             body = const Center(child: Text('Please log in first.'));
           }
         } else if (_selectedIndex == 2) {
-          body = const AccountScreen(); // New Account screen
+          if (isAuthenticated) {
+            body = const AccountScreen();
+          } else {
+            body = const Center(child: Text('Please log in first.'));
+          }
         } else {
           body = const SizedBox.shrink();
         }

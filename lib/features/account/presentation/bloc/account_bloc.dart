@@ -9,9 +9,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final AuthBloc authBloc;
 
   AccountBloc({required this.authBloc}) : super(const AccountInitialState()) {
-    on<AccountLogoutRequestedEvent>((event, emit) {
-      // When user requests logout, dispatch event to AuthBloc
-      authBloc.add(const AuthLogoutEvent());
+    on<AccountLogoutRequestedEvent>((event, emit) async {
+      // 🛠️ First, clear saved user auth data
+      await authBloc.viewModel.clearUserAuthStatus();
+
+      // Then, emit unauthenticated state
+      authBloc.add(const AuthUnauthenticatedEvent());
     });
   }
 }
