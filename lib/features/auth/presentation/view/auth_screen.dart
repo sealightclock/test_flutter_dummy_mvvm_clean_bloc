@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../home_screen.dart'; // Import HomeScreen
+import '../../../../util/global_feedback_handler.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -121,9 +122,7 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   void _showSnackBarMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    showFeedback(context, message, FeedbackType.info);
   }
 
   @override

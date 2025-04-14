@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../util/global_feedback_handler.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/account_bloc.dart';
 import '../bloc/account_event.dart';
@@ -26,9 +27,7 @@ class AccountScreenBody extends StatelessWidget {
     final accountBloc = BlocProvider.of<AccountBloc>(context);
     accountBloc.add(const AccountLogoutRequestedEvent());
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Logged out successfully')),
-    );
+    showFeedback(context, 'Logged out successfully', FeedbackType.info);
   }
 
   @override

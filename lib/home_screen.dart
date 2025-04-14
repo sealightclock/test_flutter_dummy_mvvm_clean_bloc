@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/global_feedback_handler.dart';
 
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
@@ -91,9 +92,7 @@ class HomeScreenState extends State<HomeScreen> {
             currentIndex: _selectedIndex,
             onTap: (index) {
               if (!isAuthenticated && (index == 1 || index == 2)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please log in first')),
-                );
+                showFeedback(context, 'Please log in first', FeedbackType.warning);
                 return;
               }
               setState(() {

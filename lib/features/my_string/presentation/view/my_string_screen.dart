@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../theme/app_styles.dart';
+import '../../../../util/global_feedback_handler.dart';
 import '../../../../util/result.dart';
 import '../../../../util/result_handler.dart';
 import '../../domain/entity/my_string_entity.dart';
@@ -118,9 +119,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
         if (previousState is MyStringSuccessState) {
           bloc.add(UpdateMyStringFromUserEvent(previousState.value));
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save: $message')),
-        );
+        showFeedback(context, 'Failed to save: $message, rolling back.', FeedbackType.error);
       },
     );
   }
