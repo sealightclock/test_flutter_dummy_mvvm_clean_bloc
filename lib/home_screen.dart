@@ -1,14 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'features/account/presentation/view/account_screen.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/view/auth_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
-import 'features/account/presentation/view/account_screen.dart'; // 🆕️ Import AccountScreen
 
 /// Global flag to control initial tab when HomeScreen is rebuilt
 bool forceStartOnMyStringScreen = false;
+
+/// Enum for each tab in the BottomNavigationBar
+enum AppTab { auth, myString, account }
+
+/// Extension to provide metadata for each tab
+extension AppTabExtension on AppTab {
+  String get label {
+    switch (this) {
+      case AppTab.auth:
+        return 'Auth';
+      case AppTab.myString:
+        return 'MyString';
+      case AppTab.account:
+        return 'Account';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case AppTab.auth:
+        return Icons.lock;
+      case AppTab.myString:
+        return Icons.storage;
+      case AppTab.account:
+        return Icons.person;
+    }
+  }
+
+  bool isProtected() => this == AppTab.myString || this == AppTab.account;
+}
 
 /// HomeScreen manages the bottom navigation bar and switching between screens.
 class HomeScreen extends StatefulWidget {
@@ -21,16 +51,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  AppTab _selectedTab = AppTab.auth;
   bool shouldAutoSwitchToMyString = false;
+
+  static const Color strongColor = Colors.blueAccent;
+  static const Color mediumColor = Colors.blueGrey;
+  static const Color lightColor = Colors.grey;
 
   @override
   void initState() {
     super.initState();
-    // If forced by Guest Login, start directly on MyString tab
     if (forceStartOnMyStringScreen) {
-      _selectedIndex = 1;
-      forceStartOnMyStringScreen = false; // reset after using it
+      _selectedTab = AppTab.myString;
+      forceStartOnMyStringScreen = false;
     }
   }
 
@@ -44,116 +77,77 @@ class HomeScreenState extends State<HomeScreen> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
               setState(() {
-                _selectedIndex = 1;
+                _selectedTab = AppTab.myString;
                 shouldAutoSwitchToMyString = false;
               });
             }
           });
         }
 
-        // 🛠️ NEW: Handle logout -> move back to Auth tab
-        if (state is AuthUnauthenticatedState && _selectedIndex != 0) {
+        if (state is AuthUnauthenticatedState && _selectedTab != AppTab.auth) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
               setState(() {
-                _selectedIndex = 0;
+                _selectedTab = AppTab.auth;
               });
             }
           });
         }
 
         Widget body;
-        if (_selectedIndex == 0) {
-          body = const AuthScreen();
-        } else if (_selectedIndex == 1) {
-          if (isAuthenticated) {
-            body = const MyStringScreen();
-          } else {
-            body = const Center(child: Text('Please log in first.'));
-          }
-        } else if (_selectedIndex == 2) {
-          if (isAuthenticated) {
-            body = const AccountScreen();
-          } else {
-            body = const Center(child: Text('Please log in first.'));
-          }
-        } else {
-          body = const SizedBox.shrink();
+        switch (_selectedTab) {
+          case AppTab.auth:
+            body = const AuthScreen();
+            break;
+          case AppTab.myString:
+            body = isAuthenticated ? const MyStringScreen() : const Center(child: Text('Please log in first.'));
+            break;
+          case AppTab.account:
+            body = isAuthenticated ? const AccountScreen() : const Center(child: Text('Please log in first.'));
+            break;
         }
 
         return Scaffold(
           body: body,
           bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _selectedIndex,
+            currentIndex: _selectedTab.index,
             onTap: (index) {
-              if (!isAuthenticated && (index == 1 || index == 2)) {
+              final tappedTab = AppTab.values[index];
+              if (!isAuthenticated && tappedTab.isProtected()) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Please log in first')),
                 );
                 return;
               }
               setState(() {
-                _selectedIndex = index;
+                _selectedTab = tappedTab;
               });
             },
             type: BottomNavigationBarType.fixed,
             elevation: 10,
-            items: [
-              _buildBottomNavigationBarItem(
-                context: context,
-                index: 0,
-                label: 'Auth',
-                iconData: Icons.lock,
-                enabled: true,
-              ),
-              _buildBottomNavigationBarItem(
-                context: context,
-                index: 1,
-                label: 'MyString',
-                iconData: Icons.storage,
-                enabled: isAuthenticated,
-              ),
-              _buildBottomNavigationBarItem(
-                context: context,
-                index: 2,
-                label: 'Account',
-                iconData: Icons.person,
-                enabled: isAuthenticated,
-              ),
-            ],
+            items: AppTab.values.map((tab) => _buildBottomNavigationBarItem(tab, isAuthenticated)).toList(),
           ),
         );
       },
     );
   }
 
-  BottomNavigationBarItem _buildBottomNavigationBarItem({
-    required BuildContext context,
-    required int index,
-    required String label,
-    required IconData iconData,
-    required bool enabled,
-  }) {
-    final bool isSelected = _selectedIndex == index;
-
-    // 🟥️ Use theme colors instead of hardcoded colors
-    final colorScheme = Theme.of(context).colorScheme;
+  BottomNavigationBarItem _buildBottomNavigationBarItem(AppTab tab, bool isAuthenticated) {
+    final bool isSelected = _selectedTab == tab;
+    final bool enabled = !tab.isProtected() || isAuthenticated;
 
     Color color;
     if (!enabled) {
-      color = colorScheme.surfaceVariant; // For disabled
+      color = lightColor;
     } else if (isSelected) {
-      color = colorScheme.primary; // For selected item
+      color = strongColor;
     } else {
-      color = colorScheme.onSurfaceVariant; // For unselected item
+      color = mediumColor;
     }
 
     return BottomNavigationBarItem(
-      icon: Icon(
-        iconData,
-        color: color,
-      ),
-      label: label,
+      icon: Icon(tab.icon, color: color),
+      label: tab.label,
     );
   }
 }
