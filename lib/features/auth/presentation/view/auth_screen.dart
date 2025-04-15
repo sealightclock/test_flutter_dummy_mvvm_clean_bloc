@@ -38,16 +38,16 @@ class AuthScreenState extends State<AuthScreen> {
       if (user != null && user.isLoggedIn) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
 
-        _showSnackBarMessage('You have been authenticated.');
+        _showSnackBarMessage('You have been authenticated.', FeedbackType.info);
       } else {
         _bloc.add(const AuthUnauthenticatedEvent());
 
-        _showSnackBarMessage('You are not authenticated.');
+        _showSnackBarMessage('You are not authenticated.', FeedbackType.warning);
       }
     } catch (e) {
       _bloc.add(const AuthUnauthenticatedEvent());
 
-      _showSnackBarMessage('Error checking authentication status: $e');
+      _showSnackBarMessage('Error checking authentication status: $e', FeedbackType.error);
     } finally {
       setState(() {
         _checkingAuthStatus = false;
@@ -57,7 +57,7 @@ class AuthScreenState extends State<AuthScreen> {
 
   void _login() async {
     _showSnackBarMessage('You are logged in as a user. You should be able to use all '
-        'features.');
+        'features.', FeedbackType.info);
 
     _bloc.add(const AuthLoadingEvent());
     try {
@@ -78,7 +78,7 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   void _signUp() async {
-    _showSnackBarMessage('You are signed up as a new user and logged in. You should be able to use all features.');
+    _showSnackBarMessage('You are signed up as a new user and logged in. You should be able to use all features.', FeedbackType.info);
 
     _bloc.add(const AuthLoadingEvent());
     try {
@@ -99,7 +99,7 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   void _guestLogin() async {
-    _showSnackBarMessage('You are logged in as a guest. Many features are disabled!');
+    _showSnackBarMessage('You are logged in as a guest. Many features are disabled!', FeedbackType.warning);
 
     _bloc.add(const AuthLoadingEvent());
     try {
@@ -121,8 +121,8 @@ class AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  void _showSnackBarMessage(String message) {
-    showFeedback(context, message, FeedbackType.info);
+  void _showSnackBarMessage(String message, FeedbackType type) {
+    showFeedback(context, message, type);
   }
 
   @override
@@ -134,7 +134,7 @@ class AuthScreenState extends State<AuthScreen> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthErrorState) {
-            _showSnackBarMessage(state.message);
+            _showSnackBarMessage(state.message, FeedbackType.error);
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -187,7 +187,7 @@ class AuthScreenState extends State<AuthScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            _showSnackBarMessage('Contact us at info@jbmobility.io');
+                            _showSnackBarMessage('Contact us at info@jbmobility.io', FeedbackType.info);
                           },
                           child: const Text('Contact Us'),
                         ),
