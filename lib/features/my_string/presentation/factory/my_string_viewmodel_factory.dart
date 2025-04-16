@@ -1,3 +1,5 @@
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/di_config.dart';
+
 import '../../data/di/my_string_dependency_injection.dart';
 import '../../data/repository/my_string_repository_impl.dart';
 import '../../domain/usecase/local/get_my_string_from_local_use_case.dart';
@@ -11,8 +13,12 @@ class MyStringViewModelFactory {
   /// Static method to create a fully wired-up MyStringViewModel
   static MyStringViewModel create() {
     // Create Data Sources using Dependency Injection (DI)
-    final localDataSource = createLocalDataSource(storeTypeSelected);
-    final remoteDataSource = createRemoteDataSource(serverTypeSelected);
+    // For now: Configure DI to use Hive and Simulator, manually.
+    // TODO: In the future, find a better way:
+    DiConfig.useHiveAndSimulator();
+
+    final localDataSource = createLocalDataSource(DiConfig.localStore);
+    final remoteDataSource = createRemoteDataSource(DiConfig.remoteServer);
 
     // Create Repository
     final repository = MyStringRepositoryImpl(

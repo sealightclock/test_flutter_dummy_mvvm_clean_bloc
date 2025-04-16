@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../theme/app_styles.dart';
+import '../../../../util/di_config.dart';
 import '../../../../util/feedback_type_enum.dart';
 import '../../../../util/global_feedback_handler.dart';
 import '../../../../util/result.dart';
 import '../../../../util/result_handler.dart';
-import '../../data/di/my_string_dependency_injection.dart';
 import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';
@@ -196,8 +196,11 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
                 // -------------------------------------------------------------------
                 // 🧩 NEW: Display current DI choices at the top of the screen
                 // -------------------------------------------------------------------
-                Text('Local Storage: ${storeTypeSelected.label}', style: AppTextStyles.small),
-                Text('Remote Server: ${serverTypeSelected.label}', style: AppTextStyles.small),
+                Text('Local Storage: ${DiConfig.localStore.label}', style:
+                AppTextStyles
+                    .small),
+                Text('Remote Server: ${DiConfig.remoteServer.label}', style:
+                AppTextStyles.small),
                 const Divider(height: 24),
 
                 TextField(
