@@ -1,4 +1,7 @@
+import 'package:hive_flutter/hive_flutter.dart';
+
 import '../../../../../util/hive_utils.dart';
+import '../../../../../util/app_constants.dart'; // ✅ Added import for constants
 import '../../domain/entity/my_string_entity.dart';
 import 'my_string_local_data_source.dart';
 
@@ -12,7 +15,10 @@ class MyStringHiveDataSource implements MyStringLocalDataSource {
   @override
   Future<MyStringEntity> getMyString() async {
     final box = await HiveUtils.openBox<MyStringEntity>(hiveBoxName);
-    return box.get(myStringKey) ?? MyStringEntity(value: 'Default Value from Hive');
+
+    // ✅ Return stored value or fallback to default (centralized constant)
+    return box.get(myStringKey) ??
+        MyStringEntity(value: AppConstants.defaultValueFromHive);
   }
 
   /// Stores a MyStringEntity object into Hive Box.
