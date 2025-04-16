@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import '../features/my_string/domain/entity/my_string_entity.dart';
 
 /// Utility class to centralize Hive initialization and operations.
 ///
@@ -11,7 +12,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 /// final box = await HiveUtils.openBox<String>('box_name');
 /// await HiveUtils.clearBox('box_name');
 /// ```
-
 class HiveUtils {
   static bool _isInitialized = false;
 
@@ -21,6 +21,19 @@ class HiveUtils {
       await Hive.initFlutter();
       _isInitialized = true;
     }
+
+    registerAdapters(); // ✅ Ensure all adapters are registered
+  }
+
+  /// Centralized registration for all Hive adapters.
+  ///
+  /// This ensures adapters are registered once app-wide.
+  static void registerAdapters() {
+    if (!Hive.isAdapterRegistered(MyStringEntityAdapter().typeId)) {
+      Hive.registerAdapter(MyStringEntityAdapter());
+    }
+
+    // Add more adapters here in future (e.g., UserAuthEntityAdapter)
   }
 
   /// Open a typed box after ensuring Hive is initialized.

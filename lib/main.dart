@@ -6,9 +6,3 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/app.dart';
 Future<void> main() async {
   runApp(const MyApp());
 }
-
-// Testability for integration testing
-// startApp() will be used by integration tests.
-Future<void> startApp(Widget app) async {
-  runApp(app);
-}
