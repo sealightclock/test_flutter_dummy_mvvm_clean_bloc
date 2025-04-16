@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/feedback_type_enum.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/global_feedback_handler.dart';
 
 import 'features/account/presentation/view/account_screen.dart';

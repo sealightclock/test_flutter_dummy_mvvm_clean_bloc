@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../theme/app_styles.dart';
+import '../../../../util/feedback_type_enum.dart';
 import '../../../../util/global_feedback_handler.dart';
 import '../../../../util/result.dart';
 import '../../../../util/result_handler.dart';

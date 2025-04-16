@@ -11,6 +11,8 @@
 // Step 1: Define Enums for Local Store and Remote Server Options
 // -------------------------------------------------------------------------------
 
+import '../../../../util/local_store_enum.dart';
+import '../../../../util/remote_server_enum.dart';
 import '../local/my_string_hive_data_source.dart';
 import '../local/my_string_local_data_source.dart';
 import '../local/my_string_shared_prefs_data_source.dart';
@@ -18,12 +20,6 @@ import '../remote/my_string_dio_data_source.dart';
 import '../remote/my_string_http_data_source.dart';
 import '../remote/my_string_remote_data_source.dart';
 import '../remote/my_string_simulator_data_source.dart';
-
-/// Enum to select which Local Store to use
-enum LocalStore { sharedPrefs, hive }
-
-/// Enum to select which Remote Server to use
-enum RemoteServer { simulator, dio, http }
 
 // -------------------------------------------------------------------------------
 // Step 2: Create Functions to Build Data Sources
@@ -38,6 +34,7 @@ MyStringLocalDataSource createLocalDataSource(LocalStore storeType) {
       return MyStringHiveDataSource();
   }
   // Validation fallback: should never reach here
+  // ignore: dead_code
   throw ArgumentError('Unsupported LocalStore type: $storeType');
 }
 
@@ -52,6 +49,7 @@ MyStringRemoteDataSource createRemoteDataSource(RemoteServer serverType) {
       return MyStringHttpDataSource();
   }
   // Validation fallback: should never reach here
+  // ignore: dead_code
   throw ArgumentError('Unsupported RemoteServer type: $serverType');
 }
 

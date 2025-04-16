@@ -1,15 +1,15 @@
-/// App-wide constants shared across features and layers.
+/// Central place to define all string constants used across the app.
 ///
-/// Keeping constants in one place improves consistency, helps debugging,
-/// and makes localization easier in the future.
-///
-/// TIP: Use different values for each data source to quickly identify bugs.
+/// Helps improve consistency and prevents hardcoded strings everywhere.
 class AppConstants {
-  /// Default string returned from Hive local store
-  static const String defaultValueFromHive = 'Default Value from Hive';
+  static const String defaultValueHive = 'Default Value from Hive';
+  static const String defaultValueSharedPrefs = 'Default Value from SharedPreferences';
 
-  /// Default string returned from SharedPreferences local store
-  static const String defaultValueFromSharedPrefs = 'Default Value from SharedPreferences';
+  // Labels for enum display (UI/debug/logging)
+  static const String localStoreLabelHive = 'Hive';
+  static const String localStoreLabelSharedPrefs = 'SharedPreferences';
 
-// Add more constants as needed for remote servers, simulators, etc.
+  static const String remoteServerLabelSimulator = 'Simulator';
+  static const String remoteServerLabelDio = 'Dio';
+  static const String remoteServerLabelHttp = 'Http';
 }

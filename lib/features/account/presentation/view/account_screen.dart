@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../util/feedback_type_enum.dart';
 import '../../../../util/global_feedback_handler.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/account_bloc.dart';
