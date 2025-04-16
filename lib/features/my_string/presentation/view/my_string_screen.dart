@@ -6,6 +6,7 @@ import '../../../../util/feedback_type_enum.dart';
 import '../../../../util/global_feedback_handler.dart';
 import '../../../../util/result.dart';
 import '../../../../util/result_handler.dart';
+import '../../data/di/my_string_dependency_injection.dart';
 import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';
@@ -192,6 +193,13 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // -------------------------------------------------------------------
+                // 🧩 NEW: Display current DI choices at the top of the screen
+                // -------------------------------------------------------------------
+                Text('Local Storage: ${storeTypeSelected.label}', style: AppTextStyles.small),
+                Text('Remote Server: ${serverTypeSelected.label}', style: AppTextStyles.small),
+                const Divider(height: 24),
+
                 TextField(
                   enabled: !isLoading,
                   controller: textEditController,
