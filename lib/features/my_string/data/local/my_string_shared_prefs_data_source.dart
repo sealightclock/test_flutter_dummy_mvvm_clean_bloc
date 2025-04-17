@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../../util/app_constants.dart'; // ✅ Added import for constants
+import '../../../../../util/app_constants.dart';
 import '../../domain/entity/my_string_entity.dart';
 import 'my_string_local_data_source.dart';
 
@@ -8,9 +8,6 @@ import 'my_string_local_data_source.dart';
 ///
 /// Implements a singleton pattern to avoid repeated getInstance() calls.
 class MyStringSharedPrefsDataSource implements MyStringLocalDataSource {
-  // Key used for storing the string
-  static const String myStringKey = 'my_string_key';
-
   // Singleton instance of SharedPreferences
   static SharedPreferences? _prefs;
 
@@ -25,13 +22,13 @@ class MyStringSharedPrefsDataSource implements MyStringLocalDataSource {
     if (_prefs == null) await init();
 
     // Read from SharedPreferences or fallback to default
-    String? storedValue = _prefs?.getString(myStringKey);
+    String? storedValue = _prefs?.getString(AppConstants.myStringKey);
 
     if (storedValue == null) {
       storedValue = AppConstants.defaultValueSharedPrefs;
 
       // Store default value to persist it for future loads
-      await _prefs?.setString(myStringKey, storedValue);
+      await _prefs?.setString(AppConstants.myStringKey, storedValue);
     }
 
     return MyStringEntity(value: storedValue);
@@ -42,6 +39,6 @@ class MyStringSharedPrefsDataSource implements MyStringLocalDataSource {
   Future<void> storeMyString(MyStringEntity value) async {
     if (_prefs == null) await init();
 
-    await _prefs?.setString(myStringKey, value.value);
+    await _prefs?.setString(AppConstants.myStringKey, value.value);
   }
 }

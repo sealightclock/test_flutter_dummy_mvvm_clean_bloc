@@ -1,3 +1,4 @@
+import '../../../../util/app_constants.dart';
 import '../../../../util/app_exception.dart';
 import '../../domain/entity/my_string_entity.dart';
 import 'my_string_http_api.dart';
@@ -13,8 +14,7 @@ class MyStringHttpDataSource implements MyStringRemoteDataSource {
   Future<MyStringEntity> getMyString() async {
     try {
       String content = await _api.fetchContent();
-      return MyStringEntity(value: 'MyStringHttpDataSource: Server String: '
-          '$content');
+      return MyStringEntity(value: '${AppConstants.prefixHttpValue}$content');
     } catch (e) {
       throw AppException('MyStringHttpDataSource: Server fetch failed: $e');
     }

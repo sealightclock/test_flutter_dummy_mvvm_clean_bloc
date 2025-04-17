@@ -1,18 +1,17 @@
 import 'package:http/http.dart' as http;
 
+import '../../../../util/app_constants.dart';
 import '../../../../util/app_exception.dart';
 
 /// Handles API calls to the backend server using the http package.
 /// Includes timeout settings for reliability.
 class MyStringHttpApi {
-  static const String backendServerUrl = 'http://example.com';
-
   /// Fetches content from the backend server.
   /// Throws a `MyStringException` if the request fails.
   Future<String> fetchContent() async {
     try {
       final response = await http
-          .get(Uri.parse(backendServerUrl))
+          .get(Uri.parse(AppConstants.backendServerUrl))
           .timeout(Duration(seconds: 5)); // Timeout for reliability
 
       if (response.statusCode == 200) {

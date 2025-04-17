@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../theme/app_styles.dart';
+import '../../../../util/app_constants.dart';
 import '../../../../util/di_config.dart';
 import '../../../../util/feedback_type_enum.dart';
 import '../../../../util/global_feedback_handler.dart';
@@ -196,18 +197,19 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
                 // -------------------------------------------------------------------
                 // 🧩 NEW: Display current DI choices at the top of the screen
                 // -------------------------------------------------------------------
-                Text('Local Storage: ${DiConfig.localStore.label}', style:
-                AppTextStyles
-                    .small),
-                Text('Remote Server: ${DiConfig.remoteServer.label}', style:
-                AppTextStyles.small),
+                Text(AppConstants.localStoragePrefix + DiConfig.localStore.label,
+                    style: AppTextStyles.small),
+
+                Text(AppConstants.remoteServerPrefix + DiConfig.remoteServer.label,
+                    style: AppTextStyles.small),
+
                 const Divider(height: 24),
 
                 TextField(
                   enabled: !isLoading,
                   controller: textEditController,
                   decoration: const InputDecoration(
-                    labelText: 'Enter string',
+                    labelText: AppConstants.enterStringLabel,
                     border: OutlineInputBorder(),
                   ),
                   onEditingComplete: () {
@@ -216,35 +218,43 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
                     });
                   },
                 ),
+
                 const SizedBox(height: AppDimens.buttonSpacing),
+
                 Row(
                   children: [
                     Expanded(
                       child: ElevatedButton.icon(
+                        // key is needed for widget testing:
                         key: const Key('updateFromUserButton'),
                         onPressed: isLoading ? null : updateFromUser,
                         icon: const Icon(Icons.person),
-                        label: const Text('Update from User'),
+                        label: const Text(AppConstants.updateFromUserLabel),
                       ),
                     ),
+
                     const SizedBox(width: AppDimens.buttonSpacing),
+
                     Expanded(
                       child: ElevatedButton.icon(
+                        // key is needed for widget testing:
                         key: const Key('updateFromServerButton'),
                         onPressed: isLoading ? null : updateFromServer,
                         icon: const Icon(Icons.cloud_download),
-                        label: const Text('Update from Server'),
+                        label: const Text(AppConstants.updateFromServerLabel),
                       ),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: AppDimens.screenPadding * 2),
+
                 if (state is MyStringInitialState)
-                  Text('Enter or load a string to begin', style: AppTextStyles.italicHint)
+                  Text(AppConstants.initialHintText, style: AppTextStyles.italicHint)
                 else if (state is MyStringLoadingState)
                   const Center(child: CircularProgressIndicator())
                 else if (state is MyStringSuccessState) ...[
-                  Text('Current Value:', style: AppTextStyles.medium),
+                  Text(AppConstants.currentValueLabel, style: AppTextStyles.medium),
                   Text(state.value, style: AppTextStyles.large),
                 ]
                 else if (state is MyStringErrorState)
