@@ -14,30 +14,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Testability for integration testing
-    // Use RootRestorationScope to support widget lifecycle restore
+    // RootRestorationScope improves integration testability
     return RootRestorationScope(
       restorationId: 'root',
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
+          BlocProvider<AuthBloc>(
             create: (_) => AuthBloc()..add(const AuthUnauthenticatedEvent()),
           ),
-          BlocProvider(
+          BlocProvider<SettingsBloc>(
             create: (_) => SettingsBloc()..add(LoadSettingsEvent()),
           ),
         ],
         child: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, state) {
-            // 🌓 Dynamically choose theme based on user settings
-            final useDark = (state is SettingsLoaded && state.settings.darkMode);
+            // Default theme if not loaded yet
+            ThemeData theme = AppTheme.lightThemeWithFontSize(16.0);
+
+            if (state is SettingsLoaded) {
+              theme = state.settings.darkMode
+                  ? AppTheme.darkThemeWithFontSize(state.settings.fontSize)
+                  : AppTheme.lightThemeWithFontSize(state.settings.fontSize);
+            }
 
             return MaterialApp(
               title: 'Flutter MVVM Clean + Bloc Demo',
               restorationScopeId: 'app',
-              theme: useDark ? ThemeData.dark(useMaterial3: true) : AppTheme.lightTheme,
-
-              // Set the initial screen as HomeScreen with BottomNavigationBar
+              theme: theme,
               home: const HomeScreen(),
             );
           },
