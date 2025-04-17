@@ -8,12 +8,13 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/view/auth_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
+import 'features/settings/presentation/view/settings_screen.dart';
 
 /// Global flag to control initial tab when HomeScreen is rebuilt
 bool forceStartOnMyStringScreen = false;
 
 /// Enum for each tab in the BottomNavigationBar
-enum AppTab { auth, myString, account }
+enum AppTab { auth, myString, account, settings }
 
 /// Extension to provide metadata for each tab
 extension AppTabExtension on AppTab {
@@ -25,6 +26,8 @@ extension AppTabExtension on AppTab {
         return 'MyString';
       case AppTab.account:
         return 'Account';
+      case AppTab.settings:
+        return 'Settings';
     }
   }
 
@@ -36,6 +39,8 @@ extension AppTabExtension on AppTab {
         return Icons.storage;
       case AppTab.account:
         return Icons.person;
+      case AppTab.settings:
+        return Icons.settings;
     }
   }
 
@@ -86,7 +91,7 @@ class HomeScreenState extends State<HomeScreen> {
           });
         }
 
-        if (state is AuthUnauthenticatedState && _selectedTab != AppTab.auth) {
+        if (state is AuthUnauthenticatedState && _selectedTab.isProtected()) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) {
               setState(() {
@@ -106,6 +111,9 @@ class HomeScreenState extends State<HomeScreen> {
             break;
           case AppTab.account:
             body = isAuthenticated ? const AccountScreen() : const Center(child: Text('Please log in first.'));
+            break;
+          case AppTab.settings:
+            body = const SettingsScreen();
             break;
         }
 
