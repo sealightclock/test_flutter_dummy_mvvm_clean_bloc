@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/feedback_type_enum.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/global_feedback_handler.dart';
 
+import 'data/local/app_hive_data_source.dart';
 import 'features/account/presentation/view/account_screen.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
@@ -10,13 +11,13 @@ import 'features/auth/presentation/view/auth_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
 import 'features/settings/presentation/view/settings_screen.dart';
 
-/// Global flag to control initial tab when HomeScreen is rebuilt
+/// Global flag to force opening MyString screen (used by tests or special flows)
 bool forceStartOnMyStringScreen = false;
 
-/// Enum for each tab in the BottomNavigationBar
+/// Enum representing each BottomNavigationBar tab
 enum AppTab { auth, myString, account, settings }
 
-/// Extension to provide metadata for each tab
+/// Extension for tab metadata like label, icon, and protection
 extension AppTabExtension on AppTab {
   String get label {
     switch (this) {
@@ -45,9 +46,16 @@ extension AppTabExtension on AppTab {
   }
 
   bool isProtected() => this == AppTab.myString || this == AppTab.account;
+
+  static AppTab fromString(String name) {
+    return AppTab.values.firstWhere(
+          (tab) => tab.name == name,
+      orElse: () => AppTab.auth,
+    );
+  }
 }
 
-/// HomeScreen manages the bottom navigation bar and switching between screens.
+/// HomeScreen shows the main bottom navigation bar and manages screen switching
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -68,10 +76,27 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
     if (forceStartOnMyStringScreen) {
       _selectedTab = AppTab.myString;
       forceStartOnMyStringScreen = false;
+    } else {
+      // Try restoring the last seen screen from Hive
+      _restoreLastSeenTab();
     }
+  }
+
+  /// Asynchronously restore last selected tab from Hive
+  void _restoreLastSeenTab() async {
+    final restoredTab = await AppHiveDataSource.getLastSeenTab();
+    setState(() {
+      _selectedTab = convertLastSeenTabToAppTab(restoredTab);
+    });
+  }
+
+  /// Persist current selected tab when changed
+  void _saveLastSeenTab(AppTab tab) {
+    AppHiveDataSource.saveTab(convertAppTabToLastSeenTab(tab));
   }
 
   @override
@@ -130,6 +155,7 @@ class HomeScreenState extends State<HomeScreen> {
               setState(() {
                 _selectedTab = tappedTab;
               });
+              _saveLastSeenTab(tappedTab);
             },
             type: BottomNavigationBarType.fixed,
             elevation: 10,
@@ -159,3 +185,31 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+AppTab convertLastSeenTabToAppTab(LastSeenTab tab) {
+  switch (tab) {
+    case LastSeenTab.auth:
+      return AppTab.auth;
+    case LastSeenTab.myString:
+      return AppTab.myString;
+    case LastSeenTab.account:
+      return AppTab.account;
+    case LastSeenTab.settings:
+      return AppTab.settings;
+  }
+}
+
+LastSeenTab convertAppTabToLastSeenTab(AppTab tab) {
+  switch (tab) {
+    case AppTab.auth:
+      return LastSeenTab.auth;
+    case AppTab.myString:
+      return LastSeenTab.myString;
+    case AppTab.account:
+      return LastSeenTab.account;
+    case AppTab.settings:
+      return LastSeenTab.settings;
+  }
+}
+
+
