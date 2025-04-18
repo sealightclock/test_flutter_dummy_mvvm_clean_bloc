@@ -1,10 +1,10 @@
 import '../../domain/entity/user_auth_entity.dart';
-import '../local/auth_local_data_source.dart';
+import '../local/auth_hive_data_source.dart';
 import '../remote/auth_remote_data_source.dart';
 
 /// Repository to coordinate between local and remote authentication data sources.
 class AuthRepository {
-  final AuthLocalDataSource _localDataSource = AuthLocalDataSource();
+  final AuthHiveDataSource _localDataSource = AuthHiveDataSource();
   final AuthRemoteDataSource _remoteDataSource = AuthRemoteDataSource();
 
   /// Signup a new user remotely and store locally.

@@ -4,7 +4,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/util/app_constants.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/hive_utils.dart';
 
 /// Data source handler to manage authentication locally using Hive.
-class AuthLocalDataSource {
+class AuthHiveDataSource {
   /// Store user data after signup or login.
   Future<void> storeUser(UserAuthEntity user) async {
     final box = await HiveUtils.openBox(AppConstants.authHiveBoxName);

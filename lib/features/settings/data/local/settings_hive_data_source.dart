@@ -3,7 +3,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/settings/domain'
     '/entity/settings_entity.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/app_constants.dart';
 
-class SettingsLocalDataSource {
+class SettingsHiveDataSource {
   /// Initialize Hive and register the adapter for SettingsEntity
   Future<void> init() async {
     // ✅ Initialize Hive if not already initialized

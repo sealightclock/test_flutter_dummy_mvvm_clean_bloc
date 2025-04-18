@@ -1,9 +1,9 @@
 import '../../domain/entity/settings_entity.dart';
-import '../local/settings_local_data_source.dart';
+import '../local/settings_hive_data_source.dart';
 import 'settings_repository.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
-  final SettingsLocalDataSource localDataSource;
+  final SettingsHiveDataSource localDataSource;
 
   SettingsRepositoryImpl(this.localDataSource);
 
