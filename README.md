@@ -4,21 +4,22 @@
 This is a dummy Flutter app built with the "MVVM Clean + Bloc" architecture, for testing and 
 learning purposes.
 
-Initially, it handles a single string: 'my_string'.
+Initially, it handled a single string: 'my_string' in a single feature. More recently, it 
+handles more features that use the same "MVVM Clean + Bloc" architecture.
 
 ## Technologies used
 This Flutter app uses the following technologies:
 
 ### Basic technologies
-These are the latest technologies used in developing a multiplatform app:
-- Flutter: for multiplatform app development
-- Dart: main programming language for Flutter app development
+These are some of the latest technologies used in developing a multiplatform app:
+- Flutter: for multiplatform app development.
+- Dart: main programming language for Flutter app development.
 
 ### Specialized technologies
 This Flutter app uses the following specialized technologies:
-- MVVM Clean + Bloc: for clean architecture with Bloc for state management
+- MVVM Clean + Bloc: for clean architecture with Bloc for state management of each feature.
 - SharedPreferences / Hive: for storing data locally to achieve data persistence.
-- Dio / Http: for making HTTP requests to remote servers
+- Dio / Http: for making HTTP requests to remote servers.
 
 ## UI/UX
 The UI should be intuitive. 'my_string' can be modified by:
@@ -29,13 +30,10 @@ The UI should be intuitive. 'my_string' can be modified by:
 ## Source file structure
 The file structure is as follows:
 
-### util/
--- app_exception.dart
+### util,theme/ (and other app-level directories or files)
 
--- result.dart
-
--- result_handler.dart
 ### features/my_string/
+
 #### -- **presentation**/
 
 ---- **view**/
@@ -64,7 +62,7 @@ The file structure is as follows:
 
 ------ my_string_entity.dart
 
------- my_string_entity.g.dart
+------ my_string_entity.g.dart (auto-generated for Hive adaptor)
 
 ---- **usecase**/
 
@@ -150,8 +148,12 @@ The "MVVM Clean + Bloc" architecture also helps to support unit testing.
 ## Scalability
 With the "MVVM Clean + Bloc" architecture, it is relatively easy to add more features to the app.
 
-More recently, another feature named "auth" has been added to the app to demonstrate the
+More recently, more features have been added to the app to demonstrate the
 scalability of this architecture.
 
-Both features "my_string" and "auth" have been implemented using the same "MVVM Clean +
-Bloc" design pattern and a similar file structure.
+All of these features, including "auth", "my_string", "account", and "settings", have been 
+implemented using the same"MVVM Clean + Bloc" design pattern and a similar file structure. Some 
+minor features may be implemented using a simplified version of the "MVVM Clean + Bloc" architecture.
+
+This project is evolving based on our understanding of Flutter, especially of the "MVVM Clean + 
+Bloc" architecture.

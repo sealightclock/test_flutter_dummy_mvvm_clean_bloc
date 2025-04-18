@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
-import 'app_restarter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Custom widget that wraps the entire app and allows full rebuilds on demand.
+import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/presentation/bloc/auth_event.dart';
+import 'features/settings/presentation/bloc/settings_bloc.dart';
+import 'features/settings/presentation/bloc/settings_event.dart';
+import 'features/settings/presentation/bloc/settings_state.dart';
+import 'home_screen.dart';
+import 'theme/app_theme.dart';
+
+/// The root widget of the app, wrapped with BlocProviders.
 ///
-/// Why do we need this layer?
-/// - Without this wrapper, changing app-wide settings (like theme) requires a full relaunch.
-/// - By wrapping the MaterialApp inside a `KeyedSubtree`, we can trigger rebuilds by changing the key.
-/// - This enables dynamic theme switching and other UI-wide config changes — without restarting the app.
+/// - It listens to settings changes (like dark mode, font size)
+/// - It builds the MaterialApp with the correct theme
+/// - It wraps the HomeScreen which controls navigation across features
+///
+/// This class is also restartable using `triggerAppRebuild()`
+/// by updating its internal key (see `_MyAppState`).
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -14,24 +24,54 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => MyAppState();
 }
 
-/// State class to manage rebuildable app wrapper.
+/// State class for [MyApp] that supports full subtree rebuild.
 class MyAppState extends State<MyApp> {
-  // Unique key to force full rebuild of MaterialApp and everything under it
-  Key _appWrapperKey = UniqueKey();
+  // This key is used to restart the subtree when settings change
+  Key appKey = UniqueKey();
 
-  /// Call this method to trigger a full rebuild of the app.
-  /// It simulates an "app restart" without restarting Flutter engine.
-  void triggerRebuild() {
+  /// Call this method to trigger a full UI rebuild.
+  ///
+  /// 🔁 Used by `triggerAppRebuild()` defined in main.dart
+  void restart() {
     setState(() {
-      _appWrapperKey = UniqueKey(); // Changes the key to trigger full rebuild
+      appKey = UniqueKey(); // Forces full rebuild of subtree
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return KeyedSubtree(
-      key: _appWrapperKey,
-      child: const AppRestarter(), // Inner app logic, includes Blocs and theme
+      key: appKey,
+      child: RootRestorationScope( // ✅ Improves integration testability
+        restorationId: 'root',
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<AuthBloc>(
+              create: (_) => AuthBloc()..add(const AuthUnauthenticatedEvent()),
+            ),
+            BlocProvider<SettingsBloc>(
+              create: (_) => SettingsBloc()..add(LoadSettingsEvent()),
+            ),
+          ],
+          child: BlocBuilder<SettingsBloc, SettingsState>(
+            builder: (context, state) {
+              final settings = state is SettingsLoaded ? state.settings : null;
+
+              // Build theme based on user settings, fallback if null
+              final theme = settings?.darkMode ?? false
+                  ? AppTheme.darkThemeWithFontSize(settings?.fontSize ?? 16.0)
+                  : AppTheme.lightThemeWithFontSize(settings?.fontSize ?? 16.0);
+
+              return MaterialApp(
+                title: 'Flutter MVVM Clean + Bloc Demo',
+                restorationScopeId: 'app', // Helps in restoring state after app restarts
+                theme: theme,
+                home: const HomeScreen(),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }
