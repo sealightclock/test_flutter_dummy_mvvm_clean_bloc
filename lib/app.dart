@@ -1,51 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'features/auth/presentation/bloc/auth_event.dart';
-import 'features/settings/presentation/bloc/settings_bloc.dart';
-import 'features/settings/presentation/bloc/settings_event.dart';
-import 'features/settings/presentation/bloc/settings_state.dart';
-import 'home_screen.dart';
-import 'theme/app_theme.dart';
+import 'app_restarter.dart';
 
-class MyApp extends StatelessWidget {
+/// Custom app-level widget that can rebuild the app
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  Key appWrapperKey = UniqueKey();
+
+  void restart() {
+    setState(() {
+      appWrapperKey = UniqueKey(); // Forces full subtree rebuild
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // RootRestorationScope improves integration testability
-    return RootRestorationScope(
-      restorationId: 'root',
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<AuthBloc>(
-            create: (_) => AuthBloc()..add(const AuthUnauthenticatedEvent()),
-          ),
-          BlocProvider<SettingsBloc>(
-            create: (_) => SettingsBloc()..add(LoadSettingsEvent()),
-          ),
-        ],
-        child: BlocBuilder<SettingsBloc, SettingsState>(
-          builder: (context, state) {
-            // Default theme if not loaded yet
-            ThemeData theme = AppTheme.lightThemeWithFontSize(16.0);
-
-            if (state is SettingsLoaded) {
-              theme = state.settings.darkMode
-                  ? AppTheme.darkThemeWithFontSize(state.settings.fontSize)
-                  : AppTheme.lightThemeWithFontSize(state.settings.fontSize);
-            }
-
-            return MaterialApp(
-              title: 'Flutter MVVM Clean + Bloc Demo',
-              restorationScopeId: 'app',
-              theme: theme,
-              home: const HomeScreen(),
-            );
-          },
-        ),
-      ),
+    return KeyedSubtree(
+      key: appWrapperKey,
+      child: const AppRestarter(),
     );
   }
 }
