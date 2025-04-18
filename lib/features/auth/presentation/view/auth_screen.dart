@@ -131,6 +131,7 @@ class AuthScreenState extends State<AuthScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Authentication'),
+        centerTitle: true, // ✅ Fixes left-alignment flicker during app launch
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {

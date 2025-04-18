@@ -36,6 +36,7 @@ class AccountScreenBody extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Account'),
+        centerTitle: true, // ✅ Fixes left-alignment flicker during app launch
       ),
       body: Center(
         child: ElevatedButton.icon(

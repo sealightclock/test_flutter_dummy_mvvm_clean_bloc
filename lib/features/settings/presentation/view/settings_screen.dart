@@ -24,7 +24,10 @@ class SettingsScreenBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+          title: const Text('Settings'),
+          centerTitle: true, // ✅ Fixes left-alignment flicker during app launch
+      ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           if (state is SettingsLoaded) {
