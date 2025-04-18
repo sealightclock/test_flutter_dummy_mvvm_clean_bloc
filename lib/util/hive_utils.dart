@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import '../features/my_string/domain/entity/my_string_entity.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/entity/my_string_entity.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/settings/domain/entity/settings_entity.dart';
 
 /// Utility class to centralize Hive initialization and operations.
 ///
@@ -31,6 +32,9 @@ class HiveUtils {
   static void registerAdapters() {
     if (!Hive.isAdapterRegistered(MyStringEntityAdapter().typeId)) {
       Hive.registerAdapter(MyStringEntityAdapter());
+    }
+    if (!Hive.isAdapterRegistered(SettingsEntityAdapter().typeId)) {
+      Hive.registerAdapter(SettingsEntityAdapter());
     }
 
     // Add more adapters here in future (e.g., UserAuthEntityAdapter)
