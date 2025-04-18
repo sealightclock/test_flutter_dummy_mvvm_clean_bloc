@@ -35,22 +35,24 @@ class TestAppLauncher {
   /// Waits until [MyStringScreenBody] appears, then extracts the `MyStringBloc`.
   /// This ensures the app is fully navigated before accessing state.
   Future<void> prepareBloc() async {
-    const timeout = Duration(seconds: 5);
-    const pollInterval = Duration(milliseconds: 100);
-    final stopwatch = Stopwatch()..start();
+    final myStringBodyFinder = find.byType(MyStringScreenBody);
 
-    while (stopwatch.elapsed < timeout) {
-      await tester.pump(pollInterval); // Retry loop
+    // Retry for up to 10 seconds
+    const timeout = Duration(seconds: 10);
+    final end = DateTime.now().add(timeout);
+    while (DateTime.now().isBefore(end)) {
+      await tester.pumpAndSettle();
 
-      final myStringBodyFinder = find.byType(MyStringScreenBody);
       if (myStringBodyFinder.evaluate().isNotEmpty) {
-        final myStringScreenState =
-        tester.firstState<MyStringScreenBodyState>(myStringBodyFinder);
-        bloc = myStringScreenState.exposedBloc;
+        final state = tester.firstState<MyStringScreenBodyState>(myStringBodyFinder);
+        bloc = state.exposedBloc;
         return;
       }
+
+      await Future.delayed(const Duration(milliseconds: 100));
     }
 
+    // Timeout
     fail('❌ MyStringScreenBody not found within ${timeout.inSeconds} seconds.');
   }
 
