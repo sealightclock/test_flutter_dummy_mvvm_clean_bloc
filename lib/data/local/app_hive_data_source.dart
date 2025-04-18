@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/app_constants.dart';
 
 /// Enum representing the last screen the user visited.
 /// This allows us to restore the UI to the last seen screen on app relaunch.
@@ -16,10 +17,6 @@ enum LastSeenTab {
 ///
 /// The saved enum value will be restored during app launch to improve UX.
 class AppHiveDataSource {
-  // Hive box name and key for this feature
-  static const String _boxName = 'last_seen_tab_box';
-  static const String _key = 'last_tab';
-
   static bool _initialized = false;
 
   /// Ensure Hive is initialized and the box is opened before use.
@@ -28,7 +25,7 @@ class AppHiveDataSource {
   static Future<void> _initIfNeeded() async {
     if (!_initialized) {
       await Hive.initFlutter(); // ✅ Safe to call multiple times
-      await Hive.openBox<String>(_boxName);
+      await Hive.openBox<String>(AppConstants.appHiveBoxName);
       _initialized = true;
     }
   }
@@ -36,15 +33,15 @@ class AppHiveDataSource {
   /// Save the selected tab (as enum string) into Hive for persistence.
   static Future<void> saveTab(LastSeenTab tab) async {
     await _initIfNeeded();
-    final box = Hive.box<String>(_boxName);
-    await box.put(_key, tab.name); // Store as string
+    final box = Hive.box<String>(AppConstants.appHiveBoxName);
+    await box.put(AppConstants.appKey, tab.name); // Store as string
   }
 
   /// Load the last seen tab from Hive, defaulting to auth if none saved.
   static Future<LastSeenTab> getLastSeenTab() async {
     await _initIfNeeded();
-    final box = Hive.box<String>(_boxName);
-    final savedName = box.get(_key);
+    final box = Hive.box<String>(AppConstants.appHiveBoxName);
+    final savedName = box.get(AppConstants.appKey);
     return LastSeenTab.values.firstWhere(
           (e) => e.name == savedName,
       orElse: () => LastSeenTab.auth,

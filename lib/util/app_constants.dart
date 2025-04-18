@@ -38,9 +38,25 @@ class AppConstants {
   static const String localStoragePrefix = 'Local Storage: ';
   static const String remoteServerPrefix = 'Remote Server: ';
 
+  // ---------------------------------------------------------------------------
   // Box and Key definitions
+  // ---------------------------------------------------------------------------
+
+  static const String appHiveBoxName = 'app_hive_box';
+  static const String appKey = 'app_key';
+
+  static const String authHiveBoxName = 'auth_hive_box';
+  static const String authKey = 'auth_key';
+
   static const String myStringHiveBoxName = 'my_string_hive_box';
   static const String myStringKey = 'my_string_key';
+
+  static const String settingsHiveBoxName = 'settings_hive_box';
+  static const String settingsKey = 'settings_key';
+
+  // ---------------------------------------------------------------------------
+  // ...
+  // ---------------------------------------------------------------------------
 
   static const String backendServerUrl = 'http://example.com';
 

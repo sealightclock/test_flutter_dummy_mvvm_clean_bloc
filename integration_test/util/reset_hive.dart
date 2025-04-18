@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/app_constants.dart';
 
 /// Helper to reset Hive database for clean integration testing.
 ///
@@ -20,8 +22,10 @@ Future<void> resetHive() async {
 
   // ✅ List of manually known box names
   const knownBoxNames = [
-    'user_auth_box',
-    'my_string_hive_box',
+    AppConstants.appHiveBoxName,
+    AppConstants.authHiveBoxName,
+    AppConstants.myStringHiveBoxName,
+    AppConstants.settingsHiveBoxName,
   ];
 
   for (final boxName in knownBoxNames) {
