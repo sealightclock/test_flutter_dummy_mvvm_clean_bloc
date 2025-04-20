@@ -1,4 +1,4 @@
-import '../../domain/entity/user_auth_entity.dart';
+import '../../domain/entity/auth_entity.dart';
 import '../local/auth_hive_data_source.dart';
 import '../remote/auth_remote_data_source.dart';
 
@@ -26,7 +26,7 @@ class AuthRepository {
   }
 
   /// Get current user authentication status from local storage.
-  Future<UserAuthEntity?> getUserAuthStatus() async {
+  Future<AuthEntity?> getUserAuthStatus() async {
     return await _localDataSource.getUser();
   }
 

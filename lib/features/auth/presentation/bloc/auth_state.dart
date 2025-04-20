@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entity/user_auth_entity.dart';
+import '../../domain/entity/auth_entity.dart';
 
 /// Sealed class for Authentication States
 sealed class AuthState extends Equatable {
@@ -21,7 +21,7 @@ class AuthLoadingState extends AuthState {
 
 /// State when a real user is successfully authenticated
 class AuthAuthenticatedState extends AuthState {
-  final UserAuthEntity user;
+  final AuthEntity user;
 
   const AuthAuthenticatedState({required this.user});
 

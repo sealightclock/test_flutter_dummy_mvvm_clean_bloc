@@ -3,7 +3,7 @@ import '../viewmodel/auth_viewmodel.dart';
 import '../../domain/usecase/login_use_case.dart';
 import '../../domain/usecase/signup_use_case.dart';
 import '../../domain/usecase/guest_login_use_case.dart';
-import '../../domain/usecase/get_user_auth_status_use_case.dart';
+import '../../domain/usecase/get_auth_status_use_case.dart';
 
 /// Factory to create AuthViewModel with all dependencies injected.
 class AuthViewModelFactory {
@@ -13,7 +13,7 @@ class AuthViewModelFactory {
       loginUseCase: LoginUseCase(repository),
       signUpUseCase: SignUpUseCase(repository),
       guestLoginUseCase: GuestLoginUseCase(repository),
-      getUserAuthStatusUseCase: GetUserAuthStatusUseCase(repository),
+      getUserAuthStatusUseCase: GetAuthStatusUseCase(repository),
     );
   }
 }

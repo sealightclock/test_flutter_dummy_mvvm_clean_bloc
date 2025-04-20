@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entity/user_auth_entity.dart';
+import '../../domain/entity/auth_entity.dart';
 
 /// Sealed class for Authentication Events
 sealed class AuthEvent extends Equatable {
@@ -16,7 +16,7 @@ class AuthLoadingEvent extends AuthEvent {
 
 /// Event when a real user has authenticated
 class AuthAuthenticatedEvent extends AuthEvent {
-  final UserAuthEntity user;
+  final AuthEntity user;
 
   const AuthAuthenticatedEvent({required this.user});
 
