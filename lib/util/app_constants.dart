@@ -43,13 +43,15 @@ class AppConstants {
   // ---------------------------------------------------------------------------
 
   static const String appHiveBoxName = 'app_hive_box';
-  static const String appKey = 'app_key';
+  static const String appLastSeenTabKey = 'app_last_seen_tab_key';
 
   static const String authHiveBoxName = 'auth_hive_box';
   static const String authKey = 'auth_key';
 
   static const String myStringHiveBoxName = 'my_string_hive_box';
   static const String myStringKey = 'my_string_key';
+
+  // TODO: account
 
   static const String settingsHiveBoxName = 'settings_hive_box';
   static const String settingsKey = 'settings_key';

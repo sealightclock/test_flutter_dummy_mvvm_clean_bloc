@@ -4,6 +4,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/util/feedback_type_enum.dart'
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/global_feedback_handler.dart';
 
 import 'data/local/app_hive_data_source.dart';
+import 'data/local/app_tab_enum.dart';
 import 'features/account/presentation/view/account_screen.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
@@ -13,9 +14,6 @@ import 'features/settings/presentation/view/settings_screen.dart';
 
 /// Global flag to force opening MyString screen (used by tests or special flows)
 bool forceStartOnMyStringScreen = false;
-
-/// Enum representing each BottomNavigationBar tab
-enum AppTab { auth, myString, account, settings }
 
 /// Extension for tab metadata like label, icon, and protection
 extension AppTabExtension on AppTab {
@@ -90,13 +88,13 @@ class HomeScreenState extends State<HomeScreen> {
   void _restoreLastSeenTab() async {
     final restoredTab = await AppHiveDataSource.getLastSeenTab();
     setState(() {
-      _selectedTab = convertLastSeenTabToAppTab(restoredTab);
+      _selectedTab = restoredTab;
     });
   }
 
   /// Persist current selected tab when changed
   void _saveLastSeenTab(AppTab tab) {
-    AppHiveDataSource.saveTab(convertAppTabToLastSeenTab(tab));
+    AppHiveDataSource.saveLastSeenTab(tab);
   }
 
   @override
@@ -183,32 +181,6 @@ class HomeScreenState extends State<HomeScreen> {
       icon: Icon(tab.icon, color: color),
       label: tab.label,
     );
-  }
-}
-
-AppTab convertLastSeenTabToAppTab(LastSeenTab tab) {
-  switch (tab) {
-    case LastSeenTab.auth:
-      return AppTab.auth;
-    case LastSeenTab.myString:
-      return AppTab.myString;
-    case LastSeenTab.account:
-      return AppTab.account;
-    case LastSeenTab.settings:
-      return AppTab.settings;
-  }
-}
-
-LastSeenTab convertAppTabToLastSeenTab(AppTab tab) {
-  switch (tab) {
-    case AppTab.auth:
-      return LastSeenTab.auth;
-    case AppTab.myString:
-      return LastSeenTab.myString;
-    case AppTab.account:
-      return LastSeenTab.account;
-    case AppTab.settings:
-      return LastSeenTab.settings;
   }
 }
 
