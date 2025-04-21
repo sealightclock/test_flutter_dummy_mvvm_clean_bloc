@@ -1,3 +1,4 @@
+import '../../../../util/result.dart';
 import '../../data/repository/settings_repository.dart';
 import '../entity/settings_entity.dart';
 
@@ -6,8 +7,12 @@ class SaveSettingsUseCase {
 
   SaveSettingsUseCase(this.repository);
 
-  Future<void> call(SettingsEntity settings) async {
-    await repository.saveSettings(settings);
+  Future<Result<void>> call(SettingsEntity settings) async {
+    try {
+      await repository.saveSettings(settings);
+      return const Success(null);
+    } catch (e) {
+      return Failure('Failed to save settings: \$e');
+    }
   }
 }
-

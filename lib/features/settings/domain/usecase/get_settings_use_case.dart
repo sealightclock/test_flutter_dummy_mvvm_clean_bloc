@@ -1,3 +1,4 @@
+import '../../../../util/result.dart';
 import '../entity/settings_entity.dart';
 import '../../data/repository/settings_repository.dart';
 
@@ -6,7 +7,12 @@ class GetSettingsUseCase {
 
   GetSettingsUseCase(this.repository);
 
-  Future<SettingsEntity> execute() {
-    return repository.getSettings();
+  Future<Result<SettingsEntity>> execute() async {
+    try {
+      final settings = await repository.getSettings();
+      return Success(settings);
+    } catch (e) {
+      return Failure('Failed to load settings: \$e');
+    }
   }
 }

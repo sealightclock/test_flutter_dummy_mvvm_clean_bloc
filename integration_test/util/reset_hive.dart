@@ -26,6 +26,7 @@ Future<void> resetHive() async {
     AppConstants.authHiveBoxName,
     AppConstants.myStringHiveBoxName,
     AppConstants.settingsHiveBoxName,
+    // TODO: Add more box names here in future (e.g., AccountHiveBoxName)
   ];
 
   for (final boxName in knownBoxNames) {
