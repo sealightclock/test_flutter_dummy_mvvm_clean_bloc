@@ -1,19 +1,25 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_state.dart';
 
+import 'util/uninstall_app.dart'; // ✅ Optional: Ensures no leftover app state from manual install
 import 'util/test_utils.dart';
 import 'util/test_app_launcher.dart';
 import 'util/test_timer.dart';
 import 'util/reset_hive.dart';
 
+import 'package:test_flutter_dummy_mvvm_clean_bloc/home_screen.dart'; // ✅ Needed for forceStartOnMyStringScreen
+
 void main() {
+  // Bind integration test environment (required boilerplate)
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Full app lifecycle with Auth and MyString persistence', (tester) async {
+    // ─────────────────────────────────────────────────────────────────────
+    // 👟 Step 0a: Temporary splash screen during test setup
+    // ─────────────────────────────────────────────────────────────────────
     await tester.pumpWidget(const MaterialApp(
       home: Scaffold(
         body: Center(child: Text('🧹 Resetting Hive...')),
@@ -21,14 +27,32 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 🗑️ Step 0b: Uninstall app first to avoid stale Hive box or state
+    // ❗ NOTE: This must happen BEFORE app is launched, or stale state may restore
+    // ─────────────────────────────────────────────────────────────────────
+    await uninstallFlutterApp('com.example.jonathan.test_flutter_dummy_mvvm_clean_bloc');
+
+    // Optional: Clean up leftover Hive files if uninstall fails or doesn't run on iOS
     await resetHive();
 
+    // ─────────────────────────────────────────────────────────────────────
+    // ⏱️ Step 1: Start timer for debugging test duration
+    // ─────────────────────────────────────────────────────────────────────
     final timer = TestTimer('Full app lifecycle with Auth and MyString persistence');
     timer.start();
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 🚀 Step 2: Launch the app
+    // ❗ Force app to start on MyStringScreen (ignore last seen screen)
+    // ─────────────────────────────────────────────────────────────────────
+    forceStartOnMyStringScreen = true; // ✅ Ensures test always starts on desired screen
     final launcher = TestAppLauncher(tester);
     await launcher.launchApp();
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 🧑 Step 3: Simulate guest login if Auth screen is shown
+    // ─────────────────────────────────────────────────────────────────────
     final moreOptionsFinder = find.text('More Options');
     if (moreOptionsFinder.evaluate().isNotEmpty) {
       await tester.tap(moreOptionsFinder);
@@ -40,9 +64,15 @@ void main() {
       await tester.pumpAndSettle();
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 🎯 Step 4: Prepare Bloc on MyString screen
+    // ─────────────────────────────────────────────────────────────────────
     await launcher.prepareBloc();
     final bloc = launcher.bloc;
 
+    // ─────────────────────────────────────────────────────────────────────
+    // ⌨️ Step 5: Enter test string and tap "Update from User"
+    // ─────────────────────────────────────────────────────────────────────
     const testValue = 'Persistent String';
     await tester.enterText(find.byType(TextField), testValue);
     await tester.pumpAndSettle();
@@ -52,16 +82,25 @@ void main() {
     await tester.tap(userButton);
     await tester.pumpAndSettle();
 
+    // ─────────────────────────────────────────────────────────────────────
+    // ✅ Step 6: Confirm both Bloc state + UI show the entered value
+    // ─────────────────────────────────────────────────────────────────────
     await waitForBlocStateAndUi<MyStringBloc, MyStringState>(
       tester,
       bloc,
-      (state) => state is MyStringSuccessState && state.value == testValue,
+          (state) => state is MyStringSuccessState && state.value == testValue,
       testValue,
     );
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 🔁 Step 7: Relaunch app to simulate real user relaunch
+    // ─────────────────────────────────────────────────────────────────────
     await launcher.launchApp();
     await tester.pumpAndSettle();
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 🧑 Step 8: Handle guest login again if Auth screen reappears
+    // ─────────────────────────────────────────────────────────────────────
     final moreOptionsFinderAfterRelaunch = find.text('More Options');
     if (moreOptionsFinderAfterRelaunch.evaluate().isNotEmpty) {
       await tester.tap(moreOptionsFinderAfterRelaunch);
@@ -73,16 +112,25 @@ void main() {
       await tester.pumpAndSettle();
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 🎯 Step 9: Refresh Bloc after app relaunch
+    // ─────────────────────────────────────────────────────────────────────
     await launcher.refreshAfterRestart();
     final blocAfterRelaunch = launcher.bloc;
 
+    // ─────────────────────────────────────────────────────────────────────
+    // ✅ Step 10: Confirm string still persists after relaunch
+    // ─────────────────────────────────────────────────────────────────────
     await waitForBlocStateAndUi<MyStringBloc, MyStringState>(
       tester,
       blocAfterRelaunch,
-      (state) => state is MyStringSuccessState && state.value == testValue,
+          (state) => state is MyStringSuccessState && state.value == testValue,
       testValue,
     );
 
+    // ─────────────────────────────────────────────────────────────────────
+    // 🏁 Step 11: Stop timer and end test
+    // ─────────────────────────────────────────────────────────────────────
     timer.stop();
   });
 }

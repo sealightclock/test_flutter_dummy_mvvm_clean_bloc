@@ -1,10 +1,10 @@
-// integration_test/util/test_app_launcher.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/view/my_string_screen.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/home_screen.dart';
@@ -19,78 +19,49 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/home_screen.dart';
 /// ```
 class TestAppLauncher {
   final WidgetTester tester;
-
-  late MyStringBloc bloc; // Exposes MyStringBloc instance for testing
+  late MyStringBloc bloc;
 
   TestAppLauncher(this.tester);
 
-  /// Launches the app inside a MaterialApp with AuthBloc support.
+  /// Launch app with AuthBloc pre-configured to skip manual login.
   Future<void> launchApp() async {
     await tester.pumpWidget(const MyAppForTesting());
-    await tester.pumpAndSettle(); // Wait until animations/UI are ready
+    await tester.pumpAndSettle();
   }
 
-  /// Prepares Bloc after MyStringScreen is shown.
-  ///
-  /// Waits until [MyStringScreenBody] appears, then extracts the `MyStringBloc`.
-  /// This ensures the app is fully navigated before accessing state.
+  /// Waits until MyStringScreenBody is found, and extracts its Bloc.
   Future<void> prepareBloc() async {
     final myStringBodyFinder = find.byType(MyStringScreenBody);
 
-    // Retry for up to 10 seconds
     const timeout = Duration(seconds: 10);
     final end = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(end)) {
       await tester.pumpAndSettle();
-
       if (myStringBodyFinder.evaluate().isNotEmpty) {
         final state = tester.firstState<MyStringScreenBodyState>(myStringBodyFinder);
         bloc = state.exposedBloc;
         return;
       }
-
       await Future.delayed(const Duration(milliseconds: 100));
     }
 
-    // Timeout
     fail('❌ MyStringScreenBody not found within ${timeout.inSeconds} seconds.');
   }
 
-  /// Re-extracts Bloc after app is relaunched (used in post-restart check).
-  ///
-  /// Same logic as [prepareBloc], but for when the app is launched a second time.
-  Future<void> refreshAfterRestart() async {
-    const timeout = Duration(seconds: 5);
-    const pollInterval = Duration(milliseconds: 100);
-    final stopwatch = Stopwatch()..start();
-
-    while (stopwatch.elapsed < timeout) {
-      await tester.pump(pollInterval);
-
-      final myStringBodyFinder = find.byType(MyStringScreenBody);
-      if (myStringBodyFinder.evaluate().isNotEmpty) {
-        final myStringScreenState =
-        tester.firstState<MyStringScreenBodyState>(myStringBodyFinder);
-        bloc = myStringScreenState.exposedBloc;
-        return;
-      }
-    }
-
-    fail('❌ MyStringScreenBody not found within ${timeout.inSeconds} seconds.');
-  }
+  Future<void> refreshAfterRestart() => prepareBloc();
 }
 
-/// A minimal version of the app for testing purposes.
-///
-/// It uses a top-level [BlocProvider] for [AuthBloc] so that [HomeScreen]
-/// functions correctly in isolation.
+/// Dummy test app with AuthBloc pre-initialized for guest login
 class MyAppForTesting extends StatelessWidget {
   const MyAppForTesting({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Force guest login to bypass Auth screen
+    final authBloc = AuthBloc()..add(const AuthGuestAuthenticatedEvent());
+
     return BlocProvider<AuthBloc>(
-      create: (_) => AuthBloc(),
+      create: (_) => authBloc,
       child: const MaterialApp(
         home: HomeScreen(),
       ),

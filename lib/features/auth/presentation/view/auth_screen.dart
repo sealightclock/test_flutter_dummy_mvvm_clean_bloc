@@ -177,11 +177,12 @@ class AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 16),
                   OutlinedButton(
                     onPressed: () {
-                      if (mounted) { // TODO: This check may not be needed.
+                      //if (mounted) { // TODO: This check may not be needed
+                      // and may be harmful with onPressed().
                         setState(() {
                           _showMoreOptions = !_showMoreOptions;
                         });
-                      }
+                      //}
                     },
                     child: Text(_showMoreOptions ? 'Fewer Options' : 'More Options'),
                   ),
