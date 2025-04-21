@@ -1,29 +1,17 @@
+import 'package:hive/hive.dart';
+
+part 'auth_entity.g.dart';
+
+@HiveType(typeId: 2)
 class AuthEntity {
-  final String username;
-  final String password;
-  final bool isLoggedIn;
+  @HiveField(0)
+  late final String username;
 
-  AuthEntity({
-    required this.username,
-    required this.password,
-    required this.isLoggedIn,
-  });
+  @HiveField(1)
+  late final String password;
 
-  // Convert to Map for Hive
-  Map<String, dynamic> toMap() {
-    return {
-      'username': username,
-      'password': password,
-      'isLoggedIn': isLoggedIn,
-    };
-  }
+  @HiveField(2)
+  late final bool isLoggedIn;
 
-  // Create from Map
-  factory AuthEntity.fromMap(Map<String, dynamic> map) {
-    return AuthEntity(
-      username: map['username'] ?? '',
-      password: map['password'] ?? '',
-      isLoggedIn: map['isLoggedIn'] ?? false,
-    );
-  }
+  AuthEntity(this.username, this.password, this.isLoggedIn);
 }

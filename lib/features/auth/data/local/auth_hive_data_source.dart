@@ -8,15 +8,15 @@ class AuthHiveDataSource {
   /// Store user data after signup or login.
   Future<void> storeUser(AuthEntity user) async {
     final box = await HiveUtils.openBox(AppConstants.authHiveBoxName);
-    await box.put(AppConstants.authKey, user.toMap());
+    await box.put(AppConstants.authKey, user);
   }
 
   /// Retrieve user data if exists.
   Future<AuthEntity?> getUser() async {
     final box = await HiveUtils.openBox(AppConstants.authHiveBoxName);
-    final userMap = box.get(AppConstants.authKey);
-    if (userMap == null) return null;
-    return AuthEntity.fromMap(Map<String, dynamic>.from(userMap));
+    final user = box.get(AppConstants.authKey);
+    if (user == null) return null;
+    return user;
   }
 
   /// Clear stored user data after logout.
