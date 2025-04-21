@@ -20,9 +20,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final result = await viewModel.getSettings();
       switch (result) {
         case Success(:final data):
-          emit(SettingsLoaded(data)); // Show loaded settings
+          emit(SettingsLoadedState(data)); // Show loaded settings
         case Failure(:final message):
-          emit(SettingsError('Failed to load settings: $message'));
+          emit(SettingsErrorState('Failed to load settings: $message'));
       }
     });
 
@@ -31,11 +31,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       final result = await viewModel.saveSettings(event.newSettings);
       switch (result) {
         case Success():
-          emit(SettingsLoaded(event.newSettings)); // Update UI immediately
+          emit(SettingsLoadedState(event.newSettings)); // Update UI immediately
           await Future.delayed(const Duration(milliseconds: 300));
           triggerAppRebuild(); // Trigger theme/font rebuild
         case Failure(:final message):
-          emit(SettingsError('Failed to save settings: $message'));
+          emit(SettingsErrorState('Failed to save settings: $message'));
       }
     });
   }

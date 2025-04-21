@@ -18,20 +18,20 @@ sealed class SettingsState extends Equatable {
 class SettingsInitial extends SettingsState {}
 
 /// State when settings have been successfully loaded or updated
-class SettingsLoaded extends SettingsState {
+class SettingsLoadedState extends SettingsState {
   final SettingsEntity settings;
 
-  const SettingsLoaded(this.settings);
+  const SettingsLoadedState(this.settings);
 
   @override
   List<Object?> get props => [settings];
 }
 
 /// State when there was a failure loading or saving settings
-class SettingsError extends SettingsState {
+class SettingsErrorState extends SettingsState {
   final String message;
 
-  const SettingsError(this.message);
+  const SettingsErrorState(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -30,7 +30,7 @@ class SettingsScreenBody extends StatelessWidget {
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
-          if (state is SettingsLoaded) {
+          if (state is SettingsLoadedState) {
             return _buildSettingsForm(context, state.settings);
           } else {
             return const Center(child: CircularProgressIndicator());
