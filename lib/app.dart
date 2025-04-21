@@ -33,9 +33,11 @@ class MyAppState extends State<MyApp> {
   ///
   /// 🔁 Used by `triggerAppRebuild()` defined in main.dart
   void restart() {
-    setState(() {
-      appKey = UniqueKey(); // Forces full rebuild of subtree
-    });
+    if (mounted) { // TODO: This check may not be needed.
+      setState(() {
+        appKey = UniqueKey(); // Forces full rebuild of subtree
+      });
+    }
   }
 
   @override

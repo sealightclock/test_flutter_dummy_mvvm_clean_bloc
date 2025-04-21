@@ -87,9 +87,11 @@ class HomeScreenState extends State<HomeScreen> {
   /// Asynchronously restore last selected tab from Hive
   void _restoreLastSeenTab() async {
     final restoredTab = await AppHiveDataSource.getLastSeenTab();
-    setState(() {
-      _selectedTab = restoredTab;
-    });
+    if (mounted) {
+      setState(() {
+        _selectedTab = restoredTab;
+      });
+    }
   }
 
   /// Persist current selected tab when changed
@@ -105,7 +107,7 @@ class HomeScreenState extends State<HomeScreen> {
 
         if (shouldAutoSwitchToMyString) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
+            if (mounted) { // TODO: This check may not be needed.
               setState(() {
                 _selectedTab = AppTab.myString;
                 shouldAutoSwitchToMyString = false;
@@ -116,7 +118,7 @@ class HomeScreenState extends State<HomeScreen> {
 
         if (state is AuthUnauthenticatedState && _selectedTab.isProtected()) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
+            if (mounted) { // TODO: This check may not be needed.
               setState(() {
                 _selectedTab = AppTab.auth;
               });
@@ -150,9 +152,11 @@ class HomeScreenState extends State<HomeScreen> {
                 showFeedback(context, 'Please log in first', FeedbackType.warning);
                 return;
               }
-              setState(() {
-                _selectedTab = tappedTab;
-              });
+              if (mounted) { // TODO: This check may not be needed.
+                setState(() {
+                  _selectedTab = tappedTab;
+                });
+              }
               _saveLastSeenTab(tappedTab);
             },
             type: BottomNavigationBarType.fixed,

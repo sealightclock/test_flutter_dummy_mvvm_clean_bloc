@@ -50,9 +50,12 @@ class AuthScreenState extends State<AuthScreen> {
 
       _showSnackBarMessage('Error checking authentication status: $e', FeedbackType.error);
     } finally {
-      setState(() {
-        _checkingAuthStatus = false;
-      });
+      if (mounted) { // This check appears to be needed, as detected by
+        // app_test.dart
+        setState(() {
+          _checkingAuthStatus = false;
+        });
+      }
     }
   }
 
@@ -174,9 +177,11 @@ class AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 16),
                   OutlinedButton(
                     onPressed: () {
-                      setState(() {
-                        _showMoreOptions = !_showMoreOptions;
-                      });
+                      if (mounted) { // TODO: This check may not be needed.
+                        setState(() {
+                          _showMoreOptions = !_showMoreOptions;
+                        });
+                      }
                     },
                     child: Text(_showMoreOptions ? 'Fewer Options' : 'More Options'),
                   ),
