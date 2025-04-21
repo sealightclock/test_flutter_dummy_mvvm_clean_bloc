@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../theme/app_styles.dart';
+import '../../../../util/app_constants.dart';
 import '../../domain/entity/settings_entity.dart';
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';
@@ -25,7 +26,7 @@ class SettingsScreenBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Settings'),
+          title: const Text(AppConstants.settingsLabel),
           centerTitle: true, // ✅ Fixes left-alignment flicker during app launch
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
@@ -49,7 +50,7 @@ class SettingsScreenBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SwitchListTile(
-            title: const Text('Dark Mode'),
+            title: const Text(AppConstants.settingsDartModeLabel),
             value: settings.darkMode,
             onChanged: (enabled) {
               final updated = settings.copyWith(darkMode: enabled);
@@ -57,7 +58,7 @@ class SettingsScreenBody extends StatelessWidget {
             },
           ),
           const SizedBox(height: 16),
-          const Text('Font Size'),
+          const Text(AppConstants.settingsFontSizeLabel),
           Row(
             children: [14.0, 16.0, 18.0].map((size) {
               return Expanded(

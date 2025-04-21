@@ -69,4 +69,11 @@ class AppConstants {
       'Mocked Server String: ';
 
   static const int simulatorDelaySeconds = 10; // Simulate network delay.
+
+  // ---------------------------------------------------------------------------
+  // UI Labels for SettingsStringScreen
+  // ---------------------------------------------------------------------------
+  static const String settingsLabel = 'Settings';
+  static const String settingsDartModeLabel = 'Dart Mode';
+  static const String settingsFontSizeLabel = 'Font Size';
 }
