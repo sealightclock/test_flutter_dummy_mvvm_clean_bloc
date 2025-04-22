@@ -1,3 +1,4 @@
+import '../../../../util/result.dart';
 import '../../domain/usecase/login_use_case.dart';
 import '../../domain/usecase/signup_use_case.dart';
 import '../../domain/usecase/guest_login_use_case.dart';
@@ -29,8 +30,8 @@ class AuthViewModel {
     await guestLoginUseCase();
   }
 
-  Future<AuthEntity?> getAuth() async {
-    return await getAuthUseCase();
+  Future<Result<AuthEntity>> getAuth() async {
+    return await getAuthUseCase.call();
   }
 
   /// Clear user authentication status after logout.

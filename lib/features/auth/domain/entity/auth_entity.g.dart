@@ -17,9 +17,9 @@ class AuthEntityAdapter extends TypeAdapter<AuthEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AuthEntity(
-      fields[0] as String,
-      fields[1] as String,
-      fields[2] as bool,
+      username: fields[0] as String,
+      password: fields[1] as String,
+      isLoggedIn: fields[2] as bool,
     );
   }
 

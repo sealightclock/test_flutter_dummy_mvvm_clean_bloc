@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../home_screen.dart'; // Import HomeScreen
 import '../../../../util/feedback_type_enum.dart';
 import '../../../../util/global_feedback_handler.dart';
+import '../../../../util/result.dart';
+import '../../domain/entity/auth_entity.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -34,28 +36,31 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _checkAuthStatus() async {
-    try {
-      final user = await _bloc.viewModel.getAuth();
-      if (user != null && user.isLoggedIn) {
-        _bloc.add(AuthAuthenticatedEvent(user: user));
+    final result = await _bloc.viewModel.getAuth();
 
-        _showSnackBarMessage('You have been authenticated.', FeedbackType.info);
-      } else {
+    switch (result) {
+      case Success<AuthEntity>(:final data):
+        if (data.isLoggedIn) {
+          _bloc.add(AuthAuthenticatedEvent(user: data));
+        } else {
+          _bloc.add(const AuthUnauthenticatedEvent());
+          _showSnackBarMessage(
+              'You are not authenticated.', FeedbackType.warning);
+        }
+        break;
+
+      case Failure<AuthEntity>(:final message):
         _bloc.add(const AuthUnauthenticatedEvent());
+        _showSnackBarMessage('Error checking authentication status: $message',
+            FeedbackType.error);
+        break;
+    }
 
-        _showSnackBarMessage('You are not authenticated.', FeedbackType.warning);
-      }
-    } catch (e) {
-      _bloc.add(const AuthUnauthenticatedEvent());
-
-      _showSnackBarMessage('Error checking authentication status: $e', FeedbackType.error);
-    } finally {
-      if (mounted) { // This check appears to be needed, as detected by
-        // app_test.dart
-        setState(() {
-          _checkingAuthStatus = false;
-        });
-      }
+    if (mounted) { // This check appears to be needed, as detected by
+      // app_test.dart
+      setState(() {
+        _checkingAuthStatus = false;
+      });
     }
   }
 
@@ -69,12 +74,26 @@ class AuthScreenState extends State<AuthScreen> {
         _usernameController.text.trim(),
         _passwordController.text.trim(),
       );
-      final user = await _bloc.viewModel.getAuth();
-      if (user != null) {
-        _bloc.add(AuthAuthenticatedEvent(user: user));
-        HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
-      } else {
-        _bloc.add(const AuthUnauthenticatedEvent());
+
+      final result = await _bloc.viewModel.getAuth();
+
+      switch (result) {
+        case Success<AuthEntity>(:final data):
+          if (data.isLoggedIn) {
+            _bloc.add(AuthAuthenticatedEvent(user: data));
+            HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
+          } else {
+            _bloc.add(const AuthUnauthenticatedEvent());
+            _showSnackBarMessage(
+                'You are not authenticated.', FeedbackType.warning);
+            }
+          break;
+
+        case Failure<AuthEntity>(:final message):
+          _bloc.add(const AuthUnauthenticatedEvent());
+          _showSnackBarMessage('Error checking authentication status: $message',
+              FeedbackType.error);
+          break;
       }
     } catch (e) {
       _bloc.add(AuthErrorEvent(message: e.toString()));
@@ -90,12 +109,26 @@ class AuthScreenState extends State<AuthScreen> {
         _usernameController.text.trim(),
         _passwordController.text.trim(),
       );
-      final user = await _bloc.viewModel.getAuth();
-      if (user != null) {
-        _bloc.add(AuthAuthenticatedEvent(user: user));
-        HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
-      } else {
-        _bloc.add(const AuthUnauthenticatedEvent());
+
+      final result = await _bloc.viewModel.getAuth();
+
+      switch (result) {
+        case Success<AuthEntity>(:final data):
+          if (data.isLoggedIn) {
+            _bloc.add(AuthAuthenticatedEvent(user: data));
+            HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
+          } else {
+            _bloc.add(const AuthUnauthenticatedEvent());
+            _showSnackBarMessage(
+                'You are not authenticated.', FeedbackType.warning);
+            }
+          break;
+
+        case Failure<AuthEntity>(:final message):
+          _bloc.add(const AuthUnauthenticatedEvent());
+          _showSnackBarMessage('Error checking authentication status: $message',
+              FeedbackType.error);
+          break;
       }
     } catch (e) {
       _bloc.add(AuthErrorEvent(message: e.toString()));

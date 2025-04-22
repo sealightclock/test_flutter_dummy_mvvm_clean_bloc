@@ -2,12 +2,19 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/data/repository
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/domain/entity'
     '/auth_entity.dart';
 
+import '../../../../util/result.dart';
+
 class GetAuthUseCase {
   final AuthRepository repository;
 
   GetAuthUseCase(this.repository);
 
-  Future<AuthEntity?> call() async {
-    return await repository.getAuth();
+  Future<Result<AuthEntity>> call() async {
+    try {
+      final auth = await repository.getAuth();
+      return Success(auth);
+    } catch (e) {
+      return Failure('Failed to get auth: $e');
+    }
   }
 }

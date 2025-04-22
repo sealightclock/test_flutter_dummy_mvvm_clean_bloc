@@ -26,7 +26,7 @@ class AuthRepository {
   }
 
   /// Get current user authentication status from local storage.
-  Future<AuthEntity?> getAuth() async {
+  Future<AuthEntity> getAuth() async {
     return await _localDataSource.getAuth();
   }
 

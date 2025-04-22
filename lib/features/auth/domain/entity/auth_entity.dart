@@ -5,13 +5,17 @@ part 'auth_entity.g.dart';
 @HiveType(typeId: 2)
 class AuthEntity {
   @HiveField(0)
-  late final String username;
+  final String username;
 
   @HiveField(1)
-  late final String password;
+  final String password;
 
   @HiveField(2)
-  late final bool isLoggedIn;
+  final bool isLoggedIn;
 
-  AuthEntity(this.username, this.password, this.isLoggedIn);
+  const AuthEntity({
+    required this.username,
+    required this.password,
+    required this.isLoggedIn,
+  });
 }

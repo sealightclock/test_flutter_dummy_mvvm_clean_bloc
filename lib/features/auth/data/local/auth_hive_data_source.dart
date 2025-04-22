@@ -12,11 +12,10 @@ class AuthHiveDataSource {
   }
 
   /// Retrieve user data if exists.
-  Future<AuthEntity?> getAuth() async {
+  Future<AuthEntity> getAuth() async {
     final box = await HiveUtils.openBox(AppConstants.authHiveBoxName);
-    final auth = box.get(AppConstants.authKey);
-    if (auth == null) return null;
-    return auth;
+    return box.get(AppConstants.authKey) ??
+        AuthEntity(username: '', password: '', isLoggedIn: false);
   }
 
   /// Clear stored user data after logout.

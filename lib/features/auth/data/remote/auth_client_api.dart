@@ -15,6 +15,7 @@ class AuthClientApi {
     _initialize();
   }
 
+  // TODO: Replace with real http client
   late final http.Client _client;
   static const String _baseUrl = 'https://mockapi.example.com/auth'; // Mock URL for structure
 
@@ -27,19 +28,19 @@ class AuthClientApi {
   Future<AuthEntity> signup(String username, String password) async {
     await Future.delayed(const Duration(seconds: 1)); // Simulate network delay
     // TODO: In real app, you would POST to server here
-    return AuthEntity(username, password, true);
+    return AuthEntity(username: username, password: password, isLoggedIn: true);
   }
 
   /// Simulate login API call
   Future<AuthEntity> login(String username, String password) async {
     await Future.delayed(const Duration(seconds: 1)); // Simulate network delay
     // TODO: In real app, you would POST and validate user credentials
-    return AuthEntity(username, password, true);
+    return AuthEntity(username: username, password: password, isLoggedIn: true);
   }
 
   /// Simulate guest login API call
   Future<AuthEntity> guestLogin() async {
     await Future.delayed(const Duration(seconds: 1)); // Simulate network delay
-    return AuthEntity('Guest', '', true);
+    return AuthEntity(username: 'Guest', password: '', isLoggedIn: true);
   }
 }
