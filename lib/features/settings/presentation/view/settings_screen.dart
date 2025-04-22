@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../theme/app_styles.dart';
+
 import '../../../../util/app_constants.dart';
 import '../../domain/entity/settings_entity.dart';
 import '../bloc/settings_bloc.dart';
@@ -44,8 +44,8 @@ class SettingsScreenBody extends StatelessWidget {
   Widget _buildSettingsForm(BuildContext context, SettingsEntity settings) {
     final bloc = BlocProvider.of<SettingsBloc>(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(AppDimens.screenPadding),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
