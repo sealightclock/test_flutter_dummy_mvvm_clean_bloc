@@ -35,7 +35,7 @@ class AuthScreenState extends State<AuthScreen> {
 
   Future<void> _checkAuthStatus() async {
     try {
-      final user = await _bloc.viewModel.getUserAuthStatus();
+      final user = await _bloc.viewModel.getAuth();
       if (user != null && user.isLoggedIn) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
 
@@ -69,7 +69,7 @@ class AuthScreenState extends State<AuthScreen> {
         _usernameController.text.trim(),
         _passwordController.text.trim(),
       );
-      final user = await _bloc.viewModel.getUserAuthStatus();
+      final user = await _bloc.viewModel.getAuth();
       if (user != null) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
         HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
@@ -90,7 +90,7 @@ class AuthScreenState extends State<AuthScreen> {
         _usernameController.text.trim(),
         _passwordController.text.trim(),
       );
-      final user = await _bloc.viewModel.getUserAuthStatus();
+      final user = await _bloc.viewModel.getAuth();
       if (user != null) {
         _bloc.add(AuthAuthenticatedEvent(user: user));
         HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;

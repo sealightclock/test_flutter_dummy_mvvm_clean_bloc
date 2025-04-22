@@ -9,29 +9,29 @@ class AuthRepository {
 
   /// Signup a new user remotely and store locally.
   Future<void> signUp(String username, String password) async {
-    final user = await _remoteDataSource.signup(username, password);
-    await _localDataSource.storeUser(user);
+    final auth = await _remoteDataSource.signup(username, password);
+    await _localDataSource.storeAuth(auth);
   }
 
   /// Login an existing user remotely and store locally.
   Future<void> login(String username, String password) async {
-    final user = await _remoteDataSource.login(username, password);
-    await _localDataSource.storeUser(user);
+    final auth = await _remoteDataSource.login(username, password);
+    await _localDataSource.storeAuth(auth);
   }
 
   /// Guest login remotely and store locally.
   Future<void> guestLogin() async {
-    final user = await _remoteDataSource.guestLogin();
-    await _localDataSource.storeUser(user);
+    final auth = await _remoteDataSource.guestLogin();
+    await _localDataSource.storeAuth(auth);
   }
 
   /// Get current user authentication status from local storage.
-  Future<AuthEntity?> getUserAuthStatus() async {
-    return await _localDataSource.getUser();
+  Future<AuthEntity?> getAuth() async {
+    return await _localDataSource.getAuth();
   }
 
   /// Clear stored user authentication after logout.
-  Future<void> clearUserAuth() async {
-    await _localDataSource.clearUser();
+  Future<void> clearAuth() async {
+    await _localDataSource.clearAuth();
   }
 }

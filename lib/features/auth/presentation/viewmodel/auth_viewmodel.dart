@@ -1,20 +1,20 @@
 import '../../domain/usecase/login_use_case.dart';
 import '../../domain/usecase/signup_use_case.dart';
 import '../../domain/usecase/guest_login_use_case.dart';
-import '../../domain/usecase/get_auth_status_use_case.dart';
+import '../../domain/usecase/get_auth_use_case.dart';
 import '../../domain/entity/auth_entity.dart';
 
 class AuthViewModel {
   final LoginUseCase loginUseCase;
   final SignUpUseCase signUpUseCase;
   final GuestLoginUseCase guestLoginUseCase;
-  final GetAuthStatusUseCase getUserAuthStatusUseCase;
+  final GetAuthUseCase getAuthUseCase;
 
   AuthViewModel({
     required this.loginUseCase,
     required this.signUpUseCase,
     required this.guestLoginUseCase,
-    required this.getUserAuthStatusUseCase,
+    required this.getAuthUseCase,
   });
 
   Future<void> login(String username, String password) async {
@@ -29,13 +29,13 @@ class AuthViewModel {
     await guestLoginUseCase();
   }
 
-  Future<AuthEntity?> getUserAuthStatus() async {
-    return await getUserAuthStatusUseCase();
+  Future<AuthEntity?> getAuth() async {
+    return await getAuthUseCase();
   }
 
   /// Clear user authentication status after logout.
-  Future<void> clearUserAuthStatus() async {
-    final repository = getUserAuthStatusUseCase.repository; // get reference
-    await repository.clearUserAuth();
+  Future<void> clearAuth() async {
+    final repository = getAuthUseCase.repository; // get reference
+    await repository.clearAuth();
   }
 }
