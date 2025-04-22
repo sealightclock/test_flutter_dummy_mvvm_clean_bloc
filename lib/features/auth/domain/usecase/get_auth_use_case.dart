@@ -14,7 +14,7 @@ class GetAuthUseCase {
       final auth = await repository.getAuth();
       return Success(auth);
     } catch (e) {
-      return Failure('Failed to get auth: $e');
+      return Failure('Failed to getAuth: $e');
     }
   }
 }

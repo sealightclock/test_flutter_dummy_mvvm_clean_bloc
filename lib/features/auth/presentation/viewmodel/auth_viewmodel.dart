@@ -18,16 +18,16 @@ class AuthViewModel {
     required this.getAuthUseCase,
   });
 
-  Future<void> login(String username, String password) async {
-    await loginUseCase(username, password);
+  Future<Result<void>> login(String username, String password) async {
+    return await loginUseCase(username, password);
   }
 
-  Future<void> signUp(String username, String password) async {
-    await signUpUseCase(username, password);
+  Future<Result<void>> signUp(String username, String password) async {
+    return await signUpUseCase(username, password);
   }
 
-  Future<void> guestLogin() async {
-    await guestLoginUseCase();
+  Future<Result<void>> guestLogin() async {
+    return await guestLoginUseCase.call();
   }
 
   Future<Result<AuthEntity>> getAuth() async {

@@ -1,3 +1,4 @@
+import '../../../../util/result.dart';
 import '../../data/repository/auth_repository.dart';
 
 class LoginUseCase {
@@ -5,7 +6,12 @@ class LoginUseCase {
 
   LoginUseCase(this.repository);
 
-  Future<void> call(String username, String password) async {
-    await repository.login(username, password);
+  Future<Result<void>> call(String username, String password) async {
+    try {
+      await repository.login(username, password);
+      return const Success(null);
+    } catch (e) {
+      return Failure('Failed to login: \$e');
+    }
   }
 }

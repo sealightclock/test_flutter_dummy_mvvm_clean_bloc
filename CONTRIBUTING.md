@@ -87,21 +87,22 @@ steps, up from DataSource, Repository to UseCase.
 
 ### Entity
 
+The constructor of an Entity class should use named parameters to avoid confusion.
+
 In general, an Entity class should have a Hive adapter whose code can be generated using 
 bash command:
 
 `flutter packages pub run build_runner build --delete-conflicting-outputs`
 
-Some Entity classes may be used by all the layers.
-
-Different layers may have different presentations of a same entity. Conversions of the entity 
+Some Entity classes may be used by all the (Presentation, Domain, Data) layers. However, different 
+layers may have different versions of a same entity. Conversions of the entity 
 between layers may be needed and should be done in the ViewModel or in the Repository.
 
 ### UseCase
 
 A UseCase class should only see Repository classes.
 
-Use call(), rather than execute(), to execute a UseCase. This makes the UseCase class look like 
+Use call(), rather than execute(), to run a UseCase. This makes the UseCase class look like 
 a function.
 
 Wrap the return value of a UseCase function into a Result<T> class with Success or Failure so that 
