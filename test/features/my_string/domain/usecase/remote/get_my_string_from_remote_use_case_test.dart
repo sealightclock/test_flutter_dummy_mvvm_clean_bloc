@@ -25,7 +25,7 @@ void main() {
 
     // Assert: Use handleResult to verify behavior
     await handleResult<MyStringEntity>(
-      futureResult: useCase.execute(),
+      futureResult: useCase.call(),
       onSuccess: (data) {
         expect(data.value, 'Remote Data');
         expect(data, isA<MyStringEntity>());

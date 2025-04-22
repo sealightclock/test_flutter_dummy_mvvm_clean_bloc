@@ -21,7 +21,7 @@ class SettingsViewModel {
   /// Returns a [Result] containing either the loaded [SettingsEntity]
   /// or an error message.
   Future<Result<SettingsEntity>> getSettings() async {
-    return await getSettingsUseCase.execute();
+    return await getSettingsUseCase.call();
   }
 
   /// Save user settings to local data source.

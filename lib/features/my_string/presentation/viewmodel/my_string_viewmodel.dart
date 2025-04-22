@@ -22,7 +22,7 @@ class MyStringViewModel {
   ///
   /// You can handle the result easily using [handleResult] if needed.
   Future<Result<MyStringEntity>> getMyStringFromLocal() async {
-    return await getFromLocalUseCase.execute();
+    return await getFromLocalUseCase.call();
   }
 
   /// Store my_string to the local store.
@@ -31,13 +31,13 @@ class MyStringViewModel {
   /// - Success on storing successfully
   /// - Failure if storing failed
   Future<Result<void>> storeMyStringToLocal(String value) async {
-    return await storeToLocalUseCase.execute(MyStringEntity(value: value));
+    return await storeToLocalUseCase.call(MyStringEntity(value: value));
   }
 
   /// Fetch my_string from the remote server.
   ///
   /// You can handle the result easily using [handleResult] if needed.
   Future<Result<MyStringEntity>> getMyStringFromRemote() async {
-    return await getFromRemoteUseCase.execute();
+    return await getFromRemoteUseCase.call();
   }
 }

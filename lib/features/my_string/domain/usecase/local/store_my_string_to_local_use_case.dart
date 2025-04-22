@@ -16,7 +16,7 @@ class StoreMyStringToLocalUseCase {
   /// Always returns a Result:
   /// - Success with void (no data needed) on success
   /// - Failure with error message on failure
-  Future<Result<void>> execute(MyStringEntity value) async {
+  Future<Result<void>> call(MyStringEntity value) async {
     try {
       await repository.storeMyStringToLocal(value);
       return const Success(null); // Success but no data

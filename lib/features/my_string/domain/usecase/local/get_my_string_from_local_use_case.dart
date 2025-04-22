@@ -17,7 +17,7 @@ class GetMyStringFromLocalUseCase {
   /// Always returns a Result:
   /// - Success with MyStringEntity on success
   /// - Failure with error message on failure
-  Future<Result<MyStringEntity>> execute() async {
+  Future<Result<MyStringEntity>> call() async {
     try {
       final entity = await repository.getMyStringFromLocal();
       return Success(entity);

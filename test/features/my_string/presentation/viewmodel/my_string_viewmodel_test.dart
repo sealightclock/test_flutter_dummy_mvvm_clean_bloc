@@ -35,7 +35,7 @@ void main() {
   });
 
   test('getMyStringFromLocal returns expected string', () async {
-    when(() => mockGetLocal.execute())
+    when(() => mockGetLocal.call())
         .thenAnswer((_) async => Success(MyStringEntity(value: 'Local String')));
 
     final result = await viewModel.getMyStringFromLocal();
@@ -50,18 +50,18 @@ void main() {
   });
 
   test('storeMyStringToLocal executes use case correctly', () async {
-    when(() => mockStoreLocal.execute(any()))
+    when(() => mockStoreLocal.call(any()))
         .thenAnswer((_) async => const Success(null)); // <- important
 
     await viewModel.storeMyStringToLocal('Save Me');
 
-    verify(() => mockStoreLocal.execute(
+    verify(() => mockStoreLocal.call(
         any(that: predicate<MyStringEntity>((entity) => entity.value == 'Save Me'))
     )).called(1);
   });
 
   test('getMyStringFromRemote returns expected string', () async {
-    when(() => mockGetRemote.execute())
+    when(() => mockGetRemote.call())
         .thenAnswer((_) async => Success(MyStringEntity(value: 'Remote String')));
 
     handleResult<MyStringEntity>(

@@ -101,6 +101,9 @@ between layers may be needed and should be done in the ViewModel or in the Repos
 
 A UseCase class should only see Repository classes.
 
+Use call(), rather than execute(), to execute a UseCase. This makes the UseCase class look like 
+a function.
+
 Wrap the return value of a UseCase function into a Result<T> class with Success or Failure so that 
 the Presentation layer (View or Bloc) can handle the result easily.
 

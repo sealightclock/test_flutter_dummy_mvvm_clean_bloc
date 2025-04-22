@@ -7,7 +7,7 @@ class GetSettingsUseCase {
 
   GetSettingsUseCase(this.repository);
 
-  Future<Result<SettingsEntity>> execute() async {
+  Future<Result<SettingsEntity>> call() async {
     try {
       final settings = await repository.getSettings();
       return Success(settings);

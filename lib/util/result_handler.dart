@@ -10,7 +10,7 @@ import 'result.dart'; // Import your Result class (Success, Failure)
 /// Example usage:
 /// ```dart
 /// await handleResult(
-///   futureResult: await useCase.execute(),
+///   futureResult: await useCase.call(),
 ///   onSuccess: (data) { ... },
 ///   onFailure: (message) { ... },
 /// );
@@ -38,7 +38,7 @@ Future<void> handleResult<T>({
 /// Example usage:
 /// ```dart
 /// final resultString = await handleResultReturning(
-///   futureResult: await useCase.execute(),
+///   futureResult: await useCase.call(),
 ///   onSuccess: (data) => data.value,
 ///   onFailure: (message) => 'Error: $message',
 /// );
