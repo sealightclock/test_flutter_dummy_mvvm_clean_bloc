@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/util/app_constants.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/feedback_type_enum.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/global_feedback_handler.dart';
 
@@ -20,13 +21,14 @@ extension AppTabExtension on AppTab {
   String get label {
     switch (this) {
       case AppTab.auth:
-        return 'Auth';
+        return AppConstants.authLabel;
       case AppTab.myString:
-        return 'MyString';
+        return AppConstants.myStringLabel;
       case AppTab.account:
-        return 'Account';
+        return AppConstants.accountLabel;
       case AppTab.settings:
-        return 'Settings';
+        return AppConstants.settingsLabel;
+      // TODO: Add more tabs here
     }
   }
 

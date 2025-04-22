@@ -22,6 +22,14 @@ class AppConstants {
   static const String remoteServerLabelHttp = 'Http';
 
   // ---------------------------------------------------------------------------
+  // UI Labels for HomeScreen (bottom navigation bar)
+  // ---------------------------------------------------------------------------
+  static const String authLabel = 'Auth';
+  static const String myStringLabel = 'MyString';
+  static const String accountLabel = 'Account';
+  static const String settingsLabel = 'Settings';
+
+  // ---------------------------------------------------------------------------
   // UI Labels for MyStringScreen (used in text fields, buttons, hints)
   // ---------------------------------------------------------------------------
 
@@ -30,6 +38,12 @@ class AppConstants {
   static const String updateFromServerLabel = 'Update from Server';
   static const String currentValueLabel = 'Current Value:';
   static const String initialHintText = 'Enter or load a string to begin';
+
+  // ---------------------------------------------------------------------------
+  // UI Labels for SettingsScreen
+  // ---------------------------------------------------------------------------
+  static const String settingsDartModeLabel = 'Dart Mode';
+  static const String settingsFontSizeLabel = 'Font Size';
 
   // ---------------------------------------------------------------------------
   // DI Section Headers for MyStringScreen (top of screen)
@@ -69,11 +83,4 @@ class AppConstants {
       'Mocked Server String: ';
 
   static const int simulatorDelaySeconds = 10; // Simulate network delay.
-
-  // ---------------------------------------------------------------------------
-  // UI Labels for SettingsStringScreen
-  // ---------------------------------------------------------------------------
-  static const String settingsLabel = 'Settings';
-  static const String settingsDartModeLabel = 'Dart Mode';
-  static const String settingsFontSizeLabel = 'Font Size';
 }
