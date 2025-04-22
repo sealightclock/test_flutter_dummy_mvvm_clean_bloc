@@ -13,7 +13,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SettingsBloc()..add(LoadSettingsEvent()),
+      create: (_) => SettingsBloc()..add(SettingsLoadEvent()),
       child: const SettingsScreenBody(),
     );
   }
@@ -54,7 +54,7 @@ class SettingsScreenBody extends StatelessWidget {
             value: settings.darkMode,
             onChanged: (enabled) {
               final updated = settings.copyWith(darkMode: enabled);
-              bloc.add(UpdateSettingsEvent(updated));
+              bloc.add(SettingsUpdateEvent(updated));
             },
           ),
           const SizedBox(height: 16),
@@ -68,7 +68,7 @@ class SettingsScreenBody extends StatelessWidget {
                   groupValue: settings.fontSize,
                   onChanged: (value) {
                     final updated = settings.copyWith(fontSize: value);
-                    bloc.add(UpdateSettingsEvent(updated));
+                    bloc.add(SettingsUpdateEvent(updated));
                   },
                 ),
               );

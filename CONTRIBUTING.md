@@ -58,17 +58,23 @@ This layer contains Bloc, Event and State classes.
 
 A Bloc class should own ViewModel which handles business logic.
 
+Use switch/case to handle all the events.
+
 #### Event class
 
-The base Event class should be sealed and should extend Equatable for comparison purposes.
+A base Event class should be sealed and should extend Equatable for comparison purposes.
 
 Typical events: Load, Update.
 
+A derived Event class should be renamed <Feature><Specific>Event.
+
 #### State class
 
-The base State class should be sealed and should extend Equatable for comparison purposes.
+A base State class should be sealed and should extend Equatable for comparison purposes.
 
 Typical states: Initial, Loading, Success (Loaded), Error.
+
+A derived State class should be renamed <Feature><Specific>State.
 
 ### ViewModel
 

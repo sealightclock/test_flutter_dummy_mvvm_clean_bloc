@@ -52,7 +52,7 @@ class MyAppState extends State<MyApp> {
               create: (_) => AuthBloc()..add(const AuthUnauthenticatedEvent()),
             ),
             BlocProvider<SettingsBloc>(
-              create: (_) => SettingsBloc()..add(LoadSettingsEvent()),
+              create: (_) => SettingsBloc()..add(SettingsLoadEvent()),
             ),
           ],
           child: BlocBuilder<SettingsBloc, SettingsState>(

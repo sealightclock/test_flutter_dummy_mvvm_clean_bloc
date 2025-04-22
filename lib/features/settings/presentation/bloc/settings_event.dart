@@ -7,11 +7,11 @@ sealed class SettingsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadSettingsEvent extends SettingsEvent {}
+class SettingsLoadEvent extends SettingsEvent {}
 
-class UpdateSettingsEvent extends SettingsEvent {
+class SettingsUpdateEvent extends SettingsEvent {
   final SettingsEntity newSettings;
-  const UpdateSettingsEvent(this.newSettings);
+  const SettingsUpdateEvent(this.newSettings);
   @override
   List<Object?> get props => [newSettings];
 }
