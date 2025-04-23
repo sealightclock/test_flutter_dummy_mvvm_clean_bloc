@@ -16,6 +16,10 @@ class BleViewModel {
     bloc.add(DeviceSelectedEvent(id));
   }
 
+  void disconnect() {
+    bloc.add(DisconnectFromDeviceEvent());
+  }
+
   bool shouldAutoScan() {
     if (lastScanTime == null) return true;
     final age = DateTime.now().difference(lastScanTime!);

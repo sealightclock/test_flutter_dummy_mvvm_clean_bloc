@@ -66,6 +66,34 @@ class _BleScreenState extends State<BleScreen> {
               return const Center(child: Text("Connected!"));
             } else if (state is BleError) {
               return Center(child: Text("Error: ${state.message}"));
+            } else if (state is BleConnected) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Connected to: ${state.deviceId}"),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: widget.viewModel.disconnect,
+                      child: const Text("Disconnect"),
+                    ),
+                  ],
+                ),
+              );
+            } else if (state is BleDisconnected) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Disconnected"),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: widget.viewModel.startScan,
+                      child: const Text("Scan Again"),
+                    ),
+                  ],
+                ),
+              );
             }
 
             return Center(

@@ -11,7 +11,12 @@ class BleDevicesFound extends BleState {
   BleDevicesFound(this.devices);
 }
 
-class BleConnected extends BleState {}
+class BleConnected extends BleState {
+  final String deviceId;
+  BleConnected(this.deviceId);
+}
+
+class BleDisconnected extends BleState {} // NEW
 
 class BleError extends BleState {
   final String message;

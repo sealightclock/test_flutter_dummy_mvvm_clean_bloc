@@ -27,7 +27,7 @@ class BleDeviceDataSource implements BleDeviceRepository {
   }
 
   @override
-  Future<void> connectToDevice(String id) async {
-    await _ble.connectToDevice(id: id).first;
+  Stream<ConnectionStateUpdate> connectToDevice(String deviceId) {
+    return _ble.connectToDevice(id: deviceId);
   }
 }
