@@ -28,6 +28,8 @@ class AppConstants {
   static const String myStringLabel = 'MyString';
   static const String accountLabel = 'Account';
   static const String settingsLabel = 'Settings';
+  static const String bleLabel = 'BLE';
+  // TODO: Add more labels here
 
   // ---------------------------------------------------------------------------
   // UI Labels for MyStringScreen (used in text fields, buttons, hints)

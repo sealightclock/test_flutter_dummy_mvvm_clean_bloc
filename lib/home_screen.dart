@@ -10,6 +10,8 @@ import 'features/account/presentation/view/account_screen.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/view/auth_screen.dart';
+import 'features/ble/presentation/factory/ble_viewmodel_factory.dart';
+import 'features/ble/presentation/view/ble_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
 import 'features/settings/presentation/view/settings_screen.dart';
 
@@ -28,6 +30,8 @@ extension AppTabExtension on AppTab {
         return AppConstants.accountLabel;
       case AppTab.settings:
         return AppConstants.settingsLabel;
+      case AppTab.ble:
+        return AppConstants.bleLabel;
       // TODO: Add more tabs here
     }
   }
@@ -42,6 +46,9 @@ extension AppTabExtension on AppTab {
         return Icons.person;
       case AppTab.settings:
         return Icons.settings;
+      case AppTab.ble:
+        return Icons.bluetooth;
+      // TODO: Add more tabs here
     }
   }
 
@@ -142,6 +149,12 @@ class HomeScreenState extends State<HomeScreen> {
           case AppTab.settings:
             body = const SettingsScreen();
             break;
+          case AppTab.ble:
+            body = isAuthenticated
+                ? BleScreen(viewModel: BleViewModelFactory.create())
+                : const Center(child: Text('Please log in first.'));
+            break;
+          // TODO: Add more tabs here
         }
 
         return Scaffold(
