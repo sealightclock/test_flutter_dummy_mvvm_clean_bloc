@@ -10,7 +10,6 @@ import 'features/account/presentation/view/account_screen.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/view/auth_screen.dart';
-import 'features/ble/presentation/factory/ble_viewmodel_factory.dart';
 import 'features/ble/presentation/view/ble_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
 import 'features/settings/presentation/view/settings_screen.dart';
@@ -151,7 +150,7 @@ class HomeScreenState extends State<HomeScreen> {
             break;
           case AppTab.ble:
             body = isAuthenticated
-                ? BleScreen(viewModel: BleViewModelFactory.create())
+                ? BleScreen()
                 : const Center(child: Text('Please log in first.'));
             break;
           // TODO: Add more tabs here

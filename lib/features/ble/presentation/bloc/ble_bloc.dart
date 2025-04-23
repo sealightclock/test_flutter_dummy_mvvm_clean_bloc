@@ -2,22 +2,23 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import '../../domain/usecase/scan_ble_devices_usecase.dart';
-import '../../domain/usecase/connect_to_ble_device_usecase.dart';
+
+import '../factory/ble_viewmodel_factory.dart';
+import '../viewmodel/ble_viewmodel.dart';
 import 'ble_event.dart';
 import 'ble_state.dart';
 
 class BleBloc extends Bloc<BleEvent, BleState> {
-  final ScanBleDevicesUseCase scanUseCase;
-  final ConnectToBleDeviceUseCase connectUseCase;
-
+  late BleViewModel viewModel;
   StreamSubscription<ConnectionStateUpdate>? _connectionSub;
 
-  BleBloc(this.scanUseCase, this.connectUseCase) : super(BleInitial()) {
+  BleBloc() : super(BleInitial()) {
+    viewModel = BleViewModelFactory.create();
+
     on<StartScanEvent>((event, emit) async {
       emit(BleScanning());
       await emit.forEach(
-        scanUseCase.execute(),
+        viewModel.scanBleDevices(),
         onData: (devices) => BleDevicesFound(devices),
         onError: (_, __) => BleError("Scan failed"),
       );
@@ -26,15 +27,11 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     on<DeviceSelectedEvent>((event, emit) async {
       try {
         _connectionSub?.cancel();
-
-        final stream = connectUseCase.connect(event.deviceId); // returns
-        // Stream<ConnectionStateUpdate>
-
-        _connectionSub = stream.listen((update) {
+        _connectionSub = viewModel.connectToDevice(event.deviceId).listen((update) {
           if (update.connectionState == DeviceConnectionState.connected) {
-            add(_emitConnected(event.deviceId));
+            emit(BleConnected(event.deviceId));
           } else if (update.connectionState == DeviceConnectionState.disconnected) {
-            add(DisconnectFromDeviceEvent());
+            emit(BleDisconnected());
           }
         });
       } catch (_) {
@@ -47,14 +44,6 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       _connectionSub = null;
       emit(BleDisconnected());
     });
-
-    on<ConnectedInternally>((event, emit) {
-      emit(BleConnected(event.deviceId));
-    });
-  }
-
-  BleEvent _emitConnected(String deviceId) {
-    return ConnectedInternally(deviceId); // defined below
   }
 
   @override
@@ -63,4 +52,3 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     return super.close();
   }
 }
-

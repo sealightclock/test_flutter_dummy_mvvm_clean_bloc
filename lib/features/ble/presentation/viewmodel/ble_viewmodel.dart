@@ -1,28 +1,21 @@
-import '../bloc/ble_bloc.dart';
-import '../bloc/ble_event.dart';
+
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+
+import '../../domain/entity/ble_device_entity.dart';
+import '../../domain/usecase/connect_to_ble_device_usecase.dart';
+import '../../domain/usecase/scan_ble_devices_usecase.dart';
 
 class BleViewModel {
-  final BleBloc bloc;
-  DateTime? lastScanTime;
+  final ScanBleDevicesUseCase scanUseCase;
+  final ConnectToBleDeviceUseCase connectUseCase;
 
-  BleViewModel(this.bloc);
+  BleViewModel(this.scanUseCase, this.connectUseCase);
 
-  void startScan() {
-    lastScanTime = DateTime.now();
-    bloc.add(StartScanEvent());
+  Stream<List<BleDeviceEntity>> scanBleDevices() {
+    return scanUseCase.execute();
   }
 
-  void connectToDevice(String id) {
-    bloc.add(DeviceSelectedEvent(id));
-  }
-
-  void disconnect() {
-    bloc.add(DisconnectFromDeviceEvent());
-  }
-
-  bool shouldAutoScan() {
-    if (lastScanTime == null) return true;
-    final age = DateTime.now().difference(lastScanTime!);
-    return age > const Duration(seconds: 30);
+  Stream<ConnectionStateUpdate> connectToDevice(String deviceId) {
+    return connectUseCase.connect(deviceId);
   }
 }
