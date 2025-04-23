@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../bloc/ble_bloc.dart';
 import '../bloc/ble_event.dart';
 import '../bloc/ble_state.dart';
 
-/// BLE screen using MVVM Clean + Bloc, consistent with MyStringScreen pattern.
-/// Bloc and ViewModel can be optionally injected for testing.
 class BleScreen extends StatelessWidget {
   final BleBloc? injectedBloc;
 
@@ -39,9 +38,24 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   void initState() {
     super.initState();
     bloc = BlocProvider.of<BleBloc>(context);
-    if (_shouldAutoScan()) {
+    _initBlePermissionsAndScan();
+  }
+
+  Future<void> _initBlePermissionsAndScan() async {
+    final granted = await _requestPermissions();
+    if (granted && _shouldAutoScan()) {
       _startScan();
     }
+  }
+
+  Future<bool> _requestPermissions() async {
+    final result = await [
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.location,
+    ].request();
+
+    return result.values.every((status) => status.isGranted);
   }
 
   bool _shouldAutoScan() {

@@ -1,32 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import '../domain/entity/ble_device_entity.dart';
-import 'ble_device_repository.dart';
 
-class BleDeviceDataSource implements BleDeviceRepository {
+class BleDeviceDataSource {
   final FlutterReactiveBle _ble;
-
   BleDeviceDataSource(this._ble);
 
-  @override
-  Stream<List<BleDeviceEntity>> scanDevices() async* {
-    // Request permissions first
-    await [
-      Permission.bluetooth,
-      Permission.bluetoothScan,
-      Permission.bluetoothConnect,
-      Permission.locationWhenInUse,
-    ].request();
+  @protected
+  FlutterReactiveBle get ble => _ble;
 
-    final devices = <String, BleDeviceEntity>{};
-
-    yield* _ble.scanForDevices(withServices: []).map((device) {
-      devices[device.id] = BleDeviceEntity(id: device.id, name: device.name);
-      return devices.values.toList();
-    });
+  Stream<List<BleDeviceEntity>> scanDevices() {
+    // Default implementation (can be overridden)
+    return const Stream.empty();
   }
 
-  @override
   Stream<ConnectionStateUpdate> connectToDevice(String deviceId) {
     return _ble.connectToDevice(id: deviceId);
   }

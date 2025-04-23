@@ -7,10 +7,5 @@ class DeviceSelectedEvent extends BleEvent {
   DeviceSelectedEvent(this.deviceId);
 }
 
-class DisconnectFromDeviceEvent extends BleEvent {} // NEW
+class DisconnectFromDeviceEvent extends BleEvent {}
 
-/// Internal only
-class ConnectedInternally extends BleEvent {
-  final String deviceId;
-  ConnectedInternally(this.deviceId);
-}
