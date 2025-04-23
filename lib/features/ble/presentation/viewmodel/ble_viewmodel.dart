@@ -3,9 +3,22 @@ import '../bloc/ble_event.dart';
 
 class BleViewModel {
   final BleBloc bloc;
+  DateTime? lastScanTime;
 
   BleViewModel(this.bloc);
 
-  void startScan() => bloc.add(StartScanEvent());
-  void connectToDevice(String id) => bloc.add(DeviceSelectedEvent(id));
+  void startScan() {
+    lastScanTime = DateTime.now();
+    bloc.add(StartScanEvent());
+  }
+
+  void connectToDevice(String id) {
+    bloc.add(DeviceSelectedEvent(id));
+  }
+
+  bool shouldAutoScan() {
+    if (lastScanTime == null) return true;
+    final age = DateTime.now().difference(lastScanTime!);
+    return age > const Duration(seconds: 30);
+  }
 }
