@@ -22,3 +22,8 @@ class BleError extends BleState {
   final String message;
   BleError(this.message);
 }
+
+class BleReconnecting extends BleState {
+  final String deviceId;
+  BleReconnecting(this.deviceId);
+}

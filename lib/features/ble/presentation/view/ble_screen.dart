@@ -5,6 +5,8 @@ import 'package:permission_handler/permission_handler.dart';
 import '../bloc/ble_bloc.dart';
 import '../bloc/ble_event.dart';
 import '../bloc/ble_state.dart';
+import '../../../../util/global_feedback_handler.dart';
+import '../../../../util/feedback_type_enum.dart';
 
 class BleScreen extends StatelessWidget {
   final BleBloc? injectedBloc;
@@ -86,35 +88,42 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('BLE Devices')),
-      body: BlocBuilder<BleBloc, BleState>(
-        builder: (context, state) {
-          final isScanning = state is BleScanning;
-
-          return Column(
-            children: [
-              SwitchListTile(
-                title: const Text("Show all devices"),
-                value: showAllDevices,
-                onChanged: isScanning
-                    ? null
-                    : (value) {
-                  setState(() => showAllDevices = value);
-                },
-              ),
-              if (lastScanTime != null)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Text(
-                    'Last scanned: ${_formatTime(lastScanTime!)}',
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-                ),
-              Expanded(
-                child: _buildBody(state, isScanning),
-              ),
-            ],
-          );
+      body: BlocListener<BleBloc, BleState>(
+        listener: (context, state) {
+          if (state is BleReconnecting) {
+            showFeedback(context, "Reconnecting to last device...", FeedbackType.info);
+          }
         },
+        child: BlocBuilder<BleBloc, BleState>(
+          builder: (context, state) {
+            final isScanning = state is BleScanning;
+
+            return Column(
+              children: [
+                SwitchListTile(
+                  title: const Text("Show all devices"),
+                  value: showAllDevices,
+                  onChanged: isScanning
+                      ? null
+                      : (value) {
+                    setState(() => showAllDevices = value);
+                  },
+                ),
+                if (lastScanTime != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Last scanned: ${_formatTime(lastScanTime!)}',
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  ),
+                Expanded(
+                  child: _buildBody(state, isScanning),
+                ),
+              ],
+            );
+          },
+        ),
       ),
       floatingActionButton: BlocBuilder<BleBloc, BleState>(
         builder: (context, state) {

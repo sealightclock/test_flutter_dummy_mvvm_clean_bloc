@@ -14,6 +14,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   final BleViewModel viewModel;
   StreamSubscription<ConnectionStateUpdate>? _connectionSub;
   bool _lastShowAll = false;
+  String? _lastConnectedDeviceId;
 
   BleBloc({BleViewModel? injectedViewModel})
       : viewModel = injectedViewModel ??
@@ -40,12 +41,14 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     on<DeviceSelectedEvent>((event, emit) async {
       try {
         _connectionSub?.cancel();
+        _lastConnectedDeviceId = event.deviceId;
+
         _connectionSub = viewModel.connectToDevice(event.deviceId).listen((update) {
           if (update.connectionState == DeviceConnectionState.connected) {
             emit(BleConnected(event.deviceId));
           } else if (update.connectionState == DeviceConnectionState.disconnected) {
             emit(BleDisconnected());
-            add(StartScanEvent(showAll: _lastShowAll));
+            _autoReconnectOrRescan();
           }
         });
       } catch (_) {
@@ -57,8 +60,19 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       await _connectionSub?.cancel();
       _connectionSub = null;
       emit(BleDisconnected());
-      add(StartScanEvent(showAll: _lastShowAll));
+      _autoReconnectOrRescan();
     });
+  }
+
+  void _autoReconnectOrRescan() async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (_lastConnectedDeviceId != null) {
+      emit(BleReconnecting(_lastConnectedDeviceId!));
+      add(DeviceSelectedEvent(_lastConnectedDeviceId!));
+    } else {
+      add(StartScanEvent(showAll: _lastShowAll));
+    }
   }
 
   @override
