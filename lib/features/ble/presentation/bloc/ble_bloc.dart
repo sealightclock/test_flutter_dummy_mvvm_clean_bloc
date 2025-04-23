@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/ble/data/ble_device_repository.dart';
 
 import '../../data/ble_filtered_device_data_source.dart';
 import '../../domain/usecase/connect_to_ble_device_usecase.dart';
@@ -14,14 +13,22 @@ import 'ble_state.dart';
 class BleBloc extends Bloc<BleEvent, BleState> {
   final BleViewModel viewModel;
   StreamSubscription<ConnectionStateUpdate>? _connectionSub;
+  bool _lastShowAll = false;
 
   BleBloc({BleViewModel? injectedViewModel})
-      : viewModel = injectedViewModel ?? BleViewModel(
-    ScanBleDevicesUseCase(BleFilteredDeviceDataSource(FlutterReactiveBle()) as BleDeviceRepository),
-    ConnectToBleDeviceUseCase(BleFilteredDeviceDataSource(FlutterReactiveBle()) as BleDeviceRepository),
-  ),
+      : viewModel = injectedViewModel ??
+      BleViewModel(
+        ScanBleDevicesUseCase(BleFilteredDeviceDataSource(FlutterReactiveBle())),
+        ConnectToBleDeviceUseCase(BleFilteredDeviceDataSource(FlutterReactiveBle())),
+      ),
         super(BleInitial()) {
     on<StartScanEvent>((event, emit) async {
+      final granted = await viewModel.requestPermissions();
+      if (!granted) {
+        emit(BleError("Permissions not granted"));
+        return;
+      }
+      _lastShowAll = event.showAll;
       emit(BleScanning());
       await emit.forEach(
         viewModel.scanBleDevices(),
@@ -38,6 +45,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
             emit(BleConnected(event.deviceId));
           } else if (update.connectionState == DeviceConnectionState.disconnected) {
             emit(BleDisconnected());
+            add(StartScanEvent(showAll: _lastShowAll));
           }
         });
       } catch (_) {
@@ -49,6 +57,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       await _connectionSub?.cancel();
       _connectionSub = null;
       emit(BleDisconnected());
+      add(StartScanEvent(showAll: _lastShowAll));
     });
   }
 
