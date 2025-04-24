@@ -2,8 +2,10 @@ sealed class BleEvent {}
 
 class StartScanEvent extends BleEvent {
   final bool showAll;
-  StartScanEvent({this.showAll = false});
+  StartScanEvent({required this.showAll});
 }
+
+class StopScanEvent extends BleEvent {}
 
 class DeviceSelectedEvent extends BleEvent {
   final String deviceId;

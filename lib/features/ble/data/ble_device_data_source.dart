@@ -87,6 +87,8 @@ class BleDeviceDataSource implements BleDeviceRepository {
 
   @override
   Stream<ConnectionStateUpdate> connect(String deviceId) {
+    logger.d("TFDB: BleDeviceDataSource: connect: deviceId=[$deviceId]");
+
     return _ble.connectToDevice(id: deviceId);
   }
 }

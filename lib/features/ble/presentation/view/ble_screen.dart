@@ -96,6 +96,10 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     bloc.add(StartScanEvent(showAll: showAllDevices));
   }
 
+  void _stopScan() {
+    bloc.add(StopScanEvent());
+  }
+
   void _connectToDevice(String id) {
     setState(() {
       connectedDeviceId = null;
@@ -146,11 +150,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
                 SwitchListTile(
                   title: const Text("Show all devices"),
                   value: showAllDevices,
-                  onChanged: isScanning
-                      ? null
-                      : (value) {
-                    setState(() => showAllDevices = value);
-                  },
+                  onChanged: isScanning ? null : (value) => setState(() => showAllDevices = value),
                 ),
                 if (lastScanTime != null)
                   Padding(
@@ -179,9 +179,23 @@ class _BleScreenBodyState extends State<BleScreenBody> {
       floatingActionButton: BlocBuilder<BleBloc, BleState>(
         builder: (context, state) {
           final isScanning = state is BleScanning;
-          return FloatingActionButton(
-            onPressed: isScanning ? null : _startScan,
-            child: const Icon(Icons.refresh),
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                heroTag: "refresh",
+                onPressed: isScanning ? null : _startScan,
+                tooltip: "Start Scan",
+                child: const Icon(Icons.refresh),
+              ),
+              const SizedBox(width: 12),
+              FloatingActionButton(
+                heroTag: "stop",
+                onPressed: isScanning ? _stopScan : null,
+                tooltip: "Stop Scan",
+                child: const Icon(Icons.stop),
+              ),
+            ],
           );
         },
       ),
