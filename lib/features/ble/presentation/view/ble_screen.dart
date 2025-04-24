@@ -84,6 +84,22 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     return "${duration.inHours}h ago";
   }
 
+  final Map<int, String> manufacturerIdToName = {
+    0x0006: "Microsoft",
+    0x000F: "Broadcom",
+    0x0010: "Apple",
+    0x0001: "Nordic Semiconductor",
+    0x004C: "Apple, Inc.",
+    0x0075: "Samsung Electronics",
+    0x0133: "Google",
+    0x014E: "Xiaomi",
+    0x0171: "Fitbit",
+    0x01DA: "Oppo",
+    0x0157: "Sony",
+    0x03DA: "Motorola",
+    0xE000: "Custom",
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,8 +107,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
       body: BlocListener<BleBloc, BleState>(
         listener: (context, state) {
           if (state is BleReconnecting) {
-            showFeedback(
-                context, "Reconnecting to last device...", FeedbackType.info);
+            showFeedback(context, "Reconnecting to last device...", FeedbackType.info);
           }
         },
         child: BlocBuilder<BleBloc, BleState>(
@@ -123,8 +138,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Text(
                       'Devices found: ${state.devices.length}',
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
                   ),
                 Expanded(
@@ -155,11 +169,21 @@ class _BleScreenBodyState extends State<BleScreenBody> {
         itemCount: state.devices.length,
         itemBuilder: (_, index) {
           final device = state.devices[index];
+          final manuId = device.manufacturerId;
+          final manuName = manuId != null ? manufacturerIdToName[manuId] ?? "Unknown" : null;
+
           return ListTile(
             title: Text(device.name),
-            subtitle: Text(
-              "${device.id}  •  RSSI: ${device.rssi} dBm",
-              style: const TextStyle(fontSize: 12),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("ID: ${device.id}"),
+                Text("RSSI: ${device.rssi}"),
+                if (manuId != null)
+                  Text("Manufacturer: 0x${manuId.toRadixString(16).toUpperCase()} ($manuName)"),
+                if (device.manufacturerHex != null)
+                  Text("Raw: ${device.manufacturerHex}"),
+              ],
             ),
             onTap: () => _connectToDevice(device.id),
           );

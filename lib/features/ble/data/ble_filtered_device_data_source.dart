@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+
 import '../domain/entity/ble_device_entity.dart';
 import 'ble_device_repository.dart';
 
@@ -14,22 +17,44 @@ class BleFilteredDeviceDataSource implements BleDeviceRepository {
     return _ble.scanForDevices(withServices: []).map((device) {
       final id = device.id.toUpperCase();
       final name = device.name.trim().isEmpty ? "Unknown Device" : device.name.trim();
+      final lower = name.toLowerCase();
 
-      if (!showAll) {
-        final lower = name.toLowerCase();
-        final isLikelyPhoneOrWatch = lower.contains("phone") || lower.contains("watch")
-            || lower.contains("iphone") || lower.contains("samsung") || lower.contains("galaxy");
-        if (!isLikelyPhoneOrWatch) return foundDevices.values.toList(); // skip this device
+      final isLikelyPhoneOrWatch = lower.contains("phone") ||
+          lower.contains("watch") ||
+          lower.contains("galaxy") ||
+          lower.contains("samsung") ||
+          lower.contains("pixel") ||
+          lower.contains("moto") ||
+          lower.contains("xiaomi") ||
+          lower.contains("oneplus") ||
+          lower.contains("oppo") ||
+          lower.contains("iphone") ||
+          lower.contains("ipad") ||
+          lower.contains("iwatch");
+
+      // Extract manufacturer ID and data
+      int? manufacturerId;
+      String? manufacturerHex;
+
+      if (device.manufacturerData.isNotEmpty && device.manufacturerData.length >= 2) {
+        final bytes = device.manufacturerData;
+        final byteData = ByteData.sublistView(bytes);
+        manufacturerId = byteData.getUint16(0, Endian.little); // first 2 bytes
+        manufacturerHex = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ').toUpperCase();
       }
 
-      foundDevices[id] = BleDeviceEntity(
-        id: id,
-        name: name,
-        rssi: device.rssi,
-      );
+      if (showAll || isLikelyPhoneOrWatch) {
+        foundDevices[id] = BleDeviceEntity(
+          id: device.id,
+          name: name,
+          rssi: device.rssi,
+          manufacturerId: manufacturerId,
+          manufacturerHex: manufacturerHex,
+        );
+      }
 
       final sorted = foundDevices.values.toList()
-        ..sort((a, b) => b.rssi.compareTo(a.rssi));
+        ..sort((a, b) => b.rssi.compareTo(a.rssi)); // strongest first
 
       return sorted;
     });
