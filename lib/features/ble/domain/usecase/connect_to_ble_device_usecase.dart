@@ -8,6 +8,6 @@ class ConnectToBleDeviceUseCase {
   ConnectToBleDeviceUseCase(this.repository);
 
   Stream<ConnectionStateUpdate> connect(String deviceId) {
-    return repository.connectToDevice(deviceId); // must return Stream
+    return repository.connect(deviceId); // must return Stream
   }
 }

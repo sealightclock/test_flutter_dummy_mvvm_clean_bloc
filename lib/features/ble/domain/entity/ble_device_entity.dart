@@ -1,6 +1,11 @@
 class BleDeviceEntity {
   final String id;
   final String name;
+  final int rssi;
 
-  const BleDeviceEntity({required this.id, required this.name});
+  BleDeviceEntity({
+    required this.id,
+    required this.name,
+    required this.rssi,
+  });
 }

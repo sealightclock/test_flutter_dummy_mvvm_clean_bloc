@@ -91,7 +91,8 @@ class _BleScreenBodyState extends State<BleScreenBody> {
       body: BlocListener<BleBloc, BleState>(
         listener: (context, state) {
           if (state is BleReconnecting) {
-            showFeedback(context, "Reconnecting to last device...", FeedbackType.info);
+            showFeedback(
+                context, "Reconnecting to last device...", FeedbackType.info);
           }
         },
         child: BlocBuilder<BleBloc, BleState>(
@@ -122,7 +123,8 @@ class _BleScreenBodyState extends State<BleScreenBody> {
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Text(
                       'Devices found: ${state.devices.length}',
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold),
                     ),
                   ),
                 Expanded(
@@ -154,8 +156,11 @@ class _BleScreenBodyState extends State<BleScreenBody> {
         itemBuilder: (_, index) {
           final device = state.devices[index];
           return ListTile(
-            title: Text(device.name.isNotEmpty ? device.name : "Unnamed"),
-            subtitle: Text(device.id),
+            title: Text(device.name),
+            subtitle: Text(
+              "${device.id}  •  RSSI: ${device.rssi} dBm",
+              style: const TextStyle(fontSize: 12),
+            ),
             onTap: () => _connectToDevice(device.id),
           );
         },

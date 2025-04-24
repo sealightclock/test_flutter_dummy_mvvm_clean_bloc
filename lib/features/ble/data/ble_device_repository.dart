@@ -4,5 +4,5 @@ import '../domain/entity/ble_device_entity.dart';
 
 abstract class BleDeviceRepository {
   Stream<List<BleDeviceEntity>> scanDevices();
-  Stream<ConnectionStateUpdate> connectToDevice(String deviceId);
+  Stream<ConnectionStateUpdate> connect(String deviceId);
 }
