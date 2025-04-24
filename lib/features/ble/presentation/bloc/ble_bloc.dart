@@ -15,8 +15,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   String? _lastConnectedDeviceId;
 
   BleBloc({BleViewModel? injectedViewModel})
-      : viewModel = injectedViewModel ??
-      BleViewModelFactory.create(),
+      : viewModel = injectedViewModel ?? BleViewModelFactory.create(),
         super(BleInitial()) {
     on<StartScanEvent>((event, emit) async {
       final granted = await viewModel.requestPermissions();
@@ -35,19 +34,23 @@ class BleBloc extends Bloc<BleEvent, BleState> {
 
     on<DeviceSelectedEvent>((event, emit) async {
       try {
-        _connectionSub?.cancel();
+        await _connectionSub?.cancel();
         _lastConnectedDeviceId = event.deviceId;
 
-        _connectionSub = viewModel.connectToDevice(event.deviceId).listen((update) {
-          if (update.connectionState == DeviceConnectionState.connected) {
-            emit(BleConnected(event.deviceId));
-          } else if (update.connectionState == DeviceConnectionState.disconnected) {
-            emit(BleDisconnected());
-            _autoReconnectOrRescan();
+        _connectionSub = viewModel.connectToDevice(event.deviceId).listen((update) async {
+          if (!emit.isDone) {
+            if (update.connectionState == DeviceConnectionState.connected) {
+              emit(BleConnected(event.deviceId));
+            } else if (update.connectionState == DeviceConnectionState.disconnected) {
+              emit(BleDisconnected());
+              _autoReconnectOrRescan();
+            }
           }
         });
       } catch (_) {
-        emit(BleError("Connection failed"));
+        if (!emit.isDone) {
+          emit(BleError("Connection failed"));
+        }
       }
     });
 
