@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:logger/logger.dart';
+import 'package:logger/logger.dart' as my_logger;
 
-final logger = Logger();
+final logger = my_logger.Logger();
 
 /// Sealed base class for all states emitted by MyStringBloc.
 ///

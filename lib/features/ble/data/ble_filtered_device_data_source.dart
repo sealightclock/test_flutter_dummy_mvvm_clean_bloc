@@ -5,6 +5,24 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import '../domain/entity/ble_device_entity.dart';
 import 'ble_device_repository.dart';
 
+import 'package:logger/logger.dart' as my_logger;
+
+final logger = my_logger.Logger();
+
+const phoneWatchManufacturerIds = {
+  0x004C, // Apple, Inc.
+  0x000F, // Cambridge Silicon Radio (CSR), now Qualcomm
+  0x0006, // Microsoft
+  0x0075, // Samsung Electronics Co. Ltd.
+  0x00E0, // Google
+  0x015D, // Xiaomi Inc.
+  0x0131, // Huawei Technologies Co. Ltd.
+  0x0174, // OnePlus
+  0x017C, // Oppo
+  0x0171, // Realtek Semiconductor
+  0x0152, // Motorola
+};
+
 class BleFilteredDeviceDataSource implements BleDeviceRepository {
   final FlutterReactiveBle _ble;
 
@@ -18,6 +36,19 @@ class BleFilteredDeviceDataSource implements BleDeviceRepository {
       final id = device.id.toUpperCase();
       final name = device.name.trim().isEmpty ? "Unknown Device" : device.name.trim();
       final lower = name.toLowerCase();
+      
+      logger.t('TFDB: BleFilteredDeviceDataSource: scanDevices: name=[$name]');
+
+      // Extract manufacturer ID and data
+      int? manufacturerId;
+      String? manufacturerHex;
+
+      if (device.manufacturerData.isNotEmpty && device.manufacturerData.length >= 2) {
+        final bytes = device.manufacturerData;
+        final byteData = ByteData.sublistView(bytes);
+        manufacturerId = byteData.getUint16(0, Endian.little); // first 2 bytes
+        manufacturerHex = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ').toUpperCase();
+      }
 
       final isLikelyPhoneOrWatch = lower.contains("phone") ||
           lower.contains("watch") ||
@@ -30,18 +61,9 @@ class BleFilteredDeviceDataSource implements BleDeviceRepository {
           lower.contains("oppo") ||
           lower.contains("iphone") ||
           lower.contains("ipad") ||
-          lower.contains("iwatch");
+          lower.contains("iwatch") ||
+          (manufacturerId != null && phoneWatchManufacturerIds.contains(manufacturerId));
 
-      // Extract manufacturer ID and data
-      int? manufacturerId;
-      String? manufacturerHex;
-
-      if (device.manufacturerData.isNotEmpty && device.manufacturerData.length >= 2) {
-        final bytes = device.manufacturerData;
-        final byteData = ByteData.sublistView(bytes);
-        manufacturerId = byteData.getUint16(0, Endian.little); // first 2 bytes
-        manufacturerHex = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ').toUpperCase();
-      }
 
       if (showAll || isLikelyPhoneOrWatch) {
         foundDevices[id] = BleDeviceEntity(
