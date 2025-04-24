@@ -173,16 +173,14 @@ class _BleScreenBodyState extends State<BleScreenBody> {
           final manuName = manuId != null ? manufacturerIdToName[manuId] ?? "Unknown" : null;
 
           return ListTile(
-            title: Text(device.name),
+            title: Text("ID: ${device.id}"),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("ID: ${device.id}"),
-                Text("RSSI: ${device.rssi}"),
+                Text("Name: ${device.name}"),
                 if (manuId != null)
                   Text("Manufacturer: 0x${manuId.toRadixString(16).toUpperCase()} ($manuName)"),
-                if (device.manufacturerHex != null)
-                  Text("Raw: ${device.manufacturerHex}"),
+                Text("RSSI: ${device.rssi}"),
               ],
             ),
             onTap: () => _connectToDevice(device.id),
