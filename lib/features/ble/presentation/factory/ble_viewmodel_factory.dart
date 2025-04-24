@@ -1,10 +1,9 @@
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/ble/data/ble_device_repository.dart';
 
 import '../../data/ble_device_data_source.dart';
 import '../../domain/usecase/connect_to_ble_device_usecase.dart';
 import '../../domain/usecase/scan_ble_devices_usecase.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-
 import '../viewmodel/ble_viewmodel.dart';
 
 class BleViewModelFactory {
