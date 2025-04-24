@@ -6,7 +6,7 @@ class ScanBleDevicesUseCase {
 
   ScanBleDevicesUseCase(this.repository);
 
-  Stream<List<BleDeviceEntity>> execute() {
-    return repository.scanDevices();
+  Stream<List<BleDeviceEntity>> execute({required bool showAll}) {
+    return repository.scanDevices(showAll: showAll);
   }
 }

@@ -11,8 +11,8 @@ class BleViewModel {
 
   BleViewModel(this.scanUseCase, this.connectUseCase);
 
-  Stream<List<BleDeviceEntity>> scanBleDevices() {
-    return scanUseCase.execute();
+  Stream<List<BleDeviceEntity>> scanBleDevices({required bool showAll}) {
+    return scanUseCase.execute(showAll: showAll);
   }
 
   Stream<ConnectionStateUpdate> connectToDevice(String deviceId) {

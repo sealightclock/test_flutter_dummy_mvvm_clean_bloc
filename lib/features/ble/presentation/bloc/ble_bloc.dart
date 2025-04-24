@@ -32,7 +32,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       _lastShowAll = event.showAll;
       emit(BleScanning());
       await emit.forEach(
-        viewModel.scanBleDevices(),
+        viewModel.scanBleDevices(showAll: event.showAll),
         onData: (devices) => BleDevicesFound(devices),
         onError: (_, __) => BleError("Scan failed"),
       );
