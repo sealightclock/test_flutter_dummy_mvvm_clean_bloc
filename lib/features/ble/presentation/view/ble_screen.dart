@@ -8,6 +8,14 @@ import '../bloc/ble_state.dart';
 import '../../../../util/global_feedback_handler.dart';
 import '../../../../util/feedback_type_enum.dart';
 
+enum BleDeviceConnectionStatus {
+  available,
+  connecting,
+  connected,
+  reconnecting,
+  disconnected,
+}
+
 class BleScreen extends StatelessWidget {
   final BleBloc? injectedBloc;
 
@@ -33,6 +41,24 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   late BleBloc bloc;
   DateTime? lastScanTime;
   bool showAllDevices = false;
+  String? connectedDeviceId;
+  String? reconnectingDeviceId;
+
+  final Map<int, String> manufacturerIdToName = {
+    0x0006: "Microsoft",
+    0x000F: "Broadcom",
+    0x0010: "Apple",
+    0x0001: "Nordic Semiconductor",
+    0x004C: "Apple, Inc.",
+    0x0075: "Samsung Electronics",
+    0x0133: "Google",
+    0x014E: "Xiaomi",
+    0x0171: "Fitbit",
+    0x01DA: "Oppo",
+    0x0157: "Sony",
+    0x03DA: "Motorola",
+    0xE000: "Custom",
+  };
 
   @override
   void initState() {
@@ -65,10 +91,15 @@ class _BleScreenBodyState extends State<BleScreenBody> {
 
   void _startScan() {
     lastScanTime = DateTime.now();
+    connectedDeviceId = null;
+    reconnectingDeviceId = null;
     bloc.add(StartScanEvent(showAll: showAllDevices));
   }
 
   void _connectToDevice(String id) {
+    setState(() {
+      connectedDeviceId = null;
+    });
     bloc.add(DeviceSelectedEvent(id));
   }
 
@@ -84,21 +115,12 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     return "${duration.inHours}h ago";
   }
 
-  final Map<int, String> manufacturerIdToName = {
-    0x0006: "Microsoft",
-    0x000F: "Broadcom",
-    0x0010: "Apple",
-    0x0001: "Nordic Semiconductor",
-    0x004C: "Apple, Inc.",
-    0x0075: "Samsung Electronics",
-    0x0133: "Google",
-    0x014E: "Xiaomi",
-    0x0171: "Fitbit",
-    0x01DA: "Oppo",
-    0x0157: "Sony",
-    0x03DA: "Motorola",
-    0xE000: "Custom",
-  };
+  String _getConnectionStatus(String id, BleState state) {
+    if (state is BleReconnecting && state.deviceId == id) return "Reconnecting...";
+    if (state is BleConnected && state.deviceId == id) return "Connected";
+    if (connectedDeviceId == id) return "Connecting...";
+    return "Available";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +129,12 @@ class _BleScreenBodyState extends State<BleScreenBody> {
       body: BlocListener<BleBloc, BleState>(
         listener: (context, state) {
           if (state is BleReconnecting) {
+            reconnectingDeviceId = state.deviceId;
             showFeedback(context, "Reconnecting to last device...", FeedbackType.info);
+          } else if (state is BleConnected) {
+            setState(() => connectedDeviceId = state.deviceId);
+          } else if (state is BleDisconnected) {
+            setState(() => connectedDeviceId = null);
           }
         },
         child: BlocBuilder<BleBloc, BleState>(
@@ -171,6 +198,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
           final device = state.devices[index];
           final manuId = device.manufacturerId;
           final manuName = manuId != null ? manufacturerIdToName[manuId] ?? "Unknown" : null;
+          final connectionStatus = _getConnectionStatus(device.id, state);
 
           return ListTile(
             title: Text("ID: ${device.id}"),
@@ -181,6 +209,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
                 if (manuId != null)
                   Text("Manufacturer: 0x${manuId.toRadixString(16).toUpperCase()} ($manuName)"),
                 Text("RSSI: ${device.rssi}"),
+                Text("Status: $connectionStatus"),
               ],
             ),
             onTap: () => _connectToDevice(device.id),
