@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
@@ -230,16 +232,24 @@ class _BleScreenBodyState extends State<BleScreenBody> {
           final manuName = manuId != null ? manufacturerIdToName[manuId] ?? "Unknown" : null;
           final connectionStatus = _getConnectionStatus(device.id, state);
 
+          final manuHexLength = device.manufacturerHex?.length ?? 0;
+
           return ListTile(
-            title: Text("ID: ${device.id}"),
+            title:
+              Text(
+                  (device.manufacturerHex != null) ?
+                  "Raw: ${device.manufacturerHex?.substring(0, min
+                    (manuHexLength, 20))}" :
+                  "ID: ${device.id}"
+              ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Name: ${device.name}"),
                 if (manuId != null)
-                  Text("Manufacturer: 0x${manuId.toRadixString(16).toUpperCase()} (${manuName})"),
+                  Text("Manufacturer: 0x${manuId.toRadixString(16).toUpperCase()} ($manuName)"),
                 Text("RSSI: ${device.rssi}"),
-                Text("Status: ${connectionStatus}"),
+                Text("Status: $connectionStatus"),
               ],
             ),
             onTap: () => _connectToDevice(device.id),
