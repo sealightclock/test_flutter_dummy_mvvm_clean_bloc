@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../bloc/ble_bloc.dart';
@@ -43,6 +44,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   bool showAllDevices = false;
   String? connectedDeviceId;
   String? reconnectingDeviceId;
+  int? connectedStatusCode;
 
   final Map<int, String> manufacturerIdToName = {
     0x0006: "Microsoft",
@@ -93,6 +95,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     lastScanTime = DateTime.now();
     connectedDeviceId = null;
     reconnectingDeviceId = null;
+    connectedStatusCode = null;
     bloc.add(StartScanEvent(showAll: showAllDevices));
   }
 
@@ -102,7 +105,8 @@ class _BleScreenBodyState extends State<BleScreenBody> {
 
   void _connectToDevice(String id) {
     setState(() {
-      connectedDeviceId = null;
+      connectedDeviceId = id;
+      connectedStatusCode = null;
     });
     bloc.add(DeviceSelectedEvent(id));
   }
@@ -119,11 +123,20 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     return "${duration.inHours}h ago";
   }
 
-  String _getConnectionStatus(String id, BleState state) {
-    if (state is BleReconnecting && state.deviceId == id) return "Reconnecting...";
-    if (state is BleConnected && state.deviceId == id) return "Connected";
-    if (connectedDeviceId == id) return "Connecting...";
-    return "Available";
+  String _getConnectionStatus(String id, BleState state, [ConnectionError? code]) {
+    if (state is BleReconnecting && state.deviceId == id) {
+      return "Reconnecting...";
+    } else if (state is BleConnected && state.deviceId == id) {
+      if (code == null || code == ConnectionError.unknown) {
+        return "Connected";
+      } else {
+        return "Disconnected (${code.name})";
+      }
+    } else if (connectedDeviceId == id) {
+      return "Connecting...";
+    } else {
+      return "Available";
+    }
   }
 
   @override
@@ -136,7 +149,10 @@ class _BleScreenBodyState extends State<BleScreenBody> {
             reconnectingDeviceId = state.deviceId;
             showFeedback(context, "Reconnecting to last device...", FeedbackType.info);
           } else if (state is BleConnected) {
-            setState(() => connectedDeviceId = state.deviceId);
+            setState(() {
+              connectedDeviceId = state.deviceId;
+              connectedStatusCode = state.update?.failure?.code.index;
+            });
           } else if (state is BleDisconnected) {
             setState(() => connectedDeviceId = null);
           }

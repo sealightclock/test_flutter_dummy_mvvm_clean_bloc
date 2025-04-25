@@ -79,9 +79,9 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       _connectionSub = viewModel.connectToDevice(event.deviceId).listen((update) async {
         if (!emit.isDone) {
           if (update.connectionState == DeviceConnectionState.connected) {
-            emit(BleConnected(event.deviceId));
+            emit(BleConnected(event.deviceId, update: update));
           } else if (update.connectionState == DeviceConnectionState.disconnected) {
-            emit(BleDisconnected());
+            emit(BleDisconnected(update));
             _autoReconnectOrRescan();
           }
         }
@@ -96,7 +96,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   Future<void> _onDisconnectFromDeviceEvent(DisconnectFromDeviceEvent event, Emitter<BleState> emit) async {
     await _connectionSub?.cancel();
     _connectionSub = null;
-    emit(BleDisconnected());
+    emit(BleDisconnected(null));
     _autoReconnectOrRescan();
   }
 
