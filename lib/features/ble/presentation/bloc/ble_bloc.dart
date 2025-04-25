@@ -62,7 +62,6 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     await _scanSub?.cancel();
     _scanSub = null;
 
-    // Preserve the device list so user can still see results
     if (_lastDevices.isNotEmpty) {
       emit(BleDevicesFound(_lastDevices));
     } else {
@@ -79,10 +78,21 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       _connectionSub = viewModel.connectToDevice(event.deviceId).listen((update) async {
         if (!emit.isDone) {
           if (update.connectionState == DeviceConnectionState.connected) {
-            emit(BleConnected(event.deviceId, update: update));
+            // Delay to wait if immediate disconnect happens
+            await Future.delayed(const Duration(milliseconds: 500));
+
+            if (!emit.isDone && update.failure == null) {
+              emit(BleConnected(event.deviceId, update: update));
+            }
+            // else: disconnected will be handled separately
+
           } else if (update.connectionState == DeviceConnectionState.disconnected) {
-            emit(BleDisconnected(update));
-            _autoReconnectOrRescan();
+            if (update.failure != null) {
+              emit(BleError("Connection failed: ${update.failure!.code.name}"));
+            } else {
+              emit(const BleDisconnected(null));
+              _autoReconnectOrRescan();
+            }
           }
         }
       });
@@ -96,7 +106,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   Future<void> _onDisconnectFromDeviceEvent(DisconnectFromDeviceEvent event, Emitter<BleState> emit) async {
     await _connectionSub?.cancel();
     _connectionSub = null;
-    emit(BleDisconnected(null));
+    emit(const BleDisconnected(null));
     _autoReconnectOrRescan();
   }
 

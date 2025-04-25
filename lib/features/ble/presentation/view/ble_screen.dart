@@ -2,22 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 import '../bloc/ble_bloc.dart';
 import '../bloc/ble_event.dart';
 import '../bloc/ble_state.dart';
 import '../../../../util/global_feedback_handler.dart';
 import '../../../../util/feedback_type_enum.dart';
-
-enum BleDeviceConnectionStatus {
-  available,
-  connecting,
-  connected,
-  reconnecting,
-  disconnected,
-}
 
 class BleScreen extends StatelessWidget {
   final BleBloc? injectedBloc;
@@ -46,7 +38,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   bool showAllDevices = false;
   String? connectedDeviceId;
   String? reconnectingDeviceId;
-  int? connectedStatusCode;
+  ConnectionError? lastConnectionError;
 
   final Map<int, String> manufacturerIdToName = {
     0x0006: "Microsoft",
@@ -97,7 +89,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     lastScanTime = DateTime.now();
     connectedDeviceId = null;
     reconnectingDeviceId = null;
-    connectedStatusCode = null;
+    lastConnectionError = null;
     bloc.add(StartScanEvent(showAll: showAllDevices));
   }
 
@@ -108,7 +100,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   void _connectToDevice(String id) {
     setState(() {
       connectedDeviceId = id;
-      connectedStatusCode = null;
+      lastConnectionError = null;
     });
     bloc.add(DeviceSelectedEvent(id));
   }
@@ -125,14 +117,14 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     return "${duration.inHours}h ago";
   }
 
-  String _getConnectionStatus(String id, BleState state, [ConnectionError? code]) {
+  String _getConnectionStatus(String id, BleState state) {
     if (state is BleReconnecting && state.deviceId == id) {
       return "Reconnecting...";
     } else if (state is BleConnected && state.deviceId == id) {
-      if (code == null || code == ConnectionError.unknown) {
-        return "Connected";
+      if (lastConnectionError != null) {
+        return "Disconnected (${lastConnectionError!.name})";
       } else {
-        return "Disconnected (${code.name})";
+        return "Connected";
       }
     } else if (connectedDeviceId == id) {
       return "Connecting...";
@@ -148,15 +140,18 @@ class _BleScreenBodyState extends State<BleScreenBody> {
       body: BlocListener<BleBloc, BleState>(
         listener: (context, state) {
           if (state is BleReconnecting) {
-            reconnectingDeviceId = state.deviceId;
+            setState(() => reconnectingDeviceId = state.deviceId);
             showFeedback(context, "Reconnecting to last device...", FeedbackType.info);
           } else if (state is BleConnected) {
             setState(() {
               connectedDeviceId = state.deviceId;
-              connectedStatusCode = state.update?.failure?.code.index;
+              lastConnectionError = state.update?.failure?.code;
             });
-          } else if (state is BleDisconnected) {
-            setState(() => connectedDeviceId = null);
+          } else if (state is BleDisconnected || state is BleError) {
+            setState(() {
+              connectedDeviceId = null;
+              lastConnectionError = null;
+            });
           }
         },
         child: BlocBuilder<BleBloc, BleState>(
@@ -235,13 +230,11 @@ class _BleScreenBodyState extends State<BleScreenBody> {
           final manuHexLength = device.manufacturerHex?.length ?? 0;
 
           return ListTile(
-            title:
-              Text(
-                  (device.manufacturerHex != null) ?
-                  "Raw: ${device.manufacturerHex?.substring(0, min
-                    (manuHexLength, 20))}" :
-                  "ID: ${device.id}"
-              ),
+            title: Text(
+                (device.manufacturerHex != null)
+                    ? "Raw: ${device.manufacturerHex?.substring(0, min(manuHexLength, 20))}"
+                    : "ID: ${device.id}"
+            ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -256,43 +249,8 @@ class _BleScreenBodyState extends State<BleScreenBody> {
           );
         },
       );
-    } else if (state is BleConnected) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Connected to: ${state.deviceId}"),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _disconnect,
-              child: const Text("Disconnect"),
-            ),
-          ],
-        ),
-      );
-    } else if (state is BleDisconnected) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Disconnected"),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _startScan,
-              child: const Text("Scan Again"),
-            ),
-          ],
-        ),
-      );
-    } else if (state is BleError) {
-      return Center(child: Text("Error: ${state.message}"));
     } else {
-      return Center(
-        child: ElevatedButton(
-          onPressed: _startScan,
-          child: const Text("Start BLE Scan"),
-        ),
-      );
+      return const Center(child: Text("No devices found."));
     }
   }
 }
