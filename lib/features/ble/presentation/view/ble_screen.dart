@@ -237,9 +237,9 @@ class _BleScreenBodyState extends State<BleScreenBody> {
               children: [
                 Text("Name: ${device.name}"),
                 if (manuId != null)
-                  Text("Manufacturer: 0x${manuId.toRadixString(16).toUpperCase()} ($manuName)"),
+                  Text("Manufacturer: 0x${manuId.toRadixString(16).toUpperCase()} (${manuName})"),
                 Text("RSSI: ${device.rssi}"),
-                Text("Status: $connectionStatus"),
+                Text("Status: ${connectionStatus}"),
               ],
             ),
             onTap: () => _connectToDevice(device.id),
