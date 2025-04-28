@@ -13,6 +13,7 @@ import 'features/auth/presentation/view/auth_screen.dart';
 import 'features/ble/presentation/view/ble_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
 import 'features/settings/presentation/view/settings_screen.dart';
+import 'features/vehicle_status/presentation/view/vehicle_status_screen.dart';
 
 /// Global flag to force opening MyString screen (used by tests or special flows)
 bool forceStartOnMyStringScreen = false;
@@ -31,6 +32,8 @@ extension AppTabExtension on AppTab {
         return AppConstants.settingsLabel;
       case AppTab.ble:
         return AppConstants.bleLabel;
+      case AppTab.status:
+        return AppConstants.statusLabel;
       // TODO: Add more tabs here
     }
   }
@@ -47,6 +50,8 @@ extension AppTabExtension on AppTab {
         return Icons.settings;
       case AppTab.ble:
         return Icons.bluetooth;
+      case AppTab.status:
+        return Icons.location_on;
       // TODO: Add more tabs here
     }
   }
@@ -140,10 +145,14 @@ class HomeScreenState extends State<HomeScreen> {
             body = const AuthScreen();
             break;
           case AppTab.myString:
-            body = isAuthenticated ? const MyStringScreen() : const Center(child: Text('Please log in first.'));
+            body = isAuthenticated
+                ? const MyStringScreen()
+                : const Center(child: Text('Please log in first.'));
             break;
           case AppTab.account:
-            body = isAuthenticated ? const AccountScreen() : const Center(child: Text('Please log in first.'));
+            body = isAuthenticated
+                ? const AccountScreen()
+                : const Center(child: Text('Please log in first.'));
             break;
           case AppTab.settings:
             body = const SettingsScreen();
@@ -151,6 +160,11 @@ class HomeScreenState extends State<HomeScreen> {
           case AppTab.ble:
             body = isAuthenticated
                 ? BleScreen()
+                : const Center(child: Text('Please log in first.'));
+            break;
+          case AppTab.status:
+            body = isAuthenticated
+                ? VehicleStatusScreen()
                 : const Center(child: Text('Please log in first.'));
             break;
           // TODO: Add more tabs here
@@ -201,5 +215,3 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-

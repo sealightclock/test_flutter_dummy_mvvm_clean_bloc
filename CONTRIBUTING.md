@@ -5,7 +5,11 @@ architecture.
 
 ## Presentation Layer
 
+The Presentation layer contains View, Bloc, and ViewModel.
+
 ### View
+
+The View usually represents a screen.
 
 #### Screen class
 
@@ -85,6 +89,8 @@ steps, up from DataSource, Repository to UseCase.
 
 ## Domain Layer
 
+The Domain layer contains Entity and UseCase classes.
+
 ### Entity
 
 The constructor of an Entity class should use named parameters to avoid confusion.
@@ -110,14 +116,20 @@ the Presentation layer (View or Bloc) can handle the result easily.
 
 ## Data Layer
 
+The Data layer contains Repository and DataSource classes.
+
 ### Repository
 
 A Repository class should only see DataSource classes.
+
+Data processing for the Domain layer, such as throttling, should be done in the Repository class.
 
 ### DataSource
 
 A DataSource class usually deal with one specific type, such as local storage, remote server, or 
 testing/simulated data.
+
+DataSource streams raw updates (as fast as they arrive). 
 
 When using a package or API to access data, try to initialize it inside the DataSource class 
 rather than in the main() function.

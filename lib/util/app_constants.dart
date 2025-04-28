@@ -29,6 +29,7 @@ class AppConstants {
   static const String accountLabel = 'Account';
   static const String settingsLabel = 'Settings';
   static const String bleLabel = 'BLE';
+  static const String statusLabel = 'Status';
   // TODO: Add more labels here
 
   // ---------------------------------------------------------------------------
@@ -71,6 +72,9 @@ class AppConstants {
 
   static const String settingsHiveBoxName = 'settings_hive_box';
   static const String settingsKey = 'settings_key';
+
+  // TODO: BLE
+  // TODO: Status
 
   // ---------------------------------------------------------------------------
   // ...

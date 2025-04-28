@@ -151,8 +151,16 @@ With the "MVVM Clean + Bloc" architecture, it is relatively easy to add more fea
 More recently, more features have been added to the app to demonstrate the
 scalability of this architecture.
 
-All of these features, including "auth", "my_string", "account", and "settings", have been 
-implemented using the same"MVVM Clean + Bloc" design pattern and a similar file structure. Some 
+All of these features, including:
+
+- "auth"
+- "my_string"
+- "account"
+- "settings"
+- "ble"
+- "vehicle_status"
+
+have been implemented using the same "MVVM Clean + Bloc" design pattern and a similar file structure. Some 
 minor features may be implemented using a simplified version of the "MVVM Clean + Bloc" architecture.
 
 This project is evolving based on our understanding of Flutter, especially of the "MVVM Clean + 
