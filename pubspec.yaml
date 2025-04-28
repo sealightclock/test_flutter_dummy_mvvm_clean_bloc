@@ -52,6 +52,12 @@ dependencies:
   flutter_reactive_ble: ^5.0.2
   permission_handler: ^11.3.1
 
+  # Geolocation
+  geolocator: ^14.0.0
+
+  # Throttling
+  rxdart: ^0.28.0
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
