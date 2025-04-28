@@ -16,6 +16,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   final BleViewModel viewModel;
   StreamSubscription<List<BleDeviceEntity>>? _scanSub;
   StreamSubscription<ConnectionStateUpdate>? _connectionSub;
+  Timer? _connectionTimeoutTimer;
   bool _lastShowAll = false;
   String? _lastConnectedDeviceId;
   List<BleDeviceEntity> _lastDevices = [];
@@ -71,50 +72,119 @@ class BleBloc extends Bloc<BleEvent, BleState> {
 
   Future<void> _onDeviceSelectedEvent(DeviceSelectedEvent event, Emitter<BleState> emit) async {
     logger.d("TFDB: BleBloc: DeviceSelectedEvent: event=[$event]");
+
     try {
       await _connectionSub?.cancel();
       _lastConnectedDeviceId = event.deviceId;
+      _cancelConnectionTimeoutTimer();
 
       _connectionSub = viewModel.connectToDevice(event.deviceId).listen((update) async {
         if (!emit.isDone) {
-          if (update.connectionState == DeviceConnectionState.connected) {
-            // Delay to wait if immediate disconnect happens
+          logger.t("TFDB: BleBloc: _onDeviceSelectedEvent: emit.isDone==false "
+              "while update=[$update]");
+
+          if (update.connectionState == DeviceConnectionState.connecting) {
+            _startConnectionTimeoutTimer(event.deviceId);
+          } else if (update.connectionState == DeviceConnectionState.connected) {
+            _cancelConnectionTimeoutTimer();
+            // Delay a little to wait for immediate disconnect
             await Future.delayed(const Duration(milliseconds: 500));
 
             if (!emit.isDone && update.failure == null) {
               emit(BleConnected(event.deviceId, update: update));
             }
-            // else: disconnected will be handled separately
-
           } else if (update.connectionState == DeviceConnectionState.disconnected) {
+            _cancelConnectionTimeoutTimer();
             if (update.failure != null) {
               emit(BleError("Connection failed: ${update.failure!.code.name}"));
             } else {
-              emit(const BleDisconnected(null));
+              emit(BleDisconnected(event.deviceId, _lastDevices));
               _autoReconnectOrRescan();
             }
+          } else {
+            logger.e("TFDB: BleBloc: _onDeviceSelectedEvent: unexpected update.connectionState=[${update.connectionState}]");
           }
+        } else {
+          logger.w("TFDB: BleBloc: _onDeviceSelectedEvent: emit.isDone==true while update=[$update]");
+
+          _handleConnectionUpdateOutsideEmit(update);
         }
       });
-    } catch (_) {
+    } catch (e, stackTrace) {
+      logger.e("TFDB: BleBloc: _onDeviceSelectedEvent: error=$e, stackTrace=$stackTrace");
+
       if (!emit.isDone) {
         emit(BleError("Connection failed"));
+      } else {
+        logger.e("TFDB: BleBloc: _onDeviceSelectedEvent: emit.isDone==true");
       }
     }
   }
 
+  void _startConnectionTimeoutTimer(String deviceId) {
+    logger.w("TFDB: BleBloc: _startConnectionTimeoutTimer: "
+        "deviceId=[$deviceId]: Connection "
+        "timeout. Forcing disconnect...");
+
+    _cancelConnectionTimeoutTimer();
+    _connectionTimeoutTimer = Timer(const Duration(seconds: 10), () {
+      add(DisconnectFromDeviceEvent(deviceId));
+    });
+  }
+
+  void _cancelConnectionTimeoutTimer() {
+    // logger.w("TFDB: BleBloc: _cancelConnectionTimeoutTimer: Cancelling "
+    //     "connection timeout timer...");
+
+    _connectionTimeoutTimer?.cancel();
+    _connectionTimeoutTimer = null;
+  }
+
+  void _handleConnectionUpdateOutsideEmit(ConnectionStateUpdate update) {
+    logger.w("TFDB: BleBloc: _handleConnectionUpdateOutsideEmit: "
+        "update=[$update]");
+
+    if (update.connectionState == DeviceConnectionState.disconnected) {
+      if (update.failure != null) {
+        logger.e("TFDB: BleBloc: "
+            "_handleConnectionUpdateOutsideEmit: Disconnected with failure: "
+            "${update.failure!
+            .code.name}");
+      } else {
+        logger.w("TFDB: BleBloc: "
+            "_handleConnectionUpdateOutsideEmit: Disconnected silently (no "
+            "failure captured)");
+      }
+
+      add(DisconnectFromDeviceEvent(_lastConnectedDeviceId!));
+    } else if (update.connectionState == DeviceConnectionState.connecting) {
+        _startConnectionTimeoutTimer(_lastConnectedDeviceId!);
+    } else {
+      logger.e("TFDB: BleBloc: "
+          "_handleConnectionUpdateOutsideEmit: Unexpected connection state: "
+          "${update.connectionState}");
+    }
+  }
+
   Future<void> _onDisconnectFromDeviceEvent(DisconnectFromDeviceEvent event, Emitter<BleState> emit) async {
+    logger.d("TFDB: BleBloc: _onDisconnectFromDeviceEvent: event=[$event]");
+
     await _connectionSub?.cancel();
     _connectionSub = null;
-    emit(const BleDisconnected(null));
-    _autoReconnectOrRescan();
+    _cancelConnectionTimeoutTimer();
+    emit(BleDisconnected(event.deviceId, _lastDevices));
+    //JZ _autoReconnectOrRescan();
   }
 
   Future<void> _onShowReconnectingEvent(ShowReconnectingEvent event, Emitter<BleState> emit) async {
+    logger.d("TFDB: BleBloc: _onShowReconnectingEvent: event=[$event]");
+
     emit(BleReconnecting(event.deviceId));
   }
 
   void _autoReconnectOrRescan() async {
+    logger.d("TFDB: BleBloc: _autoReconnectOrRescan: Auto-reconnecting...");
+
     await Future.delayed(const Duration(seconds: 1));
 
     if (_lastConnectedDeviceId != null) {
@@ -127,8 +197,12 @@ class BleBloc extends Bloc<BleEvent, BleState> {
 
   @override
   Future<void> close() {
+    logger.d("TFDB: BleBloc: close: Closing...");
+
     _scanSub?.cancel();
     _connectionSub?.cancel();
+    _cancelConnectionTimeoutTimer();
+
     return super.close();
   }
 }

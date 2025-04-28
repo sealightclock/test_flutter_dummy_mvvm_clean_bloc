@@ -103,8 +103,8 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     bloc.add(DeviceSelectedEvent(id));
   }
 
-  void _disconnect() {
-    bloc.add(DisconnectFromDeviceEvent());
+  void _disconnect(String deviceId) {
+    bloc.add(DisconnectFromDeviceEvent(deviceId));
   }
 
   String _formatTime(DateTime time) {
@@ -116,9 +116,13 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   }
 
   String _getConnectionStatus(String id, BleState state) {
-    if (state is BleReconnecting && state.deviceId == id) return "Reconnecting...";
+    if (state is BleReconnecting && state.deviceId == id) return "Reconnecting...Wait";
     if (state is BleConnected && state.deviceId == id) return "Connected";
-    if (connectedDeviceId == id) return "Connecting...";
+    if (state is BleDisconnected && state.deviceId == id) return "Disconnected";
+    if (state is BleError) return "Error: ${state.message}";
+
+    if (connectedDeviceId == id) return "Connecting...Wait";
+
     return "Available";
   }
 
@@ -195,7 +199,8 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   Widget _buildBody(BleState state, bool isScanning) {
     if (isScanning) {
       return const Center(child: CircularProgressIndicator());
-    } else if (state is BleDevicesFound) {
+    // TODO: For now, let's just show the devices for the last scan.
+    } else if (state is BleDevicesFound || state is BleDisconnected) {
       return ListView.builder(
         itemCount: state.devices.length,
         itemBuilder: (_, index) {
@@ -244,12 +249,13 @@ class _BleScreenBodyState extends State<BleScreenBody> {
             Text("Connected to: ${state.deviceId}"),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: _disconnect,
+              onPressed: () => _disconnect(state.deviceId),
               child: const Text("Disconnect"),
             ),
           ],
         ),
       );
+    // TODO: This case is not used for now.
     } else if (state is BleDisconnected) {
       return Center(
         child: Column(

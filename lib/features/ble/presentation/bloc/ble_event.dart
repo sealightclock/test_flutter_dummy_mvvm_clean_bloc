@@ -12,7 +12,10 @@ class DeviceSelectedEvent extends BleEvent {
   DeviceSelectedEvent(this.deviceId);
 }
 
-class DisconnectFromDeviceEvent extends BleEvent {}
+class DisconnectFromDeviceEvent extends BleEvent {
+  final String deviceId;
+  DisconnectFromDeviceEvent(this.deviceId);
+}
 
 class ShowReconnectingEvent extends BleEvent {
   final String deviceId;
