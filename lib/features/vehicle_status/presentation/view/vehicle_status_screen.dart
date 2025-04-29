@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../bloc/vehicle_status_bloc.dart';
-import '../bloc/vehicle_status_state.dart';
 import '../bloc/vehicle_status_event.dart';
+import '../bloc/vehicle_status_state.dart';
 
 /// The VehicleStatusScreen displays the vehicle's location and speed.
 class VehicleStatusScreen extends StatelessWidget {
@@ -18,7 +19,9 @@ class VehicleStatusScreen extends StatelessWidget {
         ),
         body: BlocBuilder<VehicleStatusBloc, VehicleStatusState>(
           builder: (context, state) {
-            if (state is BlocVehicleStatusLoadSuccess) {
+            if (state is BlocVehicleStatusPermissionDenied) {
+              return const Center(child: Text('Location permission denied.\nPlease enable it in settings.'));
+            } else if (state is BlocVehicleStatusLoadSuccess) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

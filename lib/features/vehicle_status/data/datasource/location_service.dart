@@ -1,8 +1,9 @@
 import 'dart:async';
+
 import 'package:geolocator/geolocator.dart';
 
-/// Service class responsible for providing raw location data using GPS.
-/// This class initializes its own dependencies internally to avoid polluting top-level code.
+/// Service providing raw GPS stream.
+/// Assumes permissions are already granted.
 class LocationService {
   final GeolocatorPlatform _geolocator = GeolocatorPlatform.instance;
 

@@ -10,6 +10,9 @@ sealed class VehicleStatusState extends Equatable {
 }
 
 class BlocVehicleStatusInitial extends VehicleStatusState {}
+
+class BlocVehicleStatusPermissionDenied extends VehicleStatusState {}
+
 class BlocVehicleStatusLoadSuccess extends VehicleStatusState {
   final VehicleStatusEntity status;
   const BlocVehicleStatusLoadSuccess(this.status);

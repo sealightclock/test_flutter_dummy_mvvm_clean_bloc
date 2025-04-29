@@ -64,6 +64,8 @@ A Bloc class should own ViewModel which handles business logic.
 
 Use switch/case to handle all the events.
 
+Bloc is a good place to check for app permissions (Internet, Bluetooth, Location, etc.).
+
 #### Event class
 
 A base Event class should be sealed and should extend Equatable for comparison purposes.
@@ -86,6 +88,8 @@ A ViewModel class should only see UseCase classes.
 
 Use a factory to facilitate the creation of a ViewModel instance, as it's built in multiple 
 steps, up from DataSource, Repository to UseCase.
+
+ViewModel is a good place to request app permissions (Internet, Bluetooth, Location, etc.).
 
 ## Domain Layer
 
