@@ -36,6 +36,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   late BleBloc bloc;
   DateTime? lastScanTime;
   bool showAllDevices = false;
+  bool _permissionDenied = false;
   String? connectedDeviceId;
   String? reconnectingDeviceId;
   ConnectionError? lastConnectionError;
@@ -65,7 +66,18 @@ class _BleScreenBodyState extends State<BleScreenBody> {
 
   Future<void> _initBlePermissionsAndScan() async {
     final granted = await _requestPermissions();
-    if (granted && _shouldAutoScan()) {
+    if (!granted) {
+      setState(() {
+        _permissionDenied = true; // <-- NEW
+      });
+      return;
+    }
+
+    setState(() {
+      _permissionDenied = false; // In case of retry success
+    });
+
+    if (_shouldAutoScan()) {
       _startScan();
     }
   }
@@ -197,7 +209,21 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   }
 
   Widget _buildBody(BleState state, bool isScanning) {
-    if (isScanning) {
+    if (_permissionDenied) {
+      // <-- NEW: Show warning message if permission not granted
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            "Precise location permission is required for BLE scanning.\n\n"
+                "Please go to Android Settings -> Apps -> YourApp -> Permissions, "
+                "and set Location access to 'Precise'.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+      );
+    } else if (isScanning) {
       return const Center(child: CircularProgressIndicator());
     // TODO: For now, let's just show the devices for the last scan.
     } else if (state is BleDevicesFound || state is BleDisconnected) {
