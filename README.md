@@ -7,6 +7,8 @@ learning purposes.
 Initially, it handled a single string: 'my_string' in a single feature. More recently, it 
 handles more features that use the same "MVVM Clean + Bloc" architecture.
 
+Refer to file "CONTRIBUTING.md" for guidelines for developing a Flutter app.
+
 ## Technologies used
 This Flutter app uses the following technologies:
 

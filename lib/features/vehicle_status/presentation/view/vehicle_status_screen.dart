@@ -12,16 +12,16 @@ class VehicleStatusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => VehicleStatusBloc()..add(BlocVehicleStatusStarted()),
+      create: (_) => VehicleStatusBloc()..add(VehicleStatusStartedEvent()),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Vehicle Status'),
         ),
         body: BlocBuilder<VehicleStatusBloc, VehicleStatusState>(
           builder: (context, state) {
-            if (state is BlocVehicleStatusPermissionDenied) {
+            if (state is VehicleStatusPermissionDeniedState) {
               return const Center(child: Text('Location permission denied.\nPlease enable it in settings.'));
-            } else if (state is BlocVehicleStatusLoadSuccess) {
+            } else if (state is VehicleStatusLoadSuccessState) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
