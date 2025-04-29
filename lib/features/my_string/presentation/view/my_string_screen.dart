@@ -156,7 +156,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter MVVM Clean + Bloc'),
-        centerTitle: true,
+        centerTitle: true, // to be consistent with app themes
       ),
       body: OrientationBuilder( // Orientation-aware content
         builder: (context, orientation) {

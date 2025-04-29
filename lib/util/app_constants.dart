@@ -26,7 +26,7 @@ class AppConstants {
   // ---------------------------------------------------------------------------
   static const String authLabel = 'Auth';
   static const String myStringLabel = 'MyString';
-  static const String accountLabel = 'Account';
+  static const String accountLabel = 'A/C';
   static const String settingsLabel = 'Settings';
   static const String bleLabel = 'BLE';
   static const String statusLabel = 'Status';

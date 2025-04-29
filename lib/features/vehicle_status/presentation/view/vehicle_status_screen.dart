@@ -16,6 +16,7 @@ class VehicleStatusScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Vehicle Status'),
+          centerTitle: true, // to be consistent with app themes
         ),
         body: BlocBuilder<VehicleStatusBloc, VehicleStatusState>(
           builder: (context, state) {

@@ -141,7 +141,10 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('BLE Devices')),
+      appBar: AppBar(
+          title: const Text('BLE Devices'),
+          centerTitle: true, // ✅ Fixes left-alignment flicker during app launch
+      ),
       body: BlocListener<BleBloc, BleState>(
         listener: (context, state) {
           if (state is BleReconnecting) {
