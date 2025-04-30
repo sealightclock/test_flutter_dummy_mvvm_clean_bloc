@@ -41,7 +41,7 @@ class AuthScreenState extends State<AuthScreen> {
     switch (result) {
       case Success<AuthEntity>(:final data):
         if (data.isLoggedIn) {
-          _bloc.add(AuthAuthenticatedEvent(user: data));
+          _bloc.add(AuthAuthenticatedEvent(auth: data));
         } else {
           _bloc.add(const AuthUnauthenticatedEvent());
           _showSnackBarMessage(
@@ -80,7 +80,7 @@ class AuthScreenState extends State<AuthScreen> {
       switch (result) {
         case Success<AuthEntity>(:final data):
           if (data.isLoggedIn) {
-            _bloc.add(AuthAuthenticatedEvent(user: data));
+            _bloc.add(AuthAuthenticatedEvent(auth: data));
             RootScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
           } else {
             _bloc.add(const AuthUnauthenticatedEvent());
@@ -115,7 +115,7 @@ class AuthScreenState extends State<AuthScreen> {
       switch (result) {
         case Success<AuthEntity>(:final data):
           if (data.isLoggedIn) {
-            _bloc.add(AuthAuthenticatedEvent(user: data));
+            _bloc.add(AuthAuthenticatedEvent(auth: data));
             RootScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
           } else {
             _bloc.add(const AuthUnauthenticatedEvent());

@@ -20,7 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           break;
 
         case AuthAuthenticatedEvent():
-          emit(AuthAuthenticatedState(user: event.user));
+          emit(AuthAuthenticatedState(user: event.auth));
           break;
 
         case AuthGuestAuthenticatedEvent():

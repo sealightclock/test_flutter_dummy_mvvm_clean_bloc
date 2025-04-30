@@ -73,7 +73,7 @@ Bloc is a good place to check for app permissions (Internet, Bluetooth, Location
 
 #### [GUIDELINE] Event class
 
-A base Event class should be sealed and should extend Equatable for comparison purposes.
+A base Event class should be sealed.
 
 Typical events: Load, Update.
 
