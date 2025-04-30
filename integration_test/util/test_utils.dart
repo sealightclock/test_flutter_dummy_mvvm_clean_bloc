@@ -69,7 +69,7 @@ Future<void> pumpUntilFoundWidget(WidgetTester tester, Finder finder, {Duration 
 
 /// Waits until a widget of given type appears in the widget tree.
 ///
-/// [T] is the widget type to wait for, e.g., MyStringHomeScreen.
+/// [T] is the widget type to wait for, e.g., MyStringScreen.
 /// [timeoutSeconds] is the maximum time to wait before giving up.
 ///
 /// Throws an exception if the widget is not found within timeout.

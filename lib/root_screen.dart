@@ -66,17 +66,17 @@ extension AppTabExtension on AppTab {
   }
 }
 
-/// HomeScreen shows the main bottom navigation bar and manages screen switching
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+/// RootScreen shows the main bottom navigation bar and manages screen switching
+class RootScreen extends StatefulWidget {
+  const RootScreen({super.key});
 
-  static final GlobalKey<HomeScreenState> homeScreenKey = GlobalKey<HomeScreenState>();
+  static final GlobalKey<RootScreenState> homeScreenKey = GlobalKey<RootScreenState>();
 
   @override
-  State<HomeScreen> createState() => HomeScreenState();
+  State<RootScreen> createState() => RootScreenState();
 }
 
-class HomeScreenState extends State<HomeScreen> {
+class RootScreenState extends State<RootScreen> {
   AppTab _selectedTab = AppTab.auth;
   bool shouldAutoSwitchToMyString = false;
 

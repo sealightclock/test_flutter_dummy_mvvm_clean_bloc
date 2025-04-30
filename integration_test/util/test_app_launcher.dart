@@ -7,7 +7,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/presentation/bl
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/view/my_string_screen.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/home_screen.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/root_screen.dart';
 
 /// Utility class to help launching the app during integration tests.
 ///
@@ -63,7 +63,7 @@ class MyAppForTesting extends StatelessWidget {
     return BlocProvider<AuthBloc>(
       create: (_) => authBloc,
       child: const MaterialApp(
-        home: HomeScreen(),
+        home: RootScreen(),
       ),
     );
   }

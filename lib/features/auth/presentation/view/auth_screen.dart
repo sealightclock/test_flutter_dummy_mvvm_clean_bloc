@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../home_screen.dart'; // Import HomeScreen
+import '../../../../root_screen.dart'; // Import RootScreen
 import '../../../../util/feedback_type_enum.dart';
 import '../../../../util/global_feedback_handler.dart';
 import '../../../../util/result.dart';
@@ -81,7 +81,7 @@ class AuthScreenState extends State<AuthScreen> {
         case Success<AuthEntity>(:final data):
           if (data.isLoggedIn) {
             _bloc.add(AuthAuthenticatedEvent(user: data));
-            HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
+            RootScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
           } else {
             _bloc.add(const AuthUnauthenticatedEvent());
             _showSnackBarMessage(
@@ -116,7 +116,7 @@ class AuthScreenState extends State<AuthScreen> {
         case Success<AuthEntity>(:final data):
           if (data.isLoggedIn) {
             _bloc.add(AuthAuthenticatedEvent(user: data));
-            HomeScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
+            RootScreen.homeScreenKey.currentState?.shouldAutoSwitchToMyString = true;
           } else {
             _bloc.add(const AuthUnauthenticatedEvent());
             _showSnackBarMessage(
@@ -144,13 +144,13 @@ class AuthScreenState extends State<AuthScreen> {
 
       _bloc.add(const AuthGuestAuthenticatedEvent());
 
-      // Set global flag before rebuilding HomeScreen
+      // Set global flag before rebuilding RootScreen
       forceStartOnMyStringScreen = true;
 
       if (mounted) { // This check appears to be needed, as detected by
-        // Replace HomeScreen to immediately jump to MyString tab
+        // Replace RootScreen to immediately jump to MyString tab
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          MaterialPageRoute(builder: (_) => const RootScreen()),
         );
       }
     } catch (e) {

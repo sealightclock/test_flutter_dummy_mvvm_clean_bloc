@@ -45,5 +45,16 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- Bluetooth permissions -->
+        <key>NSBluetoothAlwaysUsageDescription</key>
+        <string>This app uses Bluetooth to scan and connect to nearby devices.</string>
+
+        <!-- Location permissions -->
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>This app needs location access to display vehicle status and connect to Bluetooth devices nearby.</string>
+
+        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+        <string>This app needs continuous location access for background BLE scanning or GPS tracking.</string>
 </dict>
 </plist>

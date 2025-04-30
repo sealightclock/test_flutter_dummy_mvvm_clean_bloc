@@ -6,14 +6,14 @@ import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
 import 'features/settings/presentation/bloc/settings_event.dart';
 import 'features/settings/presentation/bloc/settings_state.dart';
-import 'home_screen.dart';
+import 'root_screen.dart';
 import 'theme/app_theme.dart';
 
 /// The root widget of the app, wrapped with BlocProviders.
 ///
 /// - It listens to settings changes (like dark mode, font size)
 /// - It builds the MaterialApp with the correct theme
-/// - It wraps the HomeScreen which controls navigation across features
+/// - It wraps the RootScreen which controls navigation across features
 ///
 /// This class is also restartable using `triggerAppRebuild()`
 /// by updating its internal key (see `_MyAppState`).
@@ -68,7 +68,7 @@ class MyAppState extends State<MyApp> {
                 title: 'Flutter MVVM Clean + Bloc Demo',
                 restorationScopeId: 'app', // Helps in restoring state after app restarts
                 theme: theme,
-                home: const HomeScreen(),
+                home: const RootScreen(),
               );
             },
           ),

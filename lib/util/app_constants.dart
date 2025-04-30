@@ -22,7 +22,7 @@ class AppConstants {
   static const String remoteServerLabelHttp = 'Http';
 
   // ---------------------------------------------------------------------------
-  // UI Labels for HomeScreen (bottom navigation bar)
+  // UI Labels for RootScreen (bottom navigation bar)
   // ---------------------------------------------------------------------------
   static const String authLabel = 'Auth';
   static const String myStringLabel = 'MyString';

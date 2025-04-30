@@ -10,7 +10,7 @@ import 'util/test_app_launcher.dart';
 import 'util/test_timer.dart';
 import 'util/reset_hive.dart';
 
-import 'package:test_flutter_dummy_mvvm_clean_bloc/home_screen.dart'; // ✅ Needed for forceStartOnMyStringScreen
+import 'package:test_flutter_dummy_mvvm_clean_bloc/root_screen.dart'; // ✅ Needed for forceStartOnMyStringScreen
 
 void main() {
   // Bind integration test environment (required boilerplate)
