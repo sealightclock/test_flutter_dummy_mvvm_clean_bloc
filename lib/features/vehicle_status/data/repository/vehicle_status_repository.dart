@@ -1,17 +1,19 @@
 import 'package:rxdart/rxdart.dart';
 
 import '../../domain/entity/vehicle_status_entity.dart';
-import '../datasource/location_service_data_source.dart';
+import '../datasource/vehicle_status_data_source.dart';
 
 /// Repository responsible for providing a throttled [Stream] of [VehicleStatusEntity].
 class VehicleStatusRepository {
-  final LocationServiceDataSource _locationService;
+  late final VehicleStatusDataSource dataSource;
 
-  VehicleStatusRepository() : _locationService = LocationServiceDataSource();
+  VehicleStatusRepository(
+      {required this.dataSource}
+  );
 
   /// Returns a [Stream] of [VehicleStatusEntity] throttled to 1 event per second.
   Stream<VehicleStatusEntity> getVehicleStatusStream() {
-    return _locationService.getPositionStreamRaw()
+    return dataSource.getPositionStreamRaw()
         .throttleTime(const Duration(seconds: 1))
         .map((position) {
       // TODO: Consider using CAN bus speed for better accuracy.

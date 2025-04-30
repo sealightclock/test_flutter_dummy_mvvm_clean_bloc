@@ -3,11 +3,13 @@ import '../entity/vehicle_status_entity.dart';
 
 /// UseCase class to provide a clean entry point to get the vehicle status stream.
 class GetVehicleStatusUseCase {
-  final VehicleStatusRepository _repository;
+  late final VehicleStatusRepository repository;
 
-  GetVehicleStatusUseCase() : _repository = VehicleStatusRepository();
+  GetVehicleStatusUseCase(
+      {required this.repository}
+  );
 
   Stream<VehicleStatusEntity> call() {
-    return _repository.getVehicleStatusStream();
+    return repository.getVehicleStatusStream();
   }
 }

@@ -5,14 +5,17 @@ import '../../domain/usecase/get_vehicle_status_use_case.dart';
 
 /// ViewModel responsible for interacting with the UseCase and checking location permissions.
 ///
-/// Now uses 'permission_handler' package to request and verify permissions explicitly,
-/// matching the BLE feature style.
+/// This ViewModel no longer creates its own UseCase instance.
+/// Instead, it accepts the UseCase as a constructor parameter,
+/// which improves testability and follows Clean Architecture.
 class VehicleStatusViewModel {
-  final GetVehicleStatusUseCase _useCase;
+  final GetVehicleStatusUseCase useCase;
 
-  VehicleStatusViewModel() : _useCase = GetVehicleStatusUseCase();
+  /// Constructor that receives [GetVehicleStatusUseCase].
+  VehicleStatusViewModel(this.useCase);
 
-  Stream<VehicleStatusEntity> get vehicleStatusStream => _useCase();
+  /// Exposes a stream of [VehicleStatusEntity] from the use case.
+  Stream<VehicleStatusEntity> get vehicleStatusStream => useCase();
 
   /// Requests location permission and checks if granted.
   ///
