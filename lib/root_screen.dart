@@ -15,6 +15,10 @@ import 'features/my_string/presentation/view/my_string_screen.dart';
 import 'features/settings/presentation/view/settings_screen.dart';
 import 'features/vehicle_status/presentation/view/vehicle_status_screen.dart';
 
+import 'package:logger/logger.dart' as my_logger;
+
+final logger = my_logger.Logger();
+
 /// Global flag to force opening MyString screen (used by tests or special flows)
 bool forceStartOnMyStringScreen = false;
 
@@ -140,6 +144,9 @@ class RootScreenState extends State<RootScreen> {
         }
 
         Widget body;
+
+        logger.t('TFDB: RootScreen: build: _selectedTab: $_selectedTab');
+
         switch (_selectedTab) {
           case AppTab.auth:
             body = const AuthScreen();

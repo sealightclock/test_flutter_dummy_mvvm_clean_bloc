@@ -14,31 +14,31 @@ sealed class MyStringEvent {
 
 /// Event: Triggered when the app needs to load the string value.
 /// This might be called when the app starts or when the screen is opened.
-final class LoadMyStringEvent extends MyStringEvent {
-  const LoadMyStringEvent(); // Constructor with no parameters.
+final class MyStringLoadEvent extends MyStringEvent {
+  const MyStringLoadEvent(); // Constructor with no parameters.
 
   // No additional data is needed for this event.
 }
 
 /// Event: Triggered when the app launches and needs to load the string value.
 /// This is a system event.
-final class UpdateMyStringFromLocalEvent extends MyStringEvent {
+final class MyStringUpdateFromLocalEvent extends MyStringEvent {
   final String newValue; // The new value retrieved from the local store.
 
-  const UpdateMyStringFromLocalEvent(this.newValue); // Constructor to pass the local stored value.
+  const MyStringUpdateFromLocalEvent(this.newValue); // Constructor to pass the local stored value.
 }
 
 /// Event: Triggered when the user manually updates the string via text field
 /// + "Update from User" button.
-final class UpdateMyStringFromUserEvent extends MyStringEvent {
+final class MyStringUpdateFromUserEvent extends MyStringEvent {
   final String newValue; // The new value entered by the user.
 
-  const UpdateMyStringFromUserEvent(this.newValue); // Constructor to pass the user input.
+  const MyStringUpdateFromUserEvent(this.newValue); // Constructor to pass the user input.
 }
 
 /// Event: Triggered when the user presses "Update from Server" button.
-final class UpdateMyStringFromServerEvent extends MyStringEvent {
+final class MyStringUpdateFromServerEvent extends MyStringEvent {
   final Future<String> Function() fetchFromServer; // The function to fetch value from server.
 
-  const UpdateMyStringFromServerEvent(this.fetchFromServer); // Constructor to pass in the fetch function.
+  const MyStringUpdateFromServerEvent(this.fetchFromServer); // Constructor to pass in the fetch function.
 }

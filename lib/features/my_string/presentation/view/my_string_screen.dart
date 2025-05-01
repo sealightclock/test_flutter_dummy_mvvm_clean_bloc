@@ -69,10 +69,10 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     bloc.viewModel.getMyStringFromLocal().then((result) {
       switch (result) {
         case Success<MyStringEntity>(:final data):
-          bloc.add(UpdateMyStringFromLocalEvent(data.value));
+          bloc.add(MyStringUpdateFromLocalEvent(data.value));
           break;
         case Failure<MyStringEntity>(:final message):
-          bloc.add(UpdateMyStringFromLocalEvent('Error loading: $message'));
+          bloc.add(MyStringUpdateFromLocalEvent('Error loading: $message'));
           break;
       }
       textEditController.clear(); // Clear input field after loading
@@ -109,7 +109,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     final newValue = textEditController.text.trim();
     final previousState = bloc.state; // Save previous state for rollback
 
-    bloc.add(UpdateMyStringFromUserEvent(newValue)); // Optimistic update immediately
+    bloc.add(MyStringUpdateFromUserEvent(newValue)); // Optimistic update immediately
 
     // Try saving new value to local store
     await handleResult<void>(
@@ -120,7 +120,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
       onFailure: (message) {
         // Rollback to previous value if save failed
         if (previousState is MyStringSuccessState) {
-          bloc.add(UpdateMyStringFromUserEvent(previousState.value));
+          bloc.add(MyStringUpdateFromUserEvent(previousState.value));
         }
         showFeedback(context, 'Failed to save: $message, rolling back.', FeedbackType.error);
       },
@@ -147,7 +147,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     }
 
     // Dispatch event to Bloc
-    final event = UpdateMyStringFromServerEvent(fetchAndStore);
+    final event = MyStringUpdateFromServerEvent(fetchAndStore);
     bloc.add(event);
   }
 

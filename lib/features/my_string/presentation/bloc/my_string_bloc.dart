@@ -27,21 +27,21 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
       // 2. You can't miss any events.
 
       switch (event) {
-        case LoadMyStringEvent():
+        case MyStringLoadEvent():
           emit(MyStringLoadingState());
           break;
 
-        case UpdateMyStringFromLocalEvent():
+        case MyStringUpdateFromLocalEvent():
         // Local event already contains the new value.
           emit(MyStringSuccessState(event.newValue));
           break;
 
-        case UpdateMyStringFromUserEvent():
+        case MyStringUpdateFromUserEvent():
         // User event already contains the new value.
           emit(MyStringSuccessState(event.newValue));
           break;
 
-        case UpdateMyStringFromServerEvent():
+        case MyStringUpdateFromServerEvent():
         // For server fetch, we simulate a network call.
           emit(MyStringLoadingState()); // Start with loading state
 

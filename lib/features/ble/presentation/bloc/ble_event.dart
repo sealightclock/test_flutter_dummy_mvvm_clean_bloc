@@ -1,23 +1,23 @@
 sealed class BleEvent {}
 
-class StartScanEvent extends BleEvent {
+class BleStartScanEvent extends BleEvent {
   final bool showAll;
-  StartScanEvent({required this.showAll});
+  BleStartScanEvent({required this.showAll});
 }
 
-class StopScanEvent extends BleEvent {}
+class BleStopScanEvent extends BleEvent {}
 
-class DeviceSelectedEvent extends BleEvent {
+class BleDeviceSelectedEvent extends BleEvent {
   final String deviceId;
-  DeviceSelectedEvent(this.deviceId);
+  BleDeviceSelectedEvent(this.deviceId);
 }
 
-class DisconnectFromDeviceEvent extends BleEvent {
+class BleDisconnectFromDeviceEvent extends BleEvent {
   final String deviceId;
-  DisconnectFromDeviceEvent(this.deviceId);
+  BleDisconnectFromDeviceEvent(this.deviceId);
 }
 
-class ShowReconnectingEvent extends BleEvent {
+class BleShowReconnectingEvent extends BleEvent {
   final String deviceId;
-  ShowReconnectingEvent(this.deviceId);
+  BleShowReconnectingEvent(this.deviceId);
 }

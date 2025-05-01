@@ -15,7 +15,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   // ViewModel encapsulates logic and uses Result for safe error handling
   late SettingsViewModel viewModel;
 
-  SettingsBloc() : super(SettingsInitial()) {
+  SettingsBloc() : super(SettingsInitialState()) {
     viewModel = SettingsViewModelFactory.create();
 
     on<SettingsEvent>((event, emit) async {

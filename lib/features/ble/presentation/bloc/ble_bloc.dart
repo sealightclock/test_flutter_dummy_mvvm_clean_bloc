@@ -23,54 +23,54 @@ class BleBloc extends Bloc<BleEvent, BleState> {
 
   BleBloc({BleViewModel? injectedViewModel})
       : viewModel = injectedViewModel ?? BleViewModelFactory.create(),
-        super(BleInitial()) {
-    on<StartScanEvent>(_onStartScanEvent);
-    on<StopScanEvent>(_onStopScanEvent);
-    on<DeviceSelectedEvent>(_onDeviceSelectedEvent);
-    on<DisconnectFromDeviceEvent>(_onDisconnectFromDeviceEvent);
-    on<ShowReconnectingEvent>(_onShowReconnectingEvent);
+        super(BleInitialState()) {
+    on<BleStartScanEvent>(_onStartScanEvent);
+    on<BleStopScanEvent>(_onStopScanEvent);
+    on<BleDeviceSelectedEvent>(_onDeviceSelectedEvent);
+    on<BleDisconnectFromDeviceEvent>(_onDisconnectFromDeviceEvent);
+    on<BleShowReconnectingEvent>(_onShowReconnectingEvent);
   }
 
-  Future<void> _onStartScanEvent(StartScanEvent event, Emitter<BleState> emit) async {
+  Future<void> _onStartScanEvent(BleStartScanEvent event, Emitter<BleState> emit) async {
     final granted = await viewModel.requestPermissions();
     if (!granted) {
-      emit(BleError("Permissions not granted"));
+      emit(BleErrorState("Permissions not granted"));
       return;
     }
 
     _lastShowAll = event.showAll;
     _lastDevices = [];
 
-    emit(BleScanning());
+    emit(BleScanningState());
 
     await _scanSub?.cancel();
     _scanSub = viewModel.scanBleDevices(showAll: event.showAll).listen(
           (devices) {
         _lastDevices = devices;
         if (!emit.isDone) {
-          emit(BleDevicesFound(devices));
+          emit(BleDevicesFoundState(devices));
         }
       },
       onError: (error) {
         if (!emit.isDone) {
-          emit(BleError("Scan failed: $error"));
+          emit(BleErrorState("Scan failed: $error"));
         }
       },
     );
   }
 
-  Future<void> _onStopScanEvent(StopScanEvent event, Emitter<BleState> emit) async {
+  Future<void> _onStopScanEvent(BleStopScanEvent event, Emitter<BleState> emit) async {
     await _scanSub?.cancel();
     _scanSub = null;
 
     if (_lastDevices.isNotEmpty) {
-      emit(BleDevicesFound(_lastDevices));
+      emit(BleDevicesFoundState(_lastDevices));
     } else {
-      emit(BleInitial());
+      emit(BleInitialState());
     }
   }
 
-  Future<void> _onDeviceSelectedEvent(DeviceSelectedEvent event, Emitter<BleState> emit) async {
+  Future<void> _onDeviceSelectedEvent(BleDeviceSelectedEvent event, Emitter<BleState> emit) async {
     logger.d("TFDB: BleBloc: DeviceSelectedEvent: event=[$event]");
 
     try {
@@ -91,14 +91,14 @@ class BleBloc extends Bloc<BleEvent, BleState> {
             await Future.delayed(const Duration(milliseconds: 500));
 
             if (!emit.isDone && update.failure == null) {
-              emit(BleConnected(event.deviceId, update: update));
+              emit(BleConnectedState(event.deviceId, update: update));
             }
           } else if (update.connectionState == DeviceConnectionState.disconnected) {
             _cancelConnectionTimeoutTimer();
             if (update.failure != null) {
-              emit(BleError("Connection failed: ${update.failure!.code.name}"));
+              emit(BleErrorState("Connection failed: ${update.failure!.code.name}"));
             } else {
-              emit(BleDisconnected(event.deviceId, _lastDevices));
+              emit(BleDisconnectedState(event.deviceId, _lastDevices));
               _autoReconnectOrRescan();
             }
           } else {
@@ -114,7 +114,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       logger.e("TFDB: BleBloc: _onDeviceSelectedEvent: error=$e, stackTrace=$stackTrace");
 
       if (!emit.isDone) {
-        emit(BleError("Connection failed"));
+        emit(BleErrorState("Connection failed"));
       } else {
         logger.e("TFDB: BleBloc: _onDeviceSelectedEvent: emit.isDone==true");
       }
@@ -128,7 +128,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
 
     _cancelConnectionTimeoutTimer();
     _connectionTimeoutTimer = Timer(const Duration(seconds: 10), () {
-      add(DisconnectFromDeviceEvent(deviceId));
+      add(BleDisconnectFromDeviceEvent(deviceId));
     });
   }
 
@@ -156,7 +156,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
             "failure captured)");
       }
 
-      add(DisconnectFromDeviceEvent(_lastConnectedDeviceId!));
+      add(BleDisconnectFromDeviceEvent(_lastConnectedDeviceId!));
     } else if (update.connectionState == DeviceConnectionState.connecting) {
         _startConnectionTimeoutTimer(_lastConnectedDeviceId!);
     } else {
@@ -166,20 +166,20 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     }
   }
 
-  Future<void> _onDisconnectFromDeviceEvent(DisconnectFromDeviceEvent event, Emitter<BleState> emit) async {
+  Future<void> _onDisconnectFromDeviceEvent(BleDisconnectFromDeviceEvent event, Emitter<BleState> emit) async {
     logger.d("TFDB: BleBloc: _onDisconnectFromDeviceEvent: event=[$event]");
 
     await _connectionSub?.cancel();
     _connectionSub = null;
     _cancelConnectionTimeoutTimer();
-    emit(BleDisconnected(event.deviceId, _lastDevices));
+    emit(BleDisconnectedState(event.deviceId, _lastDevices));
     //JZ _autoReconnectOrRescan();
   }
 
-  Future<void> _onShowReconnectingEvent(ShowReconnectingEvent event, Emitter<BleState> emit) async {
+  Future<void> _onShowReconnectingEvent(BleShowReconnectingEvent event, Emitter<BleState> emit) async {
     logger.d("TFDB: BleBloc: _onShowReconnectingEvent: event=[$event]");
 
-    emit(BleReconnecting(event.deviceId));
+    emit(BleReconnectingState(event.deviceId));
   }
 
   void _autoReconnectOrRescan() async {
@@ -188,10 +188,10 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     await Future.delayed(const Duration(seconds: 1));
 
     if (_lastConnectedDeviceId != null) {
-      add(ShowReconnectingEvent(_lastConnectedDeviceId!));
-      add(DeviceSelectedEvent(_lastConnectedDeviceId!));
+      add(BleShowReconnectingEvent(_lastConnectedDeviceId!));
+      add(BleDeviceSelectedEvent(_lastConnectedDeviceId!));
     } else {
-      add(StartScanEvent(showAll: _lastShowAll));
+      add(BleStartScanEvent(showAll: _lastShowAll));
     }
   }
 

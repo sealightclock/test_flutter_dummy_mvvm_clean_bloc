@@ -10,50 +10,50 @@ abstract class BleState extends Equatable {
   get devices => null;
 }
 
-class BleInitial extends BleState {}
+class BleInitialState extends BleState {}
 
-class BleScanning extends BleState {}
+class BleScanningState extends BleState {}
 
-class BleDevicesFound extends BleState {
+class BleDevicesFoundState extends BleState {
   @override
   final List<BleDeviceEntity> devices;
-  const BleDevicesFound(this.devices);
+  const BleDevicesFoundState(this.devices);
 
   @override
   List<Object?> get props => [devices];
 }
 
-class BleConnected extends BleState {
+class BleConnectedState extends BleState {
   final String deviceId;
   final ConnectionStateUpdate? update;
 
-  const BleConnected(this.deviceId, {this.update});
+  const BleConnectedState(this.deviceId, {this.update});
 
   @override
   List<Object?> get props => [deviceId, update];
 }
 
-class BleDisconnected extends BleState {
+class BleDisconnectedState extends BleState {
   final String deviceId;
   @override
   final List<BleDeviceEntity> devices;
-  const BleDisconnected(this.deviceId, this.devices);
+  const BleDisconnectedState(this.deviceId, this.devices);
 
   @override
   List<Object?> get props => [devices];
 }
 
-class BleReconnecting extends BleState {
+class BleReconnectingState extends BleState {
   final String deviceId;
-  const BleReconnecting(this.deviceId);
+  const BleReconnectingState(this.deviceId);
 
   @override
   List<Object?> get props => [deviceId];
 }
 
-class BleError extends BleState {
+class BleErrorState extends BleState {
   final String message;
-  const BleError(this.message);
+  const BleErrorState(this.message);
 
   @override
   List<Object?> get props => [message];

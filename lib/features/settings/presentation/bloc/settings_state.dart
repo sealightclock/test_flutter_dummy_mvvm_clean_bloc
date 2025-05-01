@@ -15,7 +15,7 @@ sealed class SettingsState extends Equatable {
 }
 
 /// State before any settings are loaded (used briefly on app start)
-class SettingsInitial extends SettingsState {}
+class SettingsInitialState extends SettingsState {}
 
 /// State when settings have been successfully loaded or updated
 class SettingsLoadedState extends SettingsState {

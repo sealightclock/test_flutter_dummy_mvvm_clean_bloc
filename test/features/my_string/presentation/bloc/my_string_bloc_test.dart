@@ -9,7 +9,7 @@ void main() {
     blocTest<MyStringBloc, MyStringState>(
       'emits [Loading, Loaded] when UpdateMyStringFromServerEvent succeeds',
       build: () => MyStringBloc(),
-      act: (bloc) => bloc.add(UpdateMyStringFromServerEvent(() async => 'Server Value')),
+      act: (bloc) => bloc.add(MyStringUpdateFromServerEvent(() async => 'Server Value')),
       expect: () => [
         isA<MyStringLoadingState>(),
         isA<MyStringSuccessState>().having((s) => s.value, 'value', 'Server Value'),
@@ -19,7 +19,7 @@ void main() {
     blocTest<MyStringBloc, MyStringState>(
       'emits [Loading, Error] when UpdateMyStringFromServerEvent throws',
       build: () => MyStringBloc(),
-      act: (bloc) => bloc.add(UpdateMyStringFromServerEvent(() async {
+      act: (bloc) => bloc.add(MyStringUpdateFromServerEvent(() async {
         throw Exception('Server down');
       })),
       expect: () => [
@@ -31,7 +31,7 @@ void main() {
     blocTest<MyStringBloc, MyStringState>(
       'emits [Loaded] when UpdateMyStringFromUserEvent is added',
       build: () => MyStringBloc(),
-      act: (bloc) => bloc.add(UpdateMyStringFromUserEvent('User Input')),
+      act: (bloc) => bloc.add(MyStringUpdateFromUserEvent('User Input')),
       expect: () => [
         isA<MyStringSuccessState>().having((s) => s.value, 'value', 'User Input'),
       ],
@@ -40,7 +40,7 @@ void main() {
     blocTest<MyStringBloc, MyStringState>(
       'emits [Loaded] when UpdateMyStringFromLocalEvent is added',
       build: () => MyStringBloc(),
-      act: (bloc) => bloc.add(UpdateMyStringFromLocalEvent('Local Value')),
+      act: (bloc) => bloc.add(MyStringUpdateFromLocalEvent('Local Value')),
       expect: () => [
         isA<MyStringSuccessState>().having((s) => s.value, 'value', 'Local Value'),
       ],
