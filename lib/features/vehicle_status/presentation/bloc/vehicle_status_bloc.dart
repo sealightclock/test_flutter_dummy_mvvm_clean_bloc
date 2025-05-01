@@ -14,25 +14,25 @@ class VehicleStatusBloc extends Bloc<VehicleStatusEvent, VehicleStatusState> {
   StreamSubscription? _subscription;
 
   VehicleStatusBloc() : _viewModel = VehicleStatusViewModelFactory.create(), super(VehicleStatusInitialState()) {
-    on<VehicleStatusStartedEvent>(_onStarted);
-    on<VehicleStatusPermissionCheckedEvent>(_onPermissionChecked);
-    on<VehicleStatusUpdatedEvent>((event, emit) => emit(VehicleStatusLoadSuccessState(event.status)));
+    on<VehicleStatusStartEvent>(_onStarted);
+    on<VehicleStatusHandlePermissionEvent>(_onPermissionChecked);
+    on<VehicleStatusLoadEvent>((event, emit) => emit(VehicleStatusLoadedState(event.status)));
   }
 
   /// Called when Bloc is started.
   /// Requests location permission through ViewModel and acts accordingly.
-  Future<void> _onStarted(VehicleStatusStartedEvent event, Emitter<VehicleStatusState> emit) async {
+  Future<void> _onStarted(VehicleStatusStartEvent event, Emitter<VehicleStatusState> emit) async {
     final granted = await _viewModel.checkAndRequestLocationPermission();
-    add(VehicleStatusPermissionCheckedEvent(granted));
+    add(VehicleStatusHandlePermissionEvent(granted));
   }
 
   /// Called after checking permission.
-  void _onPermissionChecked(VehicleStatusPermissionCheckedEvent event, Emitter<VehicleStatusState> emit) {
+  void _onPermissionChecked(VehicleStatusHandlePermissionEvent event, Emitter<VehicleStatusState> emit) {
     if (!event.permissionGranted) {
       emit(VehicleStatusPermissionDeniedState());
     } else {
       _subscription = _viewModel.vehicleStatusStream.listen((status) {
-        add(VehicleStatusUpdatedEvent(status));
+        add(VehicleStatusLoadEvent(status));
       });
     }
   }

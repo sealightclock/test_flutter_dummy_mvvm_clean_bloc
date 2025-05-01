@@ -5,7 +5,7 @@ import '../../domain/entity/settings_entity.dart';
 ///
 /// This includes:
 /// - Initial: before settings are loaded
-/// - Loaded: settings loaded successfully
+/// - LoadedOrUpdated: settings loaded/updated successfully
 /// - Error: something went wrong
 sealed class SettingsState extends Equatable {
   const SettingsState();
@@ -18,10 +18,10 @@ sealed class SettingsState extends Equatable {
 class SettingsInitialState extends SettingsState {}
 
 /// State when settings have been successfully loaded or updated
-class SettingsLoadedState extends SettingsState {
+class SettingsLoadedOrUpdatedState extends SettingsState {
   final SettingsEntity settings;
 
-  const SettingsLoadedState(this.settings);
+  const SettingsLoadedOrUpdatedState(this.settings);
 
   @override
   List<Object?> get props => [settings];

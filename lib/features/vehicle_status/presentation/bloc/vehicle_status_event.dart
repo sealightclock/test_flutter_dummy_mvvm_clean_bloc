@@ -5,14 +5,14 @@ sealed class VehicleStatusEvent {
   const VehicleStatusEvent();
 }
 
-class VehicleStatusStartedEvent extends VehicleStatusEvent {}
+class VehicleStatusStartEvent extends VehicleStatusEvent {}
 
-class VehicleStatusPermissionCheckedEvent extends VehicleStatusEvent {
+class VehicleStatusHandlePermissionEvent extends VehicleStatusEvent {
   final bool permissionGranted;
-  const VehicleStatusPermissionCheckedEvent(this.permissionGranted);
+  const VehicleStatusHandlePermissionEvent(this.permissionGranted);
 }
 
-class VehicleStatusUpdatedEvent extends VehicleStatusEvent {
+class VehicleStatusLoadEvent extends VehicleStatusEvent {
   final VehicleStatusEntity status;
-  const VehicleStatusUpdatedEvent(this.status);
+  const VehicleStatusLoadEvent(this.status);
 }

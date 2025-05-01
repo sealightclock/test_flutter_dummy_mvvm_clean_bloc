@@ -75,7 +75,7 @@ Bloc is a good place to check for app permissions (Internet, Bluetooth, Location
 
 A base Event class should be sealed.
 
-Typical events: Load, Update.
+Typical events: Load (for read), Update (for write).
 
 A derived Event class should be renamed <Feature><Specific>Event.
 
@@ -83,7 +83,7 @@ A derived Event class should be renamed <Feature><Specific>Event.
 
 A base State class should be sealed and should extend Equatable for comparison purposes.
 
-Typical states: Initial, Loading, Success (Loaded), Error.
+Typical states: Initial, Loading/Loaded, Updating/Updated, Success, Error.
 
 A derived State class should be renamed <Feature><Specific>State.
 

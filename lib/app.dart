@@ -57,7 +57,7 @@ class MyAppState extends State<MyApp> {
           ],
           child: BlocBuilder<SettingsBloc, SettingsState>(
             builder: (context, state) {
-              final settings = state is SettingsLoadedState ? state.settings : null;
+              final settings = state is SettingsLoadedOrUpdatedState ? state.settings : null;
 
               // Build theme based on user settings, fallback if null
               final theme = settings?.darkMode ?? false

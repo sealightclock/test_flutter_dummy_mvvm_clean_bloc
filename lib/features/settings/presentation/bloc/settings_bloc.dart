@@ -26,7 +26,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
           switch (result) {
             case Success(:final data):
-              emit(SettingsLoadedState(data)); // Show loaded settings
+              emit(SettingsLoadedOrUpdatedState(data)); // Show loaded settings
               break;
 
             case Failure(:final message):
@@ -40,7 +40,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           final result = await viewModel.saveSettings(event.newSettings);
           switch (result) {
             case Success():
-              emit(SettingsLoadedState(event.newSettings)); // Update UI immediately
+              emit(SettingsLoadedOrUpdatedState(event.newSettings)); // Update UI
+              // immediately
               await Future.delayed(const Duration(milliseconds: 300));
               triggerAppRebuild(); // Trigger theme/font rebuild
               break;
