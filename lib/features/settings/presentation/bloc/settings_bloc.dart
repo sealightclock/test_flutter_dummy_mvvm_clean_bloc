@@ -26,11 +26,17 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
           switch (result) {
             case Success(:final data):
-              emit(SettingsLoadedOrUpdatedState(data)); // Show loaded settings
+              if (state is! SettingsLoadedOrUpdatedState ||
+                  (state as SettingsLoadedOrUpdatedState).settings != data) {
+                emit(SettingsLoadedOrUpdatedState(data));
+              }
               break;
 
             case Failure(:final message):
-              emit(SettingsErrorState('Failed to load settings: $message'));
+              if (state is! SettingsErrorState ||
+                  (state as SettingsErrorState).message != message) {
+                emit(SettingsErrorState('Failed to load settings: $message'));
+              }
               break;
           }
           break;
@@ -40,14 +46,21 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           final result = await viewModel.saveSettings(event.newSettings);
           switch (result) {
             case Success():
-              emit(SettingsLoadedOrUpdatedState(event.newSettings)); // Update UI
+              if (state is! SettingsLoadedOrUpdatedState ||
+                  (state as SettingsLoadedOrUpdatedState).settings != event
+                      .newSettings) {
+                emit(SettingsLoadedOrUpdatedState(event.newSettings));
+              }
               // immediately
               await Future.delayed(const Duration(milliseconds: 300));
               triggerAppRebuild(); // Trigger theme/font rebuild
               break;
 
             case Failure(:final message):
-              emit(SettingsErrorState('Failed to save settings: $message'));
+              if (state is! SettingsErrorState ||
+                  (state as SettingsErrorState).message != message) {
+                emit(SettingsErrorState('Failed to save settings: $message'));
+              }
               break;
           }
           break;

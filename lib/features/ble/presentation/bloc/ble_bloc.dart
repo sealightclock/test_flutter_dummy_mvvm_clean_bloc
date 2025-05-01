@@ -14,6 +14,7 @@ final logger = my_logger.Logger();
 
 class BleBloc extends Bloc<BleEvent, BleState> {
   final BleViewModel viewModel;
+
   StreamSubscription<List<BleDeviceEntity>>? _scanSub;
   StreamSubscription<ConnectionStateUpdate>? _connectionSub;
   Timer? _connectionTimeoutTimer;
@@ -34,26 +35,37 @@ class BleBloc extends Bloc<BleEvent, BleState> {
   Future<void> _onStartScanEvent(BleStartScanEvent event, Emitter<BleState> emit) async {
     final granted = await viewModel.requestPermissions();
     if (!granted) {
-      emit(BleErrorState("Permissions not granted"));
+      if (state is! BleErrorState ||
+          (state as BleErrorState).message != "Permissions not granted") {
+        emit(BleErrorState("Permissions not granted"));
+      }
       return;
     }
 
     _lastShowAll = event.showAll;
     _lastDevices = [];
 
-    emit(BleScanningState());
+    if (state is! BleScanningState) {
+      emit(BleScanningState());
+    }
 
     await _scanSub?.cancel();
     _scanSub = viewModel.scanBleDevices(showAll: event.showAll).listen(
           (devices) {
         _lastDevices = devices;
         if (!emit.isDone) {
-          emit(BleDevicesFoundState(devices));
+          if (state is! BleDevicesFoundState ||
+              (state as BleDevicesFoundState).devices != devices) {
+            emit(BleDevicesFoundState(devices));
+          }
         }
       },
       onError: (error) {
         if (!emit.isDone) {
-          emit(BleErrorState("Scan failed: $error"));
+          if (state is! BleErrorState ||
+              (state as BleErrorState).message != "Scan failed: $error") {
+            emit(BleErrorState("Scan failed: $error"));
+          }
         }
       },
     );
@@ -64,9 +76,14 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     _scanSub = null;
 
     if (_lastDevices.isNotEmpty) {
-      emit(BleDevicesFoundState(_lastDevices));
+      if (state is! BleDevicesFoundState ||
+          (state as BleDevicesFoundState).devices != _lastDevices) {
+        emit(BleDevicesFoundState(_lastDevices));
+      }
     } else {
-      emit(BleInitialState());
+      if (state is! BleInitialState) {
+        emit(BleInitialState());
+      }
     }
   }
 
@@ -91,14 +108,27 @@ class BleBloc extends Bloc<BleEvent, BleState> {
             await Future.delayed(const Duration(milliseconds: 500));
 
             if (!emit.isDone && update.failure == null) {
-              emit(BleDeviceConnectedState(event.deviceId, update: update));
+              if (state is! BleDeviceConnectedState ||
+                  (state as BleDeviceConnectedState).deviceId != event.deviceId ||
+                  (state as BleDeviceConnectedState).update != update) {
+                emit(BleDeviceConnectedState(event.deviceId, update: update));
+              }
             }
           } else if (update.connectionState == DeviceConnectionState.disconnected) {
             _cancelConnectionTimeoutTimer();
             if (update.failure != null) {
-              emit(BleErrorState("Connection failed: ${update.failure!.code.name}"));
+              if (state is! BleErrorState ||
+                  (state as BleErrorState).message != "Connection failed: "
+                      "${update.failure!.code.name}") {
+                emit(BleErrorState(
+                    "Connection failed: ${update.failure!.code.name}"));
+              }
             } else {
-              emit(BleDeviceDisconnectedState(event.deviceId, _lastDevices));
+              if (state is! BleDeviceDisconnectedState ||
+                  (state as BleDeviceDisconnectedState).deviceId != event.deviceId ||
+                  (state as BleDeviceDisconnectedState).devices != _lastDevices) {
+                emit(BleDeviceDisconnectedState(event.deviceId, _lastDevices));
+              }
               _autoReconnectOrRescan();
             }
           } else {
@@ -114,7 +144,10 @@ class BleBloc extends Bloc<BleEvent, BleState> {
       logger.e("TFDB: BleBloc: _onDeviceSelectedEvent: error=$e, stackTrace=$stackTrace");
 
       if (!emit.isDone) {
-        emit(BleErrorState("Connection failed"));
+        if (state is! BleErrorState ||
+            (state as BleErrorState).message != "Connection failed") {
+          emit(BleErrorState("Connection failed"));
+        }
       } else {
         logger.e("TFDB: BleBloc: _onDeviceSelectedEvent: emit.isDone==true");
       }
@@ -172,14 +205,23 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     await _connectionSub?.cancel();
     _connectionSub = null;
     _cancelConnectionTimeoutTimer();
-    emit(BleDeviceDisconnectedState(event.deviceId, _lastDevices));
+
+    if (state is! BleDeviceConnectedState ||
+        (state as BleDeviceConnectedState).deviceId != event.deviceId ||
+        (state as BleDeviceConnectedState).devices != _lastDevices) {
+      emit(BleDeviceDisconnectedState(event.deviceId, _lastDevices));
+    }
+
     //JZ _autoReconnectOrRescan();
   }
 
   Future<void> _onShowReconnectingEvent(BleShowReconnectingDeviceEvent event, Emitter<BleState> emit) async {
     logger.d("TFDB: BleBloc: _onShowReconnectingEvent: event=[$event]");
 
-    emit(BleDeviceReconnectingState(event.deviceId));
+    if (state is! BleDeviceReconnectingState ||
+        (state as BleDeviceReconnectingState).deviceId != event.deviceId) {
+      emit(BleDeviceReconnectingState(event.deviceId));
+    }
   }
 
   void _autoReconnectOrRescan() async {

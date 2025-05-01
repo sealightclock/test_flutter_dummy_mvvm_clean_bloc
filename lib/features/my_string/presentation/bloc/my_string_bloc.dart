@@ -1,4 +1,3 @@
-// Imports the Bloc package that provides Bloc and event/state management features.
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../factory/my_string_viewmodel_factory.dart';
@@ -28,37 +27,54 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
 
       switch (event) {
         case MyStringLoadEvent():
-          emit(MyStringLoadingState());
+        // Emit loading only if current state is not already loading
+          if (state is! MyStringLoadingState) {
+            emit(MyStringLoadingState());
+          }
           break;
 
         case MyStringUpdateFromLocalEvent():
-        // Local event already contains the new value.
-          emit(MyStringSuccessState(event.newValue));
+          if (state is! MyStringSuccessState ||
+              (state as MyStringSuccessState).value != event.newValue) {
+            emit(MyStringSuccessState(event.newValue));
+          }
           break;
 
         case MyStringUpdateFromUserEvent():
-        // User event already contains the new value.
-          emit(MyStringSuccessState(event.newValue));
+          if (state is! MyStringSuccessState ||
+              (state as MyStringSuccessState).value != event.newValue) {
+            emit(MyStringSuccessState(event.newValue));
+          }
           break;
 
         case MyStringUpdateFromServerEvent():
-        // For server fetch, we simulate a network call.
-          emit(MyStringLoadingState()); // Start with loading state
+          if (state is! MyStringLoadingState) {
+            emit(MyStringLoadingState());
+          }
 
           try {
             // Await the result from the provided fetch function
             final value = await event.fetchFromServer();
 
             if (value.isNotEmpty) {
-              // Emit the successfully loaded value
-              emit(MyStringSuccessState(value));
+              if (state is! MyStringSuccessState ||
+                  (state as MyStringSuccessState).value != value) {
+                emit(MyStringSuccessState(value));
+              }
             } else {
-              // Empty value from server is treated as an error
-              emit(MyStringErrorState('Fetched value is empty.'));
+              // Only emit error if it's not the same message
+              final newError = 'Fetched value is empty.';
+              if (state is! MyStringErrorState ||
+                  (state as MyStringErrorState).message != newError) {
+                emit(MyStringErrorState(newError));
+              }
             }
           } catch (e) {
-            // Emit an error state with a user-friendly error message
-            emit(MyStringErrorState('Failed to fetch from server: $e'));
+            final newError = 'Failed to fetch from server: $e';
+            if (state is! MyStringErrorState ||
+                (state as MyStringErrorState).message != newError) {
+              emit(MyStringErrorState(newError));
+            }
           }
           break;
       }

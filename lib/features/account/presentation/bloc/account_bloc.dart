@@ -11,10 +11,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   AccountBloc({required this.authBloc}) : super(const AccountInitialState()) {
     on<AccountLogoutEvent>((event, emit) async {
-      // 🛠️ First, clear saved user auth data
+      // First, clear saved user auth data
       await authBloc.viewModel.clearAuth();
 
-      // Then, emit unauthenticated state
+      // Then, emit unauthenticated state. Since there is already such an
+      // event in feature "auth", let's DRY instead: using add():
       authBloc.add(const AuthUnauthenticatedEvent());
     });
   }

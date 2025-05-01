@@ -29,7 +29,9 @@ class VehicleStatusBloc extends Bloc<VehicleStatusEvent, VehicleStatusState> {
   /// Called after checking permission.
   void _onPermissionChecked(VehicleStatusHandlePermissionEvent event, Emitter<VehicleStatusState> emit) {
     if (!event.permissionGranted) {
-      emit(VehicleStatusPermissionDeniedState());
+      if (state is! VehicleStatusPermissionDeniedState) {
+        emit(VehicleStatusPermissionDeniedState());
+      }
     } else {
       _subscription = _viewModel.vehicleStatusStream.listen((status) {
         add(VehicleStatusLoadEvent(status));

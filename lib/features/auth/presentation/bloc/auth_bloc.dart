@@ -16,30 +16,42 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthEvent>((event, emit) async {
       switch (event) {
         case AuthStartEvent():
-          emit(const AuthLoadingState());
+          if (state is! AuthLoadingState) {
+            emit(const AuthLoadingState());
+          }
           break;
 
         case AuthAuthenticatedEvent():
-          emit(AuthAuthenticatedState(user: event.auth));
+          if (state is! AuthAuthenticatedState) {
+            emit(AuthAuthenticatedState(user: event.auth));
+          }
           break;
 
         case AuthGuestAuthenticatedEvent():
-          emit(const AuthGuestAuthenticatedState());
+          if (state is! AuthGuestAuthenticatedState) {
+            emit(const AuthGuestAuthenticatedState());
+          }
           break;
 
         case AuthUnauthenticatedEvent():
-          emit(const AuthUnauthenticatedState());
+          if (state is! AuthUnauthenticatedState) {
+            emit(const AuthUnauthenticatedState());
+          }
           break;
 
         case AuthErrorEvent():
-          emit(AuthErrorState(message: event.message));
+          if (state is! AuthErrorState ||
+              (state as AuthErrorState).message != event.message) {
+            emit(AuthErrorState(message: event.message));
+          }
           break;
 
         case AuthLogoutEvent():
-          emit(const AuthUnauthenticatedState());
+          if (state is! AuthUnauthenticatedState) {
+            emit(const AuthUnauthenticatedState());
+          }
           break;
       }
     });
   }
 }
-

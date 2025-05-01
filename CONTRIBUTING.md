@@ -19,7 +19,7 @@ The View usually represents a screen.
 #### [GUIDELINE] Screen class
 
 A Screen class should not see ViewModel (except when mocking for testing) and its lower-level 
-classes. It should only see Bloc-related classes.
+classes. It should only see Bloc-related classes: View -> Bloc
 
 When adding or refactoring screens, please follow:
 
@@ -65,11 +65,11 @@ This layer contains Bloc, Event and State classes.
 
 #### [GUIDELINE] Bloc class
 
-A Bloc class should own ViewModel which handles business logic.
+A Bloc class should own ViewModel which handles business logic: Bloc -> ViewModel.
 
-Use switch/case to handle all the events.
+Use switch/case to handle all the events: Bloc -> Event -> State.
 
-Bloc is a good place to check for app permissions (Internet, Bluetooth, Location, etc.).
+Do not emit a state if it's the same as the current state. This prevents unnecessary UI rebuilding.
 
 #### [GUIDELINE] Event class
 
@@ -89,13 +89,11 @@ A derived State class should be renamed <Feature><Specific>State.
 
 ### ViewModel
 
-A ViewModel class should only see UseCase classes.
+A ViewModel class should only see UseCase classes: ViewModel -> UseCase.
 
 #### [GUIDELINE] ViewModelFactory
 Use a factory to facilitate the creation of a ViewModel instance, as it's built in multiple 
 steps, up from DataSource, Repository to UseCase.
-
-ViewModel is a good place to request app permissions (Internet, Bluetooth, Location, etc.).
 
 ## Domain Layer
 
@@ -118,7 +116,7 @@ between layers may be needed and should be done in the ViewModel or in the Repos
 
 ### UseCase
 
-A UseCase class should only see Repository classes.
+A UseCase class should only see Repository classes: UseCase -> Repository.
 
 Use call(), rather than execute(), to run a UseCase. This makes the UseCase class look like 
 a function.
@@ -134,7 +132,7 @@ The Data layer contains Repository and DataSource classes.
 
 ### Repository
 
-A Repository class should only see DataSource classes.
+A Repository class should only see DataSource classes: Repository -> DataSource.
 
 #### [GUIDELINE] Data processing for the Domain layer
 
@@ -164,6 +162,16 @@ For remote server access, prefer Http over Dio and other packages.
 ## Special Handling
 
 Some topics need special handling and will be addressed here.
+
+### Top-level Functions
+
+Try to build top-level functions as small as possible and follow the following flow:
+
+main.dart: main() -> MyApp()
+
+app.dart: MyApp() -> MaterialApp() -> RootScreen()
+
+root_screen.dart: RootScreen() -> <Feature>Screen()
 
 ### App Permissions
 
