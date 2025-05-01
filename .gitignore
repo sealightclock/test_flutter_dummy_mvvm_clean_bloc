@@ -31,3 +31,5 @@ doc/api/
 .idea/
 devtools_options.yaml
 .DS_Store
+*.iml
+.metadata
