@@ -5,9 +5,9 @@ sealed class AuthEvent {
   const AuthEvent();
 }
 
-/// Event to start authentication loading
-class AuthLoadingEvent extends AuthEvent {
-  const AuthLoadingEvent();
+/// Event to start authentication
+class AuthStartEvent extends AuthEvent {
+  const AuthStartEvent();
 }
 
 /// Event when a real user has authenticated
@@ -22,7 +22,7 @@ class AuthGuestAuthenticatedEvent extends AuthEvent {
   const AuthGuestAuthenticatedEvent();
 }
 
-/// Event when the user is unauthenticated
+/// Event when user/guest is unauthenticated
 class AuthUnauthenticatedEvent extends AuthEvent {
   const AuthUnauthenticatedEvent();
 }

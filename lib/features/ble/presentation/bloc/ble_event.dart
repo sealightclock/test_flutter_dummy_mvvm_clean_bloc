@@ -7,17 +7,17 @@ class BleStartScanEvent extends BleEvent {
 
 class BleStopScanEvent extends BleEvent {}
 
-class BleDeviceSelectedEvent extends BleEvent {
+class BleSelectDeviceEvent extends BleEvent {
   final String deviceId;
-  BleDeviceSelectedEvent(this.deviceId);
+  BleSelectDeviceEvent(this.deviceId);
 }
 
-class BleDisconnectFromDeviceEvent extends BleEvent {
+class BleDisconnectDeviceEvent extends BleEvent {
   final String deviceId;
-  BleDisconnectFromDeviceEvent(this.deviceId);
+  BleDisconnectDeviceEvent(this.deviceId);
 }
 
-class BleShowReconnectingEvent extends BleEvent {
+class BleShowReconnectingDeviceEvent extends BleEvent {
   final String deviceId;
-  BleShowReconnectingEvent(this.deviceId);
+  BleShowReconnectingDeviceEvent(this.deviceId);
 }

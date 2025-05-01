@@ -68,7 +68,7 @@ class AuthScreenState extends State<AuthScreen> {
     _showSnackBarMessage('You are logged in as a user. You should be able to use all '
         'features.', FeedbackType.info);
 
-    _bloc.add(const AuthLoadingEvent());
+    _bloc.add(const AuthStartEvent());
     try {
       await _bloc.viewModel.login(
         _usernameController.text.trim(),
@@ -103,7 +103,7 @@ class AuthScreenState extends State<AuthScreen> {
   void _signUp() async {
     _showSnackBarMessage('You are signed up as a new user and logged in. You should be able to use all features.', FeedbackType.info);
 
-    _bloc.add(const AuthLoadingEvent());
+    _bloc.add(const AuthStartEvent());
     try {
       await _bloc.viewModel.signUp(
         _usernameController.text.trim(),
@@ -138,7 +138,7 @@ class AuthScreenState extends State<AuthScreen> {
   void _guestLogin() async {
     _showSnackBarMessage('You are logged in as a guest. Many features are disabled!', FeedbackType.warning);
 
-    _bloc.add(const AuthLoadingEvent());
+    _bloc.add(const AuthStartEvent());
     try {
       await _bloc.viewModel.guestLogin();
 

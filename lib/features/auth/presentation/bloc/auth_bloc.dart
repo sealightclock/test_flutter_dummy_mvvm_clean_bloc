@@ -15,7 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<AuthEvent>((event, emit) async {
       switch (event) {
-        case AuthLoadingEvent():
+        case AuthStartEvent():
           emit(const AuthLoadingState());
           break;
 

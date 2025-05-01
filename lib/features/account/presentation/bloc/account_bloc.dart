@@ -6,10 +6,11 @@ import 'account_state.dart';
 
 /// Bloc to handle Account screen events and states
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
+  // Use authBloc to communicate with AuthBloc
   final AuthBloc authBloc;
 
   AccountBloc({required this.authBloc}) : super(const AccountInitialState()) {
-    on<AccountLogoutRequestedEvent>((event, emit) async {
+    on<AccountLogoutEvent>((event, emit) async {
       // 🛠️ First, clear saved user auth data
       await authBloc.viewModel.clearAuth();
 

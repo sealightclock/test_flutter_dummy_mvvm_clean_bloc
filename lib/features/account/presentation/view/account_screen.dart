@@ -26,7 +26,7 @@ class AccountScreenBody extends StatelessWidget {
 
   void _logout(BuildContext context) {
     final accountBloc = BlocProvider.of<AccountBloc>(context);
-    accountBloc.add(const AccountLogoutRequestedEvent());
+    accountBloc.add(const AccountLogoutEvent());
 
     showFeedback(context, 'Logged out successfully', FeedbackType.info);
   }

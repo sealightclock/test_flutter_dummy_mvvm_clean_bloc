@@ -4,6 +4,6 @@ sealed class AccountEvent {
 }
 
 /// Event when user taps the Logout button
-class AccountLogoutRequestedEvent extends AccountEvent {
-  const AccountLogoutRequestedEvent();
+class AccountLogoutEvent extends AccountEvent {
+  const AccountLogoutEvent();
 }

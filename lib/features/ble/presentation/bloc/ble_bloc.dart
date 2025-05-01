@@ -26,9 +26,9 @@ class BleBloc extends Bloc<BleEvent, BleState> {
         super(BleInitialState()) {
     on<BleStartScanEvent>(_onStartScanEvent);
     on<BleStopScanEvent>(_onStopScanEvent);
-    on<BleDeviceSelectedEvent>(_onDeviceSelectedEvent);
-    on<BleDisconnectFromDeviceEvent>(_onDisconnectFromDeviceEvent);
-    on<BleShowReconnectingEvent>(_onShowReconnectingEvent);
+    on<BleSelectDeviceEvent>(_onDeviceSelectedEvent);
+    on<BleDisconnectDeviceEvent>(_onDisconnectFromDeviceEvent);
+    on<BleShowReconnectingDeviceEvent>(_onShowReconnectingEvent);
   }
 
   Future<void> _onStartScanEvent(BleStartScanEvent event, Emitter<BleState> emit) async {
@@ -70,7 +70,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     }
   }
 
-  Future<void> _onDeviceSelectedEvent(BleDeviceSelectedEvent event, Emitter<BleState> emit) async {
+  Future<void> _onDeviceSelectedEvent(BleSelectDeviceEvent event, Emitter<BleState> emit) async {
     logger.d("TFDB: BleBloc: DeviceSelectedEvent: event=[$event]");
 
     try {
@@ -91,14 +91,14 @@ class BleBloc extends Bloc<BleEvent, BleState> {
             await Future.delayed(const Duration(milliseconds: 500));
 
             if (!emit.isDone && update.failure == null) {
-              emit(BleConnectedState(event.deviceId, update: update));
+              emit(BleDeviceConnectedState(event.deviceId, update: update));
             }
           } else if (update.connectionState == DeviceConnectionState.disconnected) {
             _cancelConnectionTimeoutTimer();
             if (update.failure != null) {
               emit(BleErrorState("Connection failed: ${update.failure!.code.name}"));
             } else {
-              emit(BleDisconnectedState(event.deviceId, _lastDevices));
+              emit(BleDeviceDisconnectedState(event.deviceId, _lastDevices));
               _autoReconnectOrRescan();
             }
           } else {
@@ -128,7 +128,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
 
     _cancelConnectionTimeoutTimer();
     _connectionTimeoutTimer = Timer(const Duration(seconds: 10), () {
-      add(BleDisconnectFromDeviceEvent(deviceId));
+      add(BleDisconnectDeviceEvent(deviceId));
     });
   }
 
@@ -156,7 +156,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
             "failure captured)");
       }
 
-      add(BleDisconnectFromDeviceEvent(_lastConnectedDeviceId!));
+      add(BleDisconnectDeviceEvent(_lastConnectedDeviceId!));
     } else if (update.connectionState == DeviceConnectionState.connecting) {
         _startConnectionTimeoutTimer(_lastConnectedDeviceId!);
     } else {
@@ -166,20 +166,20 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     }
   }
 
-  Future<void> _onDisconnectFromDeviceEvent(BleDisconnectFromDeviceEvent event, Emitter<BleState> emit) async {
+  Future<void> _onDisconnectFromDeviceEvent(BleDisconnectDeviceEvent event, Emitter<BleState> emit) async {
     logger.d("TFDB: BleBloc: _onDisconnectFromDeviceEvent: event=[$event]");
 
     await _connectionSub?.cancel();
     _connectionSub = null;
     _cancelConnectionTimeoutTimer();
-    emit(BleDisconnectedState(event.deviceId, _lastDevices));
+    emit(BleDeviceDisconnectedState(event.deviceId, _lastDevices));
     //JZ _autoReconnectOrRescan();
   }
 
-  Future<void> _onShowReconnectingEvent(BleShowReconnectingEvent event, Emitter<BleState> emit) async {
+  Future<void> _onShowReconnectingEvent(BleShowReconnectingDeviceEvent event, Emitter<BleState> emit) async {
     logger.d("TFDB: BleBloc: _onShowReconnectingEvent: event=[$event]");
 
-    emit(BleReconnectingState(event.deviceId));
+    emit(BleDeviceReconnectingState(event.deviceId));
   }
 
   void _autoReconnectOrRescan() async {
@@ -188,8 +188,8 @@ class BleBloc extends Bloc<BleEvent, BleState> {
     await Future.delayed(const Duration(seconds: 1));
 
     if (_lastConnectedDeviceId != null) {
-      add(BleShowReconnectingEvent(_lastConnectedDeviceId!));
-      add(BleDeviceSelectedEvent(_lastConnectedDeviceId!));
+      add(BleShowReconnectingDeviceEvent(_lastConnectedDeviceId!));
+      add(BleSelectDeviceEvent(_lastConnectedDeviceId!));
     } else {
       add(BleStartScanEvent(showAll: _lastShowAll));
     }

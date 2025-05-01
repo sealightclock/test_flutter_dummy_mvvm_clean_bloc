@@ -112,11 +112,11 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     setState(() {
       connectedDeviceId = id;
     });
-    bloc.add(BleDeviceSelectedEvent(id));
+    bloc.add(BleSelectDeviceEvent(id));
   }
 
   void _disconnect(String deviceId) {
-    bloc.add(BleDisconnectFromDeviceEvent(deviceId));
+    bloc.add(BleDisconnectDeviceEvent(deviceId));
   }
 
   String _formatTime(DateTime time) {
@@ -128,9 +128,9 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   }
 
   String _getConnectionStatus(String id, BleState state) {
-    if (state is BleReconnectingState && state.deviceId == id) return "Reconnecting...Wait";
-    if (state is BleConnectedState && state.deviceId == id) return "Connected";
-    if (state is BleDisconnectedState && state.deviceId == id) return "Disconnected";
+    if (state is BleDeviceReconnectingState && state.deviceId == id) return "Reconnecting...Wait";
+    if (state is BleDeviceConnectedState && state.deviceId == id) return "Connected";
+    if (state is BleDeviceDisconnectedState && state.deviceId == id) return "Disconnected";
     if (state is BleErrorState) return "Error: ${state.message}";
 
     if (connectedDeviceId == id) return "Connecting...Wait";
@@ -147,12 +147,12 @@ class _BleScreenBodyState extends State<BleScreenBody> {
       ),
       body: BlocListener<BleBloc, BleState>(
         listener: (context, state) {
-          if (state is BleReconnectingState) {
+          if (state is BleDeviceReconnectingState) {
             reconnectingDeviceId = state.deviceId;
             showFeedback(context, "Reconnecting to last device...", FeedbackType.info);
-          } else if (state is BleConnectedState) {
+          } else if (state is BleDeviceConnectedState) {
             setState(() => connectedDeviceId = state.deviceId);
-          } else if (state is BleDisconnectedState) {
+          } else if (state is BleDeviceDisconnectedState) {
             setState(() => connectedDeviceId = null);
           }
         },
@@ -229,7 +229,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
     } else if (isScanning) {
       return const Center(child: CircularProgressIndicator());
     // TODO: For now, let's just show the devices for the last scan.
-    } else if (state is BleDevicesFoundState || state is BleDisconnectedState) {
+    } else if (state is BleDevicesFoundState || state is BleDeviceDisconnectedState) {
       return ListView.builder(
         itemCount: state.devices.length,
         itemBuilder: (_, index) {
@@ -270,7 +270,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
           );
         },
       );
-    } else if (state is BleConnectedState) {
+    } else if (state is BleDeviceConnectedState) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -285,7 +285,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
         ),
       );
     // TODO: This case is not used for now.
-    } else if (state is BleDisconnectedState) {
+    } else if (state is BleDeviceDisconnectedState) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
