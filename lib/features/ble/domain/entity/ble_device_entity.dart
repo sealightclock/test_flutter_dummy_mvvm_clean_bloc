@@ -2,8 +2,8 @@ class BleDeviceEntity {
   final String id;
   final String name;
   final int rssi;
-  final int? manufacturerId;     // NEW: Manufacturer ID
-  final String? manufacturerHex; // NEW: Manufacturer raw hex string
+  final int? manufacturerId;
+  final String? manufacturerHex;
 
   BleDeviceEntity({
     required this.id,

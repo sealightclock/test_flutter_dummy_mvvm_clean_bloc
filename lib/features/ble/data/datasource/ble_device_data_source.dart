@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
-import '../domain/entity/ble_device_entity.dart';
-import 'ble_device_repository.dart';
+import '../../domain/entity/ble_device_entity.dart';
+import '../repository/ble_device_repository.dart';
 
 import 'package:logger/logger.dart' as my_logger;
 

@@ -14,12 +14,12 @@ class BleViewModel {
 
   /// Scans for BLE devices.
   Stream<List<BleDeviceEntity>> scanBleDevices({required bool showAll}) {
-    return scanUseCase.execute(showAll: showAll);
+    return scanUseCase.call(showAll: showAll);
   }
 
   /// Connects to a BLE device by ID.
   Stream<ConnectionStateUpdate> connectToDevice(String deviceId) {
-    return connectUseCase.connect(deviceId);
+    return connectUseCase.call(deviceId);
   }
 
   /// Requests necessary permissions for BLE operation.
