@@ -6,7 +6,8 @@ import 'account_state.dart';
 
 /// Bloc to handle Account screen events and states
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
-  // Use authBloc to communicate with AuthBloc
+  // TODO: We make use of AuthBloc so that we don't need to create a separate
+  //   AccountViewModel. This is for simplicity and may need to be revisited.
   final AuthBloc authBloc;
 
   AccountBloc({required this.authBloc}) : super(const AccountInitialState()) {

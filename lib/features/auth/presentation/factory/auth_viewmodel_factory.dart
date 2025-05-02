@@ -1,6 +1,7 @@
 import '../../data/local/auth_hive_data_source.dart';
 import '../../data/remote/auth_remote_data_source.dart';
 import '../../data/repository/auth_repository.dart';
+import '../../domain/usecase/logout_use_case.dart';
 import '../viewmodel/auth_viewmodel.dart';
 import '../../domain/usecase/login_use_case.dart';
 import '../../domain/usecase/signup_use_case.dart';
@@ -22,12 +23,14 @@ class AuthViewModelFactory {
     final signUpUseCase = SignUpUseCase(repository);
     final guestLoginUseCase = GuestLoginUseCase(repository);
     final getAuthUseCase = GetAuthUseCase(repository);
+    final logoutUseCase = LogoutUseCase(repository);
 
     return AuthViewModel(
       loginUseCase: loginUseCase,
       signUpUseCase: signUpUseCase,
       guestLoginUseCase: guestLoginUseCase,
       getAuthUseCase: getAuthUseCase,
+      logoutUseCase: logoutUseCase,
     );
   }
 }
