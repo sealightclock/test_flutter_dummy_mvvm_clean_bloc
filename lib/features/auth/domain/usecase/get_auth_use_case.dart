@@ -7,7 +7,7 @@ import '../../../../util/result.dart';
 class GetAuthUseCase {
   final AuthRepository repository;
 
-  GetAuthUseCase(this.repository);
+  GetAuthUseCase({required this.repository});
 
   Future<Result<AuthEntity>> call() async {
     try {

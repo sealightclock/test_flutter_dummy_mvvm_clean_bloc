@@ -5,7 +5,7 @@ import '../entity/settings_entity.dart';
 class SaveSettingsUseCase {
   final SettingsRepository repository;
 
-  SaveSettingsUseCase(this.repository);
+  SaveSettingsUseCase({required this.repository});
 
   Future<Result<void>> call(SettingsEntity settings) async {
     try {

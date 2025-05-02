@@ -19,11 +19,11 @@ class AuthViewModelFactory {
       remoteDataSource: remoteDataSource,
     );
 
-    final loginUseCase = LoginUseCase(repository);
-    final signUpUseCase = SignUpUseCase(repository);
-    final guestLoginUseCase = GuestLoginUseCase(repository);
-    final getAuthUseCase = GetAuthUseCase(repository);
-    final logoutUseCase = LogoutUseCase(repository);
+    final loginUseCase = LoginUseCase(repository: repository);
+    final signUpUseCase = SignUpUseCase(repository: repository);
+    final guestLoginUseCase = GuestLoginUseCase(repository: repository);
+    final getAuthUseCase = GetAuthUseCase(repository: repository);
+    final logoutUseCase = LogoutUseCase(repository: repository);
 
     return AuthViewModel(
       loginUseCase: loginUseCase,

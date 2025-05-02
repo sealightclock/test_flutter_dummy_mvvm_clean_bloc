@@ -4,7 +4,7 @@ import '../../data/repository/ble_device_repository.dart';
 class ConnectToBleDeviceUseCase {
   final BleDeviceRepository repository;
 
-  ConnectToBleDeviceUseCase(this.repository);
+  ConnectToBleDeviceUseCase({required this.repository});
 
   Stream<ConnectionStateUpdate> call(String deviceId) {
     return repository.connect(deviceId);

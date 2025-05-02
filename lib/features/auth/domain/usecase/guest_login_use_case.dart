@@ -4,7 +4,7 @@ import '../../data/repository/auth_repository.dart';
 class GuestLoginUseCase {
   final AuthRepository repository;
 
-  GuestLoginUseCase(this.repository);
+  GuestLoginUseCase({required this.repository});
 
   Future<Result<void>> call() async {
     try {

@@ -7,10 +7,12 @@ import '../viewmodel/settings_viewmodel.dart';
 class SettingsViewModelFactory {
   static SettingsViewModel create() {
     final localDataSource = SettingsHiveDataSource();
-    final repository = SettingsRepositoryImpl(localDataSource);
+
+    final repository = SettingsRepositoryImpl(localDataSource: localDataSource);
+
     return SettingsViewModel(
-      getSettingsUseCase: GetSettingsUseCase(repository),
-      saveSettingsUseCase: SaveSettingsUseCase(repository),
+      getSettingsUseCase: GetSettingsUseCase(repository: repository),
+      saveSettingsUseCase: SaveSettingsUseCase(repository: repository),
     );
   }
 }

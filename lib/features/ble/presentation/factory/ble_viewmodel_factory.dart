@@ -13,14 +13,18 @@ class BleViewModelFactory {
     // Set up data source
     final dataSource = BleDeviceDataSource(bleApi);
 
-    // TODO: Since we don't need local and remote data sources, we can just use the data source.
+    // TODO: Since we don't need multiple data sources, we can just use the
+    //   single data source for the repository:
     final repository = dataSource;
 
     // Set up use cases
-    final scanUseCase = ScanBleDevicesUseCase(repository);
-    final connectUseCase = ConnectToBleDeviceUseCase(repository);
+    final scanUseCase = ScanBleDevicesUseCase(repository: repository);
+    final connectUseCase = ConnectToBleDeviceUseCase(repository: repository);
 
     // Return ViewModel (Bloc will now create its own instance of BleViewModel)
-    return BleViewModel(scanUseCase, connectUseCase);
+    return BleViewModel(
+        scanUseCase,
+        connectUseCase,
+    );
   }
 }

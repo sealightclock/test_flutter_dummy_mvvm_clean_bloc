@@ -5,7 +5,7 @@ import 'settings_repository.dart';
 class SettingsRepositoryImpl implements SettingsRepository {
   final SettingsHiveDataSource localDataSource;
 
-  SettingsRepositoryImpl(this.localDataSource);
+  SettingsRepositoryImpl({required this.localDataSource});
 
   @override
   Future<SettingsEntity> getSettings() {

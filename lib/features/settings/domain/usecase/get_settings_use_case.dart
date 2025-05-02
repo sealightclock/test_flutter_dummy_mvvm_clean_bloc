@@ -5,7 +5,7 @@ import '../../data/repository/settings_repository.dart';
 class GetSettingsUseCase {
   final SettingsRepository repository;
 
-  GetSettingsUseCase(this.repository);
+  GetSettingsUseCase({required this.repository});
 
   Future<Result<SettingsEntity>> call() async {
     try {

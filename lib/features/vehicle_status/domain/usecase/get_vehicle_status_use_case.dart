@@ -5,9 +5,7 @@ import '../entity/vehicle_status_entity.dart';
 class GetVehicleStatusUseCase {
   late final VehicleStatusRepository repository;
 
-  GetVehicleStatusUseCase(
-      {required this.repository}
-  );
+  GetVehicleStatusUseCase({required this.repository});
 
   Stream<VehicleStatusEntity> call() {
     return repository.getVehicleStatusStream();
