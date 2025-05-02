@@ -110,8 +110,8 @@ class BleBloc extends Bloc<BleEvent, BleState> {
             if (!emit.isDone && update.failure == null) {
               if (state is! BleDeviceConnectedState ||
                   (state as BleDeviceConnectedState).deviceId != event.deviceId ||
-                  (state as BleDeviceConnectedState).update != update) {
-                emit(BleDeviceConnectedState(event.deviceId, update: update));
+                  (state as BleDeviceConnectedState).connectionStatusUpdate != update) {
+                emit(BleDeviceConnectedState(event.deviceId, connectionStatusUpdate: update));
               }
             }
           } else if (update.connectionState == DeviceConnectionState.disconnected) {

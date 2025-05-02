@@ -35,15 +35,15 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
 
         case MyStringUpdateFromLocalEvent():
           if (state is! MyStringSuccessState ||
-              (state as MyStringSuccessState).value != event.newValue) {
-            emit(MyStringSuccessState(event.newValue));
+              (state as MyStringSuccessState).value != event.value) {
+            emit(MyStringSuccessState(event.value));
           }
           break;
 
         case MyStringUpdateFromUserEvent():
           if (state is! MyStringSuccessState ||
-              (state as MyStringSuccessState).value != event.newValue) {
-            emit(MyStringSuccessState(event.newValue));
+              (state as MyStringSuccessState).value != event.value) {
+            emit(MyStringSuccessState(event.value));
           }
           break;
 
@@ -63,17 +63,17 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
               }
             } else {
               // Only emit error if it's not the same message
-              final newError = 'Fetched value is empty.';
+              final message = 'Fetched value is empty.';
               if (state is! MyStringErrorState ||
-                  (state as MyStringErrorState).message != newError) {
-                emit(MyStringErrorState(newError));
+                  (state as MyStringErrorState).message != message) {
+                emit(MyStringErrorState(message));
               }
             }
           } catch (e) {
-            final newError = 'Failed to fetch from server: $e';
+            final message = 'Failed to fetch from server: $e';
             if (state is! MyStringErrorState ||
-                (state as MyStringErrorState).message != newError) {
-              emit(MyStringErrorState(newError));
+                (state as MyStringErrorState).message != message) {
+              emit(MyStringErrorState(message));
             }
           }
           break;

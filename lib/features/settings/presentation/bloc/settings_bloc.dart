@@ -25,10 +25,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           final result = await viewModel.getSettings();
 
           switch (result) {
-            case Success(:final data):
+            case Success(data: final settings):
               if (state is! SettingsLoadedOrUpdatedState ||
-                  (state as SettingsLoadedOrUpdatedState).settings != data) {
-                emit(SettingsLoadedOrUpdatedState(data));
+                  (state as SettingsLoadedOrUpdatedState).settings != settings) {
+                emit(SettingsLoadedOrUpdatedState(settings));
               }
               break;
 
@@ -43,13 +43,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
         case SettingsUpdateEvent():
         // User event: Save new settings and refresh UI immediately
-          final result = await viewModel.saveSettings(event.newSettings);
+          final result = await viewModel.saveSettings(event.settings);
           switch (result) {
             case Success():
               if (state is! SettingsLoadedOrUpdatedState ||
                   (state as SettingsLoadedOrUpdatedState).settings != event
-                      .newSettings) {
-                emit(SettingsLoadedOrUpdatedState(event.newSettings));
+                      .settings) {
+                emit(SettingsLoadedOrUpdatedState(event.settings));
               }
               // immediately
               await Future.delayed(const Duration(milliseconds: 300));

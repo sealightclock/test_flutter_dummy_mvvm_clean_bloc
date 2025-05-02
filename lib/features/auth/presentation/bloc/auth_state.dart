@@ -21,12 +21,12 @@ class AuthLoadingState extends AuthState {
 
 /// State when a real user is successfully authenticated
 class AuthAuthenticatedState extends AuthState {
-  final AuthEntity user;
+  final AuthEntity auth;
 
-  const AuthAuthenticatedState({required this.user});
+  const AuthAuthenticatedState({required this.auth});
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [auth];
 }
 
 /// State when a guest user is authenticated

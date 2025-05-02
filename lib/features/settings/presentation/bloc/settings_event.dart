@@ -7,6 +7,6 @@ sealed class SettingsEvent {
 class SettingsLoadEvent extends SettingsEvent {}
 
 class SettingsUpdateEvent extends SettingsEvent {
-  final SettingsEntity newSettings;
-  const SettingsUpdateEvent(this.newSettings);
+  final SettingsEntity settings;
+  const SettingsUpdateEvent(this.settings);
 }

@@ -25,12 +25,12 @@ class BleDevicesFoundState extends BleState {
 
 class BleDeviceConnectedState extends BleState {
   final String deviceId;
-  final ConnectionStateUpdate? update;
+  final ConnectionStateUpdate? connectionStatusUpdate;
 
-  const BleDeviceConnectedState(this.deviceId, {this.update});
+  const BleDeviceConnectedState(this.deviceId, {this.connectionStatusUpdate});
 
   @override
-  List<Object?> get props => [deviceId, update];
+  List<Object?> get props => [deviceId, connectionStatusUpdate];
 }
 
 class BleDeviceDisconnectedState extends BleState {

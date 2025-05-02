@@ -27,9 +27,9 @@ class VehicleStatusScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Latitude: ${state.status.latitude.toStringAsFixed(6)}'),
-                    Text('Longitude: ${state.status.longitude.toStringAsFixed(6)}'),
-                    Text('Speed: ${state.status.speedKmh.toStringAsFixed(1)} km/h'),
+                    Text('Latitude: ${state.vehicleStatus.latitude.toStringAsFixed(6)}'),
+                    Text('Longitude: ${state.vehicleStatus.longitude.toStringAsFixed(6)}'),
+                    Text('Speed: ${state.vehicleStatus.speedKmh.toStringAsFixed(1)} km/h'),
                   ],
                 ),
               );

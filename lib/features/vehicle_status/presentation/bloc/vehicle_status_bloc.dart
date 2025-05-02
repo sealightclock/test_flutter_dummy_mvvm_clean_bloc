@@ -16,7 +16,7 @@ class VehicleStatusBloc extends Bloc<VehicleStatusEvent, VehicleStatusState> {
   VehicleStatusBloc() : _viewModel = VehicleStatusViewModelFactory.create(), super(VehicleStatusInitialState()) {
     on<VehicleStatusStartEvent>(_onStarted);
     on<VehicleStatusHandlePermissionEvent>(_onPermissionChecked);
-    on<VehicleStatusLoadEvent>((event, emit) => emit(VehicleStatusLoadedState(event.status)));
+    on<VehicleStatusLoadEvent>((event, emit) => emit(VehicleStatusLoadedState(event.vehicleStatus)));
   }
 
   /// Called when Bloc is started.

@@ -23,17 +23,17 @@ final class MyStringLoadEvent extends MyStringEvent {
 /// Event: Triggered when the app launches and needs to load the string value.
 /// This is a system event.
 final class MyStringUpdateFromLocalEvent extends MyStringEvent {
-  final String newValue; // The new value retrieved from the local store.
+  final String value; // The new value retrieved from the local store.
 
-  const MyStringUpdateFromLocalEvent(this.newValue); // Constructor to pass the local stored value.
+  const MyStringUpdateFromLocalEvent(this.value); // Constructor to pass the local stored value.
 }
 
 /// Event: Triggered when the user manually updates the string via text field
 /// + "Update from User" button.
 final class MyStringUpdateFromUserEvent extends MyStringEvent {
-  final String newValue; // The new value entered by the user.
+  final String value; // The new value entered by the user.
 
-  const MyStringUpdateFromUserEvent(this.newValue); // Constructor to pass the user input.
+  const MyStringUpdateFromUserEvent(this.value); // Constructor to pass the user input.
 }
 
 /// Event: Triggered when the user presses "Update from Server" button.

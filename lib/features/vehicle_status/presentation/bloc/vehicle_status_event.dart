@@ -13,6 +13,6 @@ class VehicleStatusHandlePermissionEvent extends VehicleStatusEvent {
 }
 
 class VehicleStatusLoadEvent extends VehicleStatusEvent {
-  final VehicleStatusEntity status;
-  const VehicleStatusLoadEvent(this.status);
+  final VehicleStatusEntity vehicleStatus;
+  const VehicleStatusLoadEvent(this.vehicleStatus);
 }

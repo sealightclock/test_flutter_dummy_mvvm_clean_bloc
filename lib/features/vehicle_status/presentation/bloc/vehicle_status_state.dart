@@ -15,9 +15,9 @@ class VehicleStatusInitialState extends VehicleStatusState {}
 class VehicleStatusPermissionDeniedState extends VehicleStatusState {}
 
 class VehicleStatusLoadedState extends VehicleStatusState {
-  final VehicleStatusEntity status;
-  const VehicleStatusLoadedState(this.status);
+  final VehicleStatusEntity vehicleStatus;
+  const VehicleStatusLoadedState(this.vehicleStatus);
 
   @override
-  List<Object?> get props => [status];
+  List<Object?> get props => [vehicleStatus];
 }
