@@ -12,32 +12,22 @@ import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';
 import '../bloc/my_string_state.dart';
-import '../viewmodel/my_string_viewmodel.dart';
 
 /// This screen demonstrates how to apply MVVM Clean + Bloc architecture
 /// to manage a simple string stored locally and remotely.
 class MyStringScreen extends StatelessWidget {
-  // TODO: Usually View should not see ViewModel. However, for testing,
-  //   we may need to inject a custom ViewModel. Please continue to find a
-  //   way to block View from seeing ViewModel.
-  // Allow injecting custom ViewModel or Bloc for testing
-  final MyStringViewModel? injectedViewModel;
+  // Allow injecting a custom Bloc for testing purposes only.
   final MyStringBloc? injectedBloc;
 
   const MyStringScreen({
     super.key,
-    this.injectedViewModel,
     this.injectedBloc,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MyStringBloc>(
-      create: (_) {
-        final bloc = injectedBloc ?? MyStringBloc();
-        bloc.viewModel = injectedViewModel ?? bloc.viewModel;
-        return bloc;
-      },
+      create: (_) => injectedBloc ?? MyStringBloc(),
       child: const MyStringScreenBody(),
     );
   }
@@ -52,24 +42,21 @@ class MyStringScreenBody extends StatefulWidget {
 }
 
 class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBindingObserver {
-  late MyStringBloc bloc; // Bloc to manage "my_string" state
+  late MyStringBloc bloc;
 
   @visibleForTesting
-  MyStringBloc get exposedBloc => bloc; // For widget testing access
+  MyStringBloc get exposedBloc => bloc; // Exposed for widget testing if needed
 
-  final TextEditingController textEditController = TextEditingController(); // Controller for user input
+  final TextEditingController textEditController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-
-    // Listen to app lifecycle (pause/resume)
     WidgetsBinding.instance.addObserver(this);
 
     bloc = BlocProvider.of<MyStringBloc>(context);
 
-    // Load existing string from local store on app start
-    bloc.viewModel.getMyStringFromLocal().then((result) {
+    bloc.getMyStringFromLocal().then((result) {
       switch (result) {
         case Success<MyStringEntity>(:final data):
           bloc.add(MyStringUpdateFromLocalEvent(data.value));
@@ -78,7 +65,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
           bloc.add(MyStringUpdateFromLocalEvent('Error loading: $message'));
           break;
       }
-      textEditController.clear(); // Clear input field after loading
+      textEditController.clear();
     });
   }
 
@@ -89,39 +76,32 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     super.dispose();
   }
 
-  /// React to app going to background/inactive
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
     if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
-      _saveCurrentText(); // Save any text before app goes background
+      _saveCurrentText();
     }
   }
 
-  /// Save current text optimistically when app goes background
   void _saveCurrentText() {
     final text = textEditController.text.trim();
     if (text.isNotEmpty) {
-      bloc.viewModel.storeMyStringToLocal(text);
+      bloc.storeMyStringToLocal(text);
     }
   }
 
-  /// User wants to update the string from TextField (optimistic UI)
   void updateFromUser() async {
     final newValue = textEditController.text.trim();
-    final previousState = bloc.state; // Save previous state for rollback
+    final previousState = bloc.state;
 
-    bloc.add(MyStringUpdateFromUserEvent(newValue)); // Optimistic update immediately
+    bloc.add(MyStringUpdateFromUserEvent(newValue));
 
-    // Try saving new value to local store
     await handleResult<void>(
-      futureResult: bloc.viewModel.storeMyStringToLocal(newValue),
+      futureResult: bloc.storeMyStringToLocal(newValue),
       onSuccess: (_) {
         textEditController.clear();
       },
       onFailure: (message) {
-        // Rollback to previous value if save failed
         if (previousState is MyStringSuccessState) {
           bloc.add(MyStringUpdateFromUserEvent(previousState.value));
         }
@@ -130,11 +110,9 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     );
   }
 
-  /// User wants to fetch a string from server (simulate network call)
   void updateFromServer() async {
-    // Define a future function for fetching and storing
     Future<String> fetchAndStore() async {
-      final result = await bloc.viewModel.getMyStringFromRemote();
+      final result = await bloc.getMyStringFromRemote();
 
       final value = await handleResultReturning<MyStringEntity, String>(
         futureResult: Future.value(result),
@@ -143,15 +121,13 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
       );
 
       if (!value.startsWith('Error')) {
-        await bloc.viewModel.storeMyStringToLocal(value);
+        await bloc.storeMyStringToLocal(value);
       }
 
       return value;
     }
 
-    // Dispatch event to Bloc
-    final event = MyStringUpdateFromServerEvent(fetchAndStore);
-    bloc.add(event);
+    bloc.add(MyStringUpdateFromServerEvent(fetchAndStore));
   }
 
   @override
@@ -159,15 +135,15 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter MVVM Clean + Bloc'),
-        centerTitle: true, // to be consistent with app themes
+        centerTitle: true,
       ),
-      body: OrientationBuilder( // Orientation-aware content
+      body: OrientationBuilder(
         builder: (context, orientation) {
           final isLandscape = orientation == Orientation.landscape;
           final maxContentWidth = isLandscape ? 500.0 : 600.0;
           final horizontalPadding = isLandscape ? AppDimens.screenPadding * 2 : AppDimens.screenPadding;
 
-          return SingleChildScrollView( // Scroll content
+          return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: AppDimens.screenPadding),
             child: Center(
               child: ConstrainedBox(
@@ -183,7 +159,6 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
 
   Widget _buildBody() {
     return BlocBuilder<MyStringBloc, MyStringState>(
-      bloc: bloc,
       builder: (context, state) {
         final isLoading = state is MyStringLoadingState;
 
@@ -197,17 +172,11 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // -------------------------------------------------------------------
-                // 🧩 NEW: Display current DI choices at the top of the screen
-                // -------------------------------------------------------------------
                 Text(AppConstants.localStoragePrefix + DiConfig.localStore.label,
                     style: AppTextStyles.small),
-
                 Text(AppConstants.remoteServerPrefix + DiConfig.remoteServer.label,
                     style: AppTextStyles.small),
-
                 const Divider(height: 24),
-
                 TextField(
                   enabled: !isLoading,
                   controller: textEditController,
@@ -221,26 +190,20 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
                     });
                   },
                 ),
-
                 const SizedBox(height: AppDimens.buttonSpacing),
-
                 Row(
                   children: [
                     Expanded(
                       child: ElevatedButton.icon(
-                        // key is needed for widget testing:
                         key: const Key('updateFromUserButton'),
                         onPressed: isLoading ? null : updateFromUser,
                         icon: const Icon(Icons.person),
                         label: const Text(AppConstants.updateFromUserLabel),
                       ),
                     ),
-
                     const SizedBox(width: AppDimens.buttonSpacing),
-
                     Expanded(
                       child: ElevatedButton.icon(
-                        // key is needed for widget testing:
                         key: const Key('updateFromServerButton'),
                         onPressed: isLoading ? null : updateFromServer,
                         icon: const Icon(Icons.cloud_download),
@@ -249,21 +212,19 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
                     ),
                   ],
                 ),
-
                 const SizedBox(height: AppDimens.screenPadding * 2),
-
                 if (state is MyStringInitialState)
                   Text(AppConstants.initialHintText, style: AppTextStyles.italicHint)
                 else if (state is MyStringLoadingState)
                   const Center(child: CircularProgressIndicator())
                 else if (state is MyStringSuccessState) ...[
-                  Text(AppConstants.currentValueLabel, style: AppTextStyles.medium),
-                  Text(state.value, style: AppTextStyles.large),
-                ]
-                else if (state is MyStringErrorState)
-                  Text('Error: ${state.message}', style: AppTextStyles.error)
-                else
-                  const SizedBox.shrink(), // Defensive fallback
+                    Text(AppConstants.currentValueLabel, style: AppTextStyles.medium),
+                    Text(state.value, style: AppTextStyles.large),
+                  ]
+                  else if (state is MyStringErrorState)
+                      Text('Error: ${state.message}', style: AppTextStyles.error)
+                    else
+                      const SizedBox.shrink(),
               ],
             ),
           ),
@@ -272,4 +233,3 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     );
   }
 }
-
