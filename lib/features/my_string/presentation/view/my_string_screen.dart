@@ -56,7 +56,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
 
     bloc = BlocProvider.of<MyStringBloc>(context);
 
-    bloc.getMyStringFromLocal().then((result) {
+    bloc.viewModel.getMyStringFromLocal().then((result) {
       switch (result) {
         case Success<MyStringEntity>(:final data):
           bloc.add(MyStringUpdateFromLocalEvent(data.value));
@@ -86,7 +86,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
   void _saveCurrentText() {
     final text = textEditController.text.trim();
     if (text.isNotEmpty) {
-      bloc.storeMyStringToLocal(text);
+      bloc.viewModel.storeMyStringToLocal(text);
     }
   }
 
@@ -97,7 +97,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     bloc.add(MyStringUpdateFromUserEvent(newValue));
 
     await handleResult<void>(
-      futureResult: bloc.storeMyStringToLocal(newValue),
+      futureResult: bloc.viewModel.storeMyStringToLocal(newValue),
       onSuccess: (_) {
         textEditController.clear();
       },
@@ -112,7 +112,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
 
   void updateFromServer() async {
     Future<String> fetchAndStore() async {
-      final result = await bloc.getMyStringFromRemote();
+      final result = await bloc.viewModel.getMyStringFromRemote();
 
       final value = await handleResultReturning<MyStringEntity, String>(
         futureResult: Future.value(result),
@@ -121,7 +121,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
       );
 
       if (!value.startsWith('Error')) {
-        await bloc.storeMyStringToLocal(value);
+        await bloc.viewModel.storeMyStringToLocal(value);
       }
 
       return value;

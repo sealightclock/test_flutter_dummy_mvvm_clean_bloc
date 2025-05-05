@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../util/result.dart';
-import '../../domain/entity/my_string_entity.dart';
 import '../factory/my_string_viewmodel_factory.dart';
 import '../viewmodel/my_string_viewmodel.dart';
 import 'my_string_event.dart';
@@ -71,26 +69,5 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
           break;
       }
     });
-  }
-
-  // ---------------------------------------------------------------------------
-  // ✅ Wrapper methods to be used by the View instead of directly calling ViewModel
-  // These are called in initState(), lifecycle, and button callbacks.
-  // These wrappers are for widget unit testing purposes, not for production.
-  // ---------------------------------------------------------------------------
-
-  /// Wrapper for loading the string from local storage
-  Future<Result<MyStringEntity>> getMyStringFromLocal() async {
-    return await viewModel.getMyStringFromLocal();
-  }
-
-  /// Wrapper for saving the string to local storage
-  Future<Result<void>> storeMyStringToLocal(String value) async {
-    return await viewModel.storeMyStringToLocal(value);
-  }
-
-  /// Wrapper for simulating a remote fetch
-  Future<Result<MyStringEntity>> getMyStringFromRemote() async {
-    return await viewModel.getMyStringFromRemote();
   }
 }
