@@ -7,6 +7,7 @@ class GetVehicleStatusUseCase {
 
   GetVehicleStatusUseCase({required this.repository});
 
+  // Do not wrap Stream into Result<T>, as it has its own error handling mechanism.
   Stream<VehicleStatusEntity> call() {
     return repository.getVehicleStatusStream();
   }

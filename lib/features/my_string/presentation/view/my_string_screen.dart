@@ -17,6 +17,9 @@ import '../viewmodel/my_string_viewmodel.dart';
 /// This screen demonstrates how to apply MVVM Clean + Bloc architecture
 /// to manage a simple string stored locally and remotely.
 class MyStringScreen extends StatelessWidget {
+  // TODO: Usually View should not see ViewModel. However, for testing,
+  //   we may need to inject a custom ViewModel. Please continue to find a
+  //   way to block View from seeing ViewModel.
   // Allow injecting custom ViewModel or Bloc for testing
   final MyStringViewModel? injectedViewModel;
   final MyStringBloc? injectedBloc;

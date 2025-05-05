@@ -123,8 +123,11 @@ a function.
 
 #### [GUIDELINE] Return value of a UseCase function
 
-Wrap the return value of a UseCase function into a Result<T> class with Success or Failure so that 
-the Presentation layer (View or Bloc) can handle the result easily.
+In general, wrap the return value of a UseCase function into a Result<T> class with Success or 
+Failure so that the Presentation layer (View or Bloc) can handle the result easily.
+
+However, there are some exceptions. For example, a Stream return value should not be wrapped 
+into Result<T>.
 
 ## Data Layer
 

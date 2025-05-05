@@ -6,6 +6,7 @@ class ConnectToBleDeviceUseCase {
 
   ConnectToBleDeviceUseCase({required this.repository});
 
+  // Do not wrap Stream into Result<T>, as it has its own error handling mechanism.
   Stream<ConnectionStateUpdate> call(String deviceId) {
     return repository.connect(deviceId);
   }

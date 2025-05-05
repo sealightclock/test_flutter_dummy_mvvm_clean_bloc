@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../root_screen.dart'; // Import RootScreen
+import '../../../../root_screen.dart';
 import '../../../../util/feedback_type_enum.dart';
 import '../../../../util/global_feedback_handler.dart';
 import '../../../../util/result.dart';
@@ -9,7 +9,6 @@ import '../../domain/entity/auth_entity.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
-import '../factory/auth_viewmodel_factory.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -30,7 +29,6 @@ class AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     _bloc = BlocProvider.of<AuthBloc>(context);
-    _bloc.viewModel = AuthViewModelFactory.create();
 
     _checkAuthStatus();
   }
@@ -210,8 +208,7 @@ class AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 16),
                   OutlinedButton(
                     onPressed: () {
-                      //if (mounted) { // TODO: This check may not be needed
-                      // and may be harmful with onPressed().
+                        // Do not check mounted for button callbacks.
                         setState(() {
                           _showMoreOptions = !_showMoreOptions;
                         });

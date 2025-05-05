@@ -6,6 +6,7 @@ class ScanBleDevicesUseCase {
 
   ScanBleDevicesUseCase({required this.repository});
 
+  // Do not wrap Stream into Result<T>, as it has its own error handling mechanism.
   Stream<List<BleDeviceEntity>> call({required bool showAll}) {
     return repository.scanDevices(showAll: showAll);
   }
