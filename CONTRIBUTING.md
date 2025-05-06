@@ -18,8 +18,8 @@ The View usually represents a screen.
 
 #### [GUIDELINE] Screen class
 
-A Screen class should not see ViewModel (except when mocking for testing) and its lower-level 
-classes. It should only see Bloc-related classes: View -> Bloc
+A Screen (View) class should not see ViewModel and its lower-level classes. It should only see 
+Bloc-related classes: View -> Bloc.
 
 When adding or refactoring screens, please follow:
 
@@ -90,6 +90,8 @@ A derived State class should be renamed <Feature><Specific>State.
 ### ViewModel
 
 A ViewModel class should only see UseCase classes: ViewModel -> UseCase.
+
+There should be a same number of ViewModel functions and UseCases.
 
 #### [GUIDELINE] ViewModelFactory
 Use a factory to facilitate the creation of a ViewModel instance, as it's built in multiple 
@@ -196,5 +198,5 @@ In ViewModel (and possibly in Bloc), request and grant app permissions if not ye
 #### [GUIDELINE] Be careful when using package "permission_handler".
 
 It has been noticed that, while package "permission_handler" is flexible, it will silently fail 
-on iOS Simulator when dealing with location permissions. Use "geolocator" package's internal 
+on iOS Simulator when dealing with location permissions. Use "geolocator" package's own 
 permission API instead.

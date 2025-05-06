@@ -1,5 +1,6 @@
 import '../../data/datasource/vehicle_status_data_source.dart';
 import '../../data/repository/vehicle_status_repository.dart';
+import '../../domain/usecase/check_and_request_location_permission_use_case.dart';
 import '../../domain/usecase/get_vehicle_status_use_case.dart';
 import '../viewmodel/vehicle_status_viewmodel.dart';
 
@@ -15,11 +16,16 @@ class VehicleStatusViewModelFactory {
     // Step 2: Create repository that uses the data source
     final repository = VehicleStatusRepository(dataSource: dataSource);
 
-    // Step 3: Create use case that uses the repository
-    final useCase = GetVehicleStatusUseCase(repository: repository);
+    // Step 3: Create use cases that use the repository
+    final getVehicleStatusUseCase = GetVehicleStatusUseCase(repository: repository);
+    final checkAndRequestLocationPermissionUseCase = CheckAndRequestLocationPermissionUseCase(repository: repository);
 
-    // Step 4: Inject the use case into the ViewModel
-    return VehicleStatusViewModel(useCase);
+
+    // Step 4: Inject the use cases into the ViewModel
+    return VehicleStatusViewModel(
+        getVehicleStatusUseCase,
+        checkAndRequestLocationPermissionUseCase,
+    );
   }
 }
 
