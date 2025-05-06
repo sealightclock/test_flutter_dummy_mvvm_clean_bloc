@@ -128,12 +128,25 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   }
 
   String _getConnectionStatus(String id, BleState state) {
-    if (state is BleDeviceReconnectingState && state.deviceId == id) return "Reconnecting...Wait";
-    if (state is BleDeviceConnectedState && state.deviceId == id) return "Connected";
-    if (state is BleDeviceDisconnectedState && state.deviceId == id) return "Disconnected";
-    if (state is BleErrorState) return "Error: ${state.message}";
+    if (state is BleDeviceReconnectingState && state.deviceId == id) {
+      return "Re-connecting...Wait for 10s";
+    }
 
-    if (connectedDeviceId == id) return "Connecting...Wait";
+    if (state is BleDeviceConnectedState && state.deviceId == id) {
+      return "Connected";
+    }
+
+    if (state is BleDeviceDisconnectedState && state.deviceId == id) {
+      return "Disconnected";
+    }
+
+    if (state is BleErrorState) {
+      return "Error: ${state.message}";
+    }
+
+    if (connectedDeviceId == id) {
+      return "Connecting...Wait for 10s";
+    }
 
     return "Available";
   }
@@ -255,8 +268,9 @@ class _BleScreenBodyState extends State<BleScreenBody> {
                       (device.manufacturerHex != null) ?
                       "Raw: ${device.manufacturerHex?.substring(0, min
                               (manuHexLength, 20))}" :
-                      "ID: ${device.id}"
+                      "Raw: null"
                     ),
+                    Text("ID: ${device.id}"),
                     Text("Name: ${device.name}"),
                     if (manuId != null)
                       Text("Manufacturer: 0x${manuId.toRadixString(16)
