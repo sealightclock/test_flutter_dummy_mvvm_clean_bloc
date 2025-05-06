@@ -13,7 +13,9 @@ class VehicleStatusViewModel {
   VehicleStatusViewModel(this.useCase);
 
   /// Stream of vehicle status (from use case).
-  Stream<VehicleStatusEntity> get vehicleStatusStream => useCase();
+  Stream<VehicleStatusEntity> getVehicleStatusStream() {
+    return useCase.call();
+  }
 
   /// Checks and requests location permission.
   ///

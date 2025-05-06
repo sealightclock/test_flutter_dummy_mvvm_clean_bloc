@@ -33,7 +33,7 @@ class VehicleStatusBloc extends Bloc<VehicleStatusEvent, VehicleStatusState> {
         emit(VehicleStatusPermissionDeniedState());
       }
     } else {
-      _subscription = _viewModel.vehicleStatusStream.listen((status) {
+      _subscription = _viewModel.getVehicleStatusStream().listen((status) {
         add(VehicleStatusLoadEvent(status));
       });
     }
