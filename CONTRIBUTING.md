@@ -181,7 +181,7 @@ root_screen.dart: RootScreen() -> <Feature>Screen()
 The handling of app permissions is challenging. Fortunately, it can also be fit into the 
 MVVM Clean + Bloc architecture.
 
-#### [GUIDELINE] Specify app permissions in AndroidManifest.xml or Info.plist.
+#### [GUIDELINE] Specify app permissions in AndroidManifest.xml and Info.plist.
 
 Failure to do so may result in crashes or silent failures which are very hard to debug.
 
@@ -190,3 +190,9 @@ Failure to do so may result in crashes or silent failures which are very hard to
 In View, check whether required permissions have been granted before processing an event.
 
 In ViewModel (and possibly in Bloc), request and grant app permissions if not yet done.
+
+#### [GUIDELINE] Be careful when using package "permission_handler".
+
+It has been noticed that, while package "permission_handler" is flexible, it will silently fail 
+on iOS Simulator when dealing with location permissions. Use "geolocator" package's internal 
+permission API instead.

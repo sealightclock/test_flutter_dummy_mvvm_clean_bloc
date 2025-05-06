@@ -23,7 +23,7 @@ class VehicleStatusBloc extends Bloc<VehicleStatusEvent, VehicleStatusState> {
   /// Requests location permission through ViewModel and acts accordingly.
   Future<void> _onStarted(VehicleStatusStartEvent event, Emitter<VehicleStatusState> emit) async {
     final granted = await _viewModel.checkAndRequestLocationPermission();
-    add(VehicleStatusHandlePermissionEvent(granted));
+    add(VehicleStatusHandlePermissionEvent(granted!));
   }
 
   /// Called after checking permission.

@@ -1,39 +1,45 @@
-import 'package:permission_handler/permission_handler.dart';
-
+import 'package:geolocator/geolocator.dart';
 import '../../domain/entity/vehicle_status_entity.dart';
 import '../../domain/usecase/get_vehicle_status_use_case.dart';
 
-/// ViewModel responsible for interacting with the UseCase and checking location permissions.
+/// ViewModel responsible for location permission and vehicle status streaming.
 ///
-/// This ViewModel no longer creates its own UseCase instance.
-/// Instead, it accepts the UseCase as a constructor parameter,
-/// which improves testability and follows Clean Architecture.
+/// Uses geolocator instead of permission_handler to reliably trigger
+/// permission dialogs on both real devices and simulators.
+/// !!! "permission_handler.dart" will silently fail on iOS Simulator (The system Location permission dialog won't be triggered!)
 class VehicleStatusViewModel {
   final GetVehicleStatusUseCase useCase;
 
-  /// Constructor that receives [GetVehicleStatusUseCase].
   VehicleStatusViewModel(this.useCase);
 
-  /// Exposes a stream of [VehicleStatusEntity] from the use case.
+  /// Stream of vehicle status (from use case).
   Stream<VehicleStatusEntity> get vehicleStatusStream => useCase();
 
-  /// Requests location permission and checks if granted.
+  /// Checks and requests location permission.
   ///
-  /// Steps:
-  /// 1. Request location permission from the user.
-  /// 2. Check if the permission is granted.
-  /// 3. If denied or permanently denied, return false.
-  Future<bool> checkAndRequestLocationPermission() async {
-    final permissionStatus = await Permission.location.status;
-
-    if (permissionStatus.isGranted) {
-      return true; // Already granted.
+  /// Return values:
+  /// - `true`  => permission granted
+  /// - `false` => denied (not permanently)
+  /// - `null`  => permanently denied (user must open settings)
+  Future<bool?> checkAndRequestLocationPermission() async {
+    // Ensure location services are enabled (GPS toggle)
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return false;
     }
 
-    // If denied, request permission.
-    final newStatus = await Permission.location.request();
+    // Check current permission
+    LocationPermission permission = await Geolocator.checkPermission();
 
-    // Return true only if now granted.
-    return newStatus.isGranted;
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // User must manually enable in Settings
+      return null;
+    }
+
+    return permission == LocationPermission.always || permission == LocationPermission.whileInUse;
   }
 }
