@@ -7,19 +7,22 @@ import '../../domain/entity/ble_device_entity.dart';
 
 /// ViewModel responsible for handling BLE use cases and permission checks.
 class BleViewModel {
-  final ScanBleDevicesUseCase scanUseCase;
-  final ConnectToBleDeviceUseCase connectUseCase;
+  final ScanBleDevicesUseCase scanBleDevicesUseCase;
+  final ConnectToBleDeviceUseCase connectToBleDeviceUseCase;
 
-  BleViewModel(this.scanUseCase, this.connectUseCase);
+  BleViewModel({
+    required this.scanBleDevicesUseCase,
+    required this.connectToBleDeviceUseCase,
+  });
 
   /// Scans for BLE devices.
   Stream<List<BleDeviceEntity>> scanBleDevices({required bool showAll}) {
-    return scanUseCase.call(showAll: showAll);
+    return scanBleDevicesUseCase.call(showAll: showAll);
   }
 
   /// Connects to a BLE device by ID.
   Stream<ConnectionStateUpdate> connectToDevice(String deviceId) {
-    return connectUseCase.call(deviceId);
+    return connectToBleDeviceUseCase.call(deviceId);
   }
 
   /// Requests necessary permissions for BLE operation.

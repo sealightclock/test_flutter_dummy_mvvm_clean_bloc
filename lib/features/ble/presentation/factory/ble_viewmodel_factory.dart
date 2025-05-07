@@ -18,13 +18,13 @@ class BleViewModelFactory {
     final repository = dataSource;
 
     // Set up use cases
-    final scanUseCase = ScanBleDevicesUseCase(repository: repository);
-    final connectUseCase = ConnectToBleDeviceUseCase(repository: repository);
+    final scanBleDevicesUseCase = ScanBleDevicesUseCase(repository: repository);
+    final connectToBleDeviceUseCase = ConnectToBleDeviceUseCase(repository: repository);
 
     // Return ViewModel (Bloc will now create its own instance of BleViewModel)
     return BleViewModel(
-        scanUseCase,
-        connectUseCase,
+      scanBleDevicesUseCase: scanBleDevicesUseCase,
+      connectToBleDeviceUseCase: connectToBleDeviceUseCase,
     );
   }
 }

@@ -23,8 +23,8 @@ class VehicleStatusViewModelFactory {
 
     // Step 4: Inject the use cases into the ViewModel
     return VehicleStatusViewModel(
-        getVehicleStatusUseCase,
-        checkAndRequestLocationPermissionUseCase,
+      getVehicleStatusUseCase: getVehicleStatusUseCase,
+      checkAndRequestLocationPermissionUseCase: checkAndRequestLocationPermissionUseCase,
     );
   }
 }

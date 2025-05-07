@@ -8,21 +8,21 @@ import '../../domain/usecase/remote/get_my_string_from_remote_use_case.dart';
 ///
 /// It provides simple methods that the Bloc/UI can call to trigger UseCases.
 class MyStringViewModel {
-  final GetMyStringFromLocalUseCase getFromLocalUseCase;
-  final StoreMyStringToLocalUseCase storeToLocalUseCase;
-  final GetMyStringFromRemoteUseCase getFromRemoteUseCase;
+  final GetMyStringFromLocalUseCase getMyStringFromLocalUseCase;
+  final StoreMyStringToLocalUseCase storeMyStringToLocalUseCase;
+  final GetMyStringFromRemoteUseCase getMyStringFromRemoteUseCase;
 
   MyStringViewModel({
-    required this.getFromLocalUseCase,
-    required this.storeToLocalUseCase,
-    required this.getFromRemoteUseCase,
+    required this.getMyStringFromLocalUseCase,
+    required this.storeMyStringToLocalUseCase,
+    required this.getMyStringFromRemoteUseCase,
   });
 
   /// Fetch my_string from the local store.
   ///
   /// You can handle the result easily using [handleResult] if needed.
   Future<Result<MyStringEntity>> getMyStringFromLocal() async {
-    return await getFromLocalUseCase.call();
+    return await getMyStringFromLocalUseCase.call();
   }
 
   /// Store my_string to the local store.
@@ -31,13 +31,13 @@ class MyStringViewModel {
   /// - Success on storing successfully
   /// - Failure if storing failed
   Future<Result<void>> storeMyStringToLocal(String value) async {
-    return await storeToLocalUseCase.call(MyStringEntity(value: value));
+    return await storeMyStringToLocalUseCase.call(MyStringEntity(value: value));
   }
 
   /// Fetch my_string from the remote server.
   ///
   /// You can handle the result easily using [handleResult] if needed.
   Future<Result<MyStringEntity>> getMyStringFromRemote() async {
-    return await getFromRemoteUseCase.call();
+    return await getMyStringFromRemoteUseCase.call();
   }
 }

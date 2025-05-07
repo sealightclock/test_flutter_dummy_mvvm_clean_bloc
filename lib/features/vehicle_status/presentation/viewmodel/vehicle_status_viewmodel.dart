@@ -1,4 +1,3 @@
-import 'package:geolocator/geolocator.dart';
 import '../../domain/entity/vehicle_status_entity.dart';
 import '../../domain/usecase/check_and_request_location_permission_use_case.dart';
 import '../../domain/usecase/get_vehicle_status_use_case.dart';
@@ -12,10 +11,10 @@ class VehicleStatusViewModel {
   final GetVehicleStatusUseCase getVehicleStatusUseCase;
   final CheckAndRequestLocationPermissionUseCase checkAndRequestLocationPermissionUseCase;
 
-  VehicleStatusViewModel(
-      this.getVehicleStatusUseCase,
-      this.checkAndRequestLocationPermissionUseCase,
-  );
+  VehicleStatusViewModel({
+    required this.getVehicleStatusUseCase,
+    required this.checkAndRequestLocationPermissionUseCase,
+  });
 
   /// Stream of vehicle status (from use case).
   Stream<VehicleStatusEntity> getVehicleStatusStream() {

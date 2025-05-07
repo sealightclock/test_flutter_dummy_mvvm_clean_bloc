@@ -34,9 +34,9 @@ class MyStringViewModelFactory {
 
     // Finally, create ViewModel
     return MyStringViewModel(
-      getFromLocalUseCase: getMyStringFromLocalUseCase,
-      storeToLocalUseCase: storeMyStringToLocalUseCase,
-      getFromRemoteUseCase: getMyStringFromRemoteUseCase,
+      getMyStringFromLocalUseCase: getMyStringFromLocalUseCase,
+      storeMyStringToLocalUseCase: storeMyStringToLocalUseCase,
+      getMyStringFromRemoteUseCase: getMyStringFromRemoteUseCase,
     );
   }
 }

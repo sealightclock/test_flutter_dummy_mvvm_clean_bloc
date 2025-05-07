@@ -28,9 +28,9 @@ void main() {
     mockGetRemote = MockGetRemote();
 
     viewModel = MyStringViewModel(
-      getFromLocalUseCase: mockGetLocal,
-      storeToLocalUseCase: mockStoreLocal,
-      getFromRemoteUseCase: mockGetRemote,
+      getMyStringFromLocalUseCase: mockGetLocal,
+      storeMyStringToLocalUseCase: mockStoreLocal,
+      getMyStringFromRemoteUseCase: mockGetRemote,
     );
   });
 
