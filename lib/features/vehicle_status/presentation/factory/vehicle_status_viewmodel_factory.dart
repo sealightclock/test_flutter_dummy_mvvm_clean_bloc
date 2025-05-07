@@ -1,4 +1,4 @@
-import '../../data/datasource/vehicle_status_data_source.dart';
+import '../../data/datasource/platform/vehicle_status_data_source.dart';
 import '../../data/repository/vehicle_status_repository.dart';
 import '../../domain/usecase/check_and_request_location_permission_use_case.dart';
 import '../../domain/usecase/get_vehicle_status_use_case.dart';

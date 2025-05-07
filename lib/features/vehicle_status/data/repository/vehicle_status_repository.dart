@@ -2,7 +2,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../domain/entity/vehicle_status_entity.dart';
-import '../datasource/vehicle_status_data_source.dart';
+import '../datasource/platform/vehicle_status_data_source.dart';
 
 /// Repository responsible for providing a throttled [Stream] of [VehicleStatusEntity].
 class VehicleStatusRepository {

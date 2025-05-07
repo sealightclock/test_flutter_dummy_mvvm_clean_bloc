@@ -3,14 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_state.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/root_screen.dart'; // ✅ Needed for forceStartOnMyStringScreen
 
-import 'util/uninstall_app.dart'; // ✅ Optional: Ensures no leftover app state from manual install
-import 'util/test_utils.dart';
+import 'util/reset_hive.dart';
 import 'util/test_app_launcher.dart';
 import 'util/test_timer.dart';
-import 'util/reset_hive.dart';
-
-import 'package:test_flutter_dummy_mvvm_clean_bloc/root_screen.dart'; // ✅ Needed for forceStartOnMyStringScreen
+import 'util/test_utils.dart';
 
 void main() {
   // Bind integration test environment (required boilerplate)
@@ -31,7 +29,10 @@ void main() {
     // 🗑️ Step 0b: Uninstall app first to avoid stale Hive box or state
     // ❗ NOTE: This must happen BEFORE app is launched, or stale state may restore
     // ─────────────────────────────────────────────────────────────────────
-    await uninstallFlutterApp('com.example.jonathan.test_flutter_dummy_mvvm_clean_bloc');
+    // TODO: This line won't work.
+    //   Also, this line is unnecessary after adding a call to resetHive().
+    //   So we should remove this line.
+    //await uninstallFlutterApp('com.example.jonathan.test_flutter_dummy_mvvm_clean_bloc');
 
     // Optional: Clean up leftover Hive files if uninstall fails or doesn't run on iOS
     await resetHive();
