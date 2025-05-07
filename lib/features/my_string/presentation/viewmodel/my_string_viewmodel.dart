@@ -1,8 +1,8 @@
 import '../../../../util/result.dart';
 import '../../domain/entity/my_string_entity.dart';
-import '../../domain/usecase/local/get_my_string_from_local_use_case.dart';
-import '../../domain/usecase/local/store_my_string_to_local_use_case.dart';
-import '../../domain/usecase/remote/get_my_string_from_remote_use_case.dart';
+import '../../domain/usecase/get_my_string_from_local_use_case.dart';
+import '../../domain/usecase/get_my_string_from_remote_use_case.dart';
+import '../../domain/usecase/store_my_string_to_local_use_case.dart';
 
 /// ViewModel that communicates with the Domain layer.
 ///

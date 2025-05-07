@@ -68,15 +68,11 @@ The file structure is as follows:
 
 ---- **usecase**/
 
------- local/
+------ get_my_string_from_local_use_case.dart
 
--------- get_my_string_from_local_use_case.dart
+------ store_my_string_to_local_use_case.dart
 
--------- store_my_string_to_local_use_case.dart
-
------- remote/
-
--------- get_my_string_from_remote_use_case.dart
+------ get_my_string_from_remote_use_case.dart
 
 #### -- ***data***/
 
@@ -86,27 +82,29 @@ The file structure is as follows:
 
 ------ my_string_repository_impl.dart
 
----- local/
+---- **datasource**/
 
------- my_string_local_data_source.dart
+------ local/
 
------- my_string_shared_prefs_data_source.dart
+-------- my_string_local_data_source.dart
 
------- my_string_hive_data_source.dart
+-------- my_string_shared_prefs_data_source.dart
 
----- remote/
+-------- my_string_hive_data_source.dart
 
------- my_string_dio_api.dart
+------ remote/
 
------- my_string_http_api.dart
+-------- my_string_dio_api.dart
 
------- my_string_remote_data_source.dart
+-------- my_string_http_api.dart
 
------- my_string_simulator_data_source.dart
+-------- my_string_remote_data_source.dart
 
------- my_string_dio_data_source.dart
+-------- my_string_simulator_data_source.dart
 
------- my_string_http_data_source.dart
+-------- my_string_dio_data_source.dart
+
+-------- my_string_http_data_source.dart
 
 ---- **di**/
 

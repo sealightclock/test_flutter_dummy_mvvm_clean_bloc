@@ -3,8 +3,8 @@
 
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart';
 
-import '../../../data/repository/my_string_repository.dart';
-import '../../entity/my_string_entity.dart';
+import '../../data/repository/my_string_repository.dart';
+import '../entity/my_string_entity.dart';
 
 /// Use Case: Retrieve the stored my_string from a local store.
 class GetMyStringFromLocalUseCase {

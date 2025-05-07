@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 
-import '../../domain/entity/auth_entity.dart';
+import '../../../domain/entity/auth_entity.dart';
 
 /// Client API to simulate remote server for authentication.
 /// In real case, replace mock implementations with real http requests.

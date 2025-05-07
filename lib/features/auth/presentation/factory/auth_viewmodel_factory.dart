@@ -1,12 +1,12 @@
-import '../../data/local/auth_hive_data_source.dart';
-import '../../data/remote/auth_remote_data_source.dart';
+import '../../data/datasource/local/auth_hive_data_source.dart';
+import '../../data/datasource/remote/auth_remote_data_source.dart';
 import '../../data/repository/auth_repository.dart';
-import '../../domain/usecase/logout_use_case.dart';
-import '../viewmodel/auth_viewmodel.dart';
-import '../../domain/usecase/login_use_case.dart';
-import '../../domain/usecase/signup_use_case.dart';
-import '../../domain/usecase/guest_login_use_case.dart';
 import '../../domain/usecase/get_auth_use_case.dart';
+import '../../domain/usecase/guest_login_use_case.dart';
+import '../../domain/usecase/login_use_case.dart';
+import '../../domain/usecase/logout_use_case.dart';
+import '../../domain/usecase/signup_use_case.dart';
+import '../viewmodel/auth_viewmodel.dart';
 
 /// Factory to create AuthViewModel with all dependencies injected.
 class AuthViewModelFactory {

@@ -1,6 +1,6 @@
 import '../../domain/entity/my_string_entity.dart';
-import '../local/my_string_local_data_source.dart';
-import '../remote/my_string_remote_data_source.dart';
+import '../datasource/local/my_string_local_data_source.dart';
+import '../datasource/remote/my_string_remote_data_source.dart';
 import 'my_string_repository.dart';
 
 /// This 2nd-level repository implementation is responsible for dealing with

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/data/local/my_string_local_data_source.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/data/remote/my_string_remote_data_source.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/data/datasource/local/my_string_local_data_source.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/data/datasource/remote/my_string_remote_data_source.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/data/repository/my_string_repository_impl.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/entity/my_string_entity.dart';
 

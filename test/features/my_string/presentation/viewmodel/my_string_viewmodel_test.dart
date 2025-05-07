@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/entity/my_string_entity.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/local/get_my_string_from_local_use_case.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/local/store_my_string_to_local_use_case.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/remote/get_my_string_from_remote_use_case.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/get_my_string_from_local_use_case.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/get_my_string_from_remote_use_case.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/store_my_string_to_local_use_case.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/viewmodel/my_string_viewmodel.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result_handler.dart'; // <-- Important!

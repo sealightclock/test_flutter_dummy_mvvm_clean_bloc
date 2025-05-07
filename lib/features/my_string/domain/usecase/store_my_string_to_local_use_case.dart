@@ -1,9 +1,9 @@
 // This UseCase file is responsible for storing "my_string" into a local store,
 // using the Domain Layer and clean error handling.
 
-import '../../../../../util/result.dart';
-import '../../../data/repository/my_string_repository.dart';
-import '../../entity/my_string_entity.dart';
+import '../../../../util/result.dart';
+import '../../data/repository/my_string_repository.dart';
+import '../entity/my_string_entity.dart';
 
 /// Use Case: Store a new value of my_string into a local store.
 class StoreMyStringToLocalUseCase {

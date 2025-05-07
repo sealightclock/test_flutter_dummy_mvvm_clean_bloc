@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../util/app_constants.dart';
-import '../../domain/entity/my_string_entity.dart';
+import '../../../domain/entity/my_string_entity.dart';
 import 'my_string_local_data_source.dart';
 
 /// Data source handler to handle local data persistence using SharedPreferences.

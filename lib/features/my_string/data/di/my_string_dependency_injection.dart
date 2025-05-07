@@ -9,13 +9,13 @@
 
 import '../../../../util/local_store_enum.dart';
 import '../../../../util/remote_server_enum.dart';
-import '../local/my_string_hive_data_source.dart';
-import '../local/my_string_local_data_source.dart';
-import '../local/my_string_shared_prefs_data_source.dart';
-import '../remote/my_string_dio_data_source.dart';
-import '../remote/my_string_http_data_source.dart';
-import '../remote/my_string_remote_data_source.dart';
-import '../remote/my_string_simulator_data_source.dart';
+import '../datasource/local/my_string_hive_data_source.dart';
+import '../datasource/local/my_string_local_data_source.dart';
+import '../datasource/local/my_string_shared_prefs_data_source.dart';
+import '../datasource/remote/my_string_dio_data_source.dart';
+import '../datasource/remote/my_string_http_data_source.dart';
+import '../datasource/remote/my_string_remote_data_source.dart';
+import '../datasource/remote/my_string_simulator_data_source.dart';
 
 // -------------------------------------------------------------------------------
 // Factory Methods to Create Data Sources Based on Config

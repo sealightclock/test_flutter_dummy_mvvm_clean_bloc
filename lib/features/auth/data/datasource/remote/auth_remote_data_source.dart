@@ -1,4 +1,4 @@
-import '../../domain/entity/auth_entity.dart';
+import '../../../domain/entity/auth_entity.dart';
 import 'auth_client_api.dart';
 
 /// Data source handler to manage authentication remotely via AuthClientApi.

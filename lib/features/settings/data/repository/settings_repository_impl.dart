@@ -1,5 +1,5 @@
 import '../../domain/entity/settings_entity.dart';
-import '../local/settings_hive_data_source.dart';
+import '../datasource/local/settings_hive_data_source.dart';
 import 'settings_repository.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {

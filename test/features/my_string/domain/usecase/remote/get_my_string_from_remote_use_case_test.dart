@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/data/repository/my_string_repository.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/entity/my_string_entity.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/remote/get_my_string_from_remote_use_case.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/get_my_string_from_remote_use_case.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/util/result_handler.dart';
 
 class MockMyStringRepository extends Mock implements MyStringRepository {}
