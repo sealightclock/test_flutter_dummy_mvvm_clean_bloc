@@ -185,7 +185,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Text('Last scanned: ${_formatTime(lastScanTime!)}', style: const TextStyle(fontSize: 14, color: Colors.grey)),
                   ),
-                if (state is BleDevicesFoundState)
+                if (state.devices != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Text('Devices found: ${state.devices.length}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
