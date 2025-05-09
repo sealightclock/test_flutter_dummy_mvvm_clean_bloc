@@ -25,16 +25,8 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    // ─────────────────────────────────────────────────────────────────────
-    // 🗑️ Step 0b: Uninstall app first to avoid stale Hive box or state
-    // ❗ NOTE: This must happen BEFORE app is launched, or stale state may restore
-    // ─────────────────────────────────────────────────────────────────────
-    // TODO: This line won't work.
-    //   Also, this line is unnecessary after adding a call to resetHive().
-    //   So we should remove this line.
-    //await uninstallFlutterApp('com.example.jonathan.test_flutter_dummy_mvvm_clean_bloc');
-
-    // Optional: Clean up leftover Hive files if uninstall fails or doesn't run on iOS
+    // This ensures that the integration test still works even if an old app
+    // was installed on the device with old Hive data.
     await resetHive();
 
     // ─────────────────────────────────────────────────────────────────────
