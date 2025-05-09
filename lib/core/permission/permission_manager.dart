@@ -2,22 +2,24 @@ import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 
-/// Enum representing app-level abstract permissions.
+/// Abstract list of permissions that can be requested by app features.
 ///
-/// Features can request a combination of these without knowing platform details.
+/// This keeps feature logic decoupled from platform-specific Permission enums.
 enum AppPermission {
-  location,         // Fine or coarse location
-  bluetooth,        // Bluetooth scan + connect
+  location,
+  bluetooth,
 }
 
-/// A centralized permission manager to abstract platform permission handling.
+/// A centralized permission handler that abstracts platform-specific logic.
 ///
-/// This helps features avoid duplicating permission logic.
-/// Uses permission_handler for Android and geolocator on iOS for location.
+/// - Uses geolocator on iOS for location permission (for proper dialog triggering).
+/// - Uses permission_handler on Android for BLE and location.
+/// - Returns `true` if all requested permissions are granted.
+/// - Keeps permission logic out of Bloc, ViewModel, and Domain layers.
 class PermissionManager {
-  /// Checks and requests a list of app permissions.
+  /// Checks and requests all permissions in the given list.
   ///
-  /// Returns true only if **all requested permissions are granted**.
+  /// Returns true only if **all permissions are granted**.
   Future<bool> checkAndRequest(List<AppPermission> permissions) async {
     for (final permission in permissions) {
       final granted = await _handle(permission);
@@ -26,40 +28,54 @@ class PermissionManager {
     return true;
   }
 
-  /// Internal dispatcher to handle each AppPermission type.
+  /// Internal handler for each AppPermission.
+  ///
+  /// Maps high-level permission types to platform-specific logic.
   Future<bool> _handle(AppPermission permission) async {
     switch (permission) {
       case AppPermission.location:
-        return Platform.isIOS
-            ? _checkGeolocatorLocation()
-            : _checkPermissionHandler(Permission.location);
+        return await _checkLocationPermission();
 
       case AppPermission.bluetooth:
-        return await _checkPermissionHandler(Permission.bluetoothScan) &&
-            await _checkPermissionHandler(Permission.bluetoothConnect);
+        return await _checkBluetoothPermissions();
+
+    // If new AppPermissions are added in the future,
+    // this switch ensures compile-time enforcement.
     }
   }
 
-  /// Uses permission_handler to check and request Android permissions.
-  Future<bool> _checkPermissionHandler(Permission permission) async {
-    final status = await permission.status;
-    if (status.isGranted) return true;
-
-    final result = await permission.request();
-    return result.isGranted;
+  /// Platform-aware logic for location permission:
+  /// - iOS: Uses geolocator to trigger native dialog.
+  /// - Android: Uses permission_handler.
+  Future<bool> _checkLocationPermission() async {
+    if (Platform.isIOS) {
+      final status = await Geolocator.checkPermission();
+      if (status == LocationPermission.denied) {
+        final result = await Geolocator.requestPermission();
+        return result == LocationPermission.whileInUse || result == LocationPermission.always;
+      }
+      return status == LocationPermission.whileInUse || status == LocationPermission.always;
+    } else {
+      final status = await Permission.location.status;
+      if (status.isGranted) return true;
+      final result = await Permission.location.request();
+      return result.isGranted;
+    }
   }
 
-  /// Uses geolocator for iOS location permission checks.
-  ///
-  /// Needed because permission_handler does not trigger iOS dialog reliably.
-  Future<bool> _checkGeolocatorLocation() async {
-    final status = await Geolocator.checkPermission();
-    if (status == LocationPermission.denied) {
-      final newStatus = await Geolocator.requestPermission();
-      return newStatus == LocationPermission.always ||
-          newStatus == LocationPermission.whileInUse;
-    }
-    return status == LocationPermission.always ||
-        status == LocationPermission.whileInUse;
+  /// Handles BLE-related permissions for Android.
+  /// - iOS does not require runtime Bluetooth permissions.
+  Future<bool> _checkBluetoothPermissions() async {
+    if (!Platform.isAndroid) return true;
+
+    final permissions = [
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+    ];
+
+    // Request all at once to avoid multiple dialogs.
+    final statuses = await permissions.request();
+
+    return statuses.values.every((status) => status.isGranted);
   }
 }
