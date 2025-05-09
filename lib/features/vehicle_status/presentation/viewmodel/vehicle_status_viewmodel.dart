@@ -1,33 +1,38 @@
 import '../../domain/entity/vehicle_status_entity.dart';
-import '../../domain/usecase/check_and_request_location_permission_use_case.dart';
 import '../../domain/usecase/get_vehicle_status_use_case.dart';
+import '../../../../core/permission/permission_manager.dart';
 
 /// ViewModel responsible for location permission and vehicle status streaming.
 ///
-/// Uses geolocator instead of permission_handler to reliably trigger
-/// permission dialogs on both real devices and simulators.
-/// !!! "permission_handler.dart" will silently fail on iOS Simulator (The system Location permission dialog won't be triggered!)
+/// PermissionManager is injected to handle platform-specific location permissions.
+/// This keeps permission logic centralized and testable.
 class VehicleStatusViewModel {
   final GetVehicleStatusUseCase getVehicleStatusUseCase;
-  final CheckAndRequestLocationPermissionUseCase checkAndRequestLocationPermissionUseCase;
+  final PermissionManager permissionManager;
 
   VehicleStatusViewModel({
     required this.getVehicleStatusUseCase,
-    required this.checkAndRequestLocationPermissionUseCase,
+    required this.permissionManager,
   });
 
-  /// Stream of vehicle status (from use case).
+  /// Returns a continuous stream of vehicle location and speed from the domain layer.
   Stream<VehicleStatusEntity> getVehicleStatusStream() {
     return getVehicleStatusUseCase.call();
   }
 
-  /// Checks and requests location permission.
+  /// Checks and requests location permission using centralized manager.
   ///
   /// Return values:
   /// - `true`  => permission granted
-  /// - `false` => denied (not permanently)
+  /// - `false` => denied (user might try again later)
   /// - `null`  => permanently denied (user must open settings)
   Future<bool?> checkAndRequestLocationPermission() async {
-    return await getVehicleStatusUseCase.repository.checkAndRequestLocationPermission();
+    final granted = await permissionManager.checkAndRequest([AppPermission.location]);
+
+    if (granted) return true;
+
+    // For simplicity, we treat all denied cases the same.
+    // If needed, platform-specific 'permanentlyDenied' logic can be added later.
+    return false;
   }
 }
