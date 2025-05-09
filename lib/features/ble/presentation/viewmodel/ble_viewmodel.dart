@@ -1,73 +1,47 @@
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../core/permission/permission_manager.dart';
+import '../../domain/entity/ble_device_entity.dart';
 import '../../domain/usecase/connect_to_ble_device_usecase.dart';
 import '../../domain/usecase/scan_ble_devices_usecase.dart';
-import '../../domain/entity/ble_device_entity.dart';
 
 /// ViewModel responsible for handling BLE use cases and permission checks.
+///
+/// This ViewModel is owned by the Bloc and used to coordinate BLE logic,
+/// including scanning and connecting, and permission validation.
 class BleViewModel {
   final ScanBleDevicesUseCase scanBleDevicesUseCase;
   final ConnectToBleDeviceUseCase connectToBleDeviceUseCase;
+  final PermissionManager permissionManager;
 
   BleViewModel({
     required this.scanBleDevicesUseCase,
     required this.connectToBleDeviceUseCase,
+    required this.permissionManager,
   });
 
-  /// Scans for BLE devices.
+  /// Starts scanning for BLE devices.
+  ///
+  /// This stream will emit a list of discovered [BleDeviceEntity]s.
   Stream<List<BleDeviceEntity>> scanBleDevices({required bool showAll}) {
     return scanBleDevicesUseCase.call(showAll: showAll);
   }
 
-  /// Connects to a BLE device by ID.
+  /// Connects to a BLE device by its unique ID.
+  ///
+  /// This stream emits updates about the connection status.
   Stream<ConnectionStateUpdate> connectToDevice(String deviceId) {
     return connectToBleDeviceUseCase.call(deviceId);
   }
 
-  /// Requests necessary permissions for BLE operation.
+  /// Requests necessary BLE and Location permissions using the centralized PermissionManager.
   ///
-  /// Steps:
-  /// 1. Request BLE and Location permissions.
-  /// 2. After user grants, check if Location permission is Precise (Fine).
-  /// 3. If not Precise, request again.
-  /// 4. Return true if all needed permissions (including Precise) are granted.
+  /// BLE requires bluetoothScan, bluetoothConnect, and precise (fine) location.
+  /// This method delegates permission logic and platform safety to the shared manager.
   Future<bool> requestPermissions() async {
-    // Request BLE and general Location permissions
-    final permissions = [
-      Permission.bluetoothScan,
-      Permission.bluetoothConnect,
-      Permission.location, // This covers both coarse and fine initially
-    ];
-    final results = await permissions.request();
-
-    // If any required permission is not granted, immediately return false
-    final allGranted = results.values.every((status) => status.isGranted);
-    if (!allGranted) {
-      return false;
-    }
-
-    // After basic permission grant, check if Location is Precise
-    final preciseGranted = await _isPreciseLocationGranted();
-    if (preciseGranted) {
-      return true; // Already have Fine location
-    }
-
-    // If not precise, request again (may pop Android system dialog)
-    final permissionAfterRequest = await Permission.location.request();
-    return permissionAfterRequest.isGranted;
-  }
-
-  /// Checks if Fine (Precise) Location permission is granted.
-  ///
-  /// Coarse Location may be granted but it's not enough for BLE scanning on Android 12+.
-  Future<bool> _isPreciseLocationGranted() async {
-    final status = await Permission.location.status;
-    // If permission is granted but user chose \"Approximate location\", it may still be coarse.
-    // The permission_handler plugin does not distinguish this directly.
-    // On Android, precise vs coarse decision is user-level, so we assume granted means precise
-    // if not otherwise limited. (Optionally: add platform-specific checks.)
-
-    return status.isGranted; // Safe basic check for now.
+    return await permissionManager.checkAndRequest([
+      AppPermission.bluetooth,
+      AppPermission.location, // location is handled using geolocator on iOS
+    ]);
   }
 }
