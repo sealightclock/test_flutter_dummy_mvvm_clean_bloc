@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /// Abstract list of permissions that can be requested by app features.
 ///

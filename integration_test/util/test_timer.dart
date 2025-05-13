@@ -1,4 +1,4 @@
-
+// ignore_for_file: avoid_print
 
 /// A small utility to measure test durations.
 class TestTimer {

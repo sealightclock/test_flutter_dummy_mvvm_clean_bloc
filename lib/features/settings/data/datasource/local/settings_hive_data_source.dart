@@ -1,7 +1,6 @@
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/settings/domain/entity/settings_entity.dart';
-
 import '../../../../../app/util/constants/app_constants.dart';
 import '../../../../../app/util/hive/hive_utils.dart';
+import '../../../domain/entity/settings_entity.dart';
 
 /// Data source to manage reading and writing app settings using Hive.
 ///

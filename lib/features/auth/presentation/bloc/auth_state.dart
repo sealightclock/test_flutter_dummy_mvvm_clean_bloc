@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import '../../domain/entity/auth_entity.dart';
 
 /// Sealed class for Authentication States

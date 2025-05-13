@@ -1,8 +1,8 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/entity/my_string_entity.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/settings/domain/entity/settings_entity.dart';
 
 import '../../../features/auth/domain/entity/auth_entity.dart';
+import '../../../features/my_string/domain/entity/my_string_entity.dart';
+import '../../../features/settings/domain/entity/settings_entity.dart';
 
 /// Utility class to centralize Hive initialization and operations.
 ///

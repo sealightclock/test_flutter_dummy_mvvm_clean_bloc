@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'app_styles.dart';
 
 /// Shared App Theme with dynamic font scaling and dark mode support.

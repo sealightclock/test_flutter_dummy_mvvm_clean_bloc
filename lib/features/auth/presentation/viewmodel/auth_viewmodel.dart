@@ -1,10 +1,10 @@
 import '../../../../app/util/result/result.dart';
-import '../../domain/usecase/login_use_case.dart';
-import '../../domain/usecase/signup_use_case.dart';
-import '../../domain/usecase/guest_login_use_case.dart';
-import '../../domain/usecase/get_auth_use_case.dart';
-import '../../domain/usecase/logout_use_case.dart';
 import '../../domain/entity/auth_entity.dart';
+import '../../domain/usecase/get_auth_use_case.dart';
+import '../../domain/usecase/guest_login_use_case.dart';
+import '../../domain/usecase/login_use_case.dart';
+import '../../domain/usecase/logout_use_case.dart';
+import '../../domain/usecase/signup_use_case.dart';
 
 class AuthViewModel {
   final LoginUseCase loginUseCase;

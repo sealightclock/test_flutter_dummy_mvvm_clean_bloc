@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import '../../domain/entity/settings_entity.dart';
 
 /// All possible states for the Settings feature.

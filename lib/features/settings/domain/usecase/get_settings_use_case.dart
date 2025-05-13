@@ -1,6 +1,6 @@
 import '../../../../app/util/result/result.dart';
-import '../entity/settings_entity.dart';
 import '../../data/repository/settings_repository.dart';
+import '../entity/settings_entity.dart';
 
 class GetSettingsUseCase {
   final SettingsRepository repository;

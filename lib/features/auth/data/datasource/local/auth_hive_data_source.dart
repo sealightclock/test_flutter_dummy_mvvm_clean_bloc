@@ -1,8 +1,6 @@
-import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/domain/entity'
-    '/auth_entity.dart';
-
 import '../../../../../app/util/constants/app_constants.dart';
 import '../../../../../app/util/hive/hive_utils.dart';
+import '../../../domain/entity/auth_entity.dart';
 
 /// Data source handler to manage authentication locally using Hive.
 class AuthHiveDataSource {

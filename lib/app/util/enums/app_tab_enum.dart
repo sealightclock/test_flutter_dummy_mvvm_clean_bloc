@@ -1,3 +1,10 @@
 /// Enum representing each BottomNavigationBar tab
-/// TODO: Add more tabs here
-enum AppTab { auth, myString, account, settings, ble, status }
+enum AppTab {
+  auth,
+  myString,
+  account,
+  settings,
+  ble,
+  status,
+  // TODO: Add more tabs here, in the order they appear
+}
