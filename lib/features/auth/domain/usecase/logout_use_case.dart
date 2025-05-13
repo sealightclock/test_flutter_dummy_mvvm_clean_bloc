@@ -1,4 +1,4 @@
-import '../../../../util/result.dart';
+import '../../../../app/util/result.dart';
 import '../../data/repository/auth_repository.dart';
 
 class LogoutUseCase {

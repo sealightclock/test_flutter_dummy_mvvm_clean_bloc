@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart' as my_logger;
 
-import 'data/datasource/local/app_hive_data_source.dart';
-import 'data/datasource/local/app_tab_enum.dart';
+import 'app/data/datasource/local/app_hive_data_source.dart';
+import 'app/data/datasource/local/app_tab_enum.dart';
+import 'app/util/app_constants.dart';
+import 'app/util/feedback_type_enum.dart';
+import 'app/util/global_feedback_handler.dart';
 import 'features/account/presentation/view/account_screen.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
@@ -12,9 +15,6 @@ import 'features/ble/presentation/view/ble_screen.dart';
 import 'features/my_string/presentation/view/my_string_screen.dart';
 import 'features/settings/presentation/view/settings_screen.dart';
 import 'features/vehicle_status/presentation/view/vehicle_status_screen.dart';
-import 'util/app_constants.dart';
-import 'util/feedback_type_enum.dart';
-import 'util/global_feedback_handler.dart';
 
 final logger = my_logger.Logger();
 

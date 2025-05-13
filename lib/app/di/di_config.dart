@@ -1,5 +1,5 @@
-import 'local_store_enum.dart';
-import 'remote_server_enum.dart';
+import '../util/local_store_enum.dart';
+import '../util/remote_server_enum.dart';
 
 /// Singleton-style config class for managing DI choices in the app.
 class DiConfig {

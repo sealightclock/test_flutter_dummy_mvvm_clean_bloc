@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../app/util/result.dart';
 import '../../../../main.dart'; // Needed for triggerAppRebuild()
-import '../../../../util/result.dart';
 import '../bloc/settings_event.dart';
 import '../bloc/settings_state.dart';
 import '../factory/settings_viewmodel_factory.dart';

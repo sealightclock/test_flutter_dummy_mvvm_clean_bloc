@@ -182,8 +182,8 @@ root_screen.dart: RootScreen() -> <Feature>Screen()
 
 ### App Permissions
 
-The handling of app permissions is challenging. Fortunately, it can also be fit into the 
-MVVM Clean + Bloc architecture.
+The handling of app permissions is challenging: It is not a product feature, rather, it sits on 
+the framework layer so can not fit into any of the components of the MVVM Clean + Bloc architecture.
 
 #### [GUIDELINE] Specify app permissions in AndroidManifest.xml and Info.plist.
 
@@ -193,7 +193,8 @@ Failure to do so may result in crashes or silent failures which are very hard to
 
 In View, check whether required permissions have been granted before processing an event.
 
-In ViewModel (and possibly in Bloc), request and grant app permissions if not yet done.
+Use a centralized PermissionManager to handle app permissions, like a platform service. Plug 
+PermissionManager into ViewModel just like a special UseCase.
 
 #### [GUIDELINE] Be careful when using package "permission_handler".
 

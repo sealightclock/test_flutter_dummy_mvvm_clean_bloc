@@ -1,4 +1,4 @@
-import '../../../util/app_constants.dart';
+import 'app_constants.dart';
 
 /// Enum to select which Remote Server to use
 enum RemoteServer {

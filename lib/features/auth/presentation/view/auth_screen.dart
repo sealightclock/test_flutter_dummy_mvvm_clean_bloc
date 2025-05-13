@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../app/util/feedback_type_enum.dart';
+import '../../../../app/util/global_feedback_handler.dart';
+import '../../../../app/util/result.dart';
 import '../../../../root_screen.dart';
-import '../../../../util/feedback_type_enum.dart';
-import '../../../../util/global_feedback_handler.dart';
-import '../../../../util/result.dart';
 import '../../domain/entity/auth_entity.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';

@@ -1,8 +1,8 @@
+import '../../../../app/core/permission/permission_manager.dart';
 import '../../data/datasource/platform/vehicle_status_data_source.dart';
 import '../../data/repository/vehicle_status_repository.dart';
 import '../../domain/usecase/get_vehicle_status_use_case.dart';
 import '../viewmodel/vehicle_status_viewmodel.dart';
-import '../../../../core/permission/permission_manager.dart';
 
 /// Factory for creating VehicleStatusViewModel with required dependencies.
 ///

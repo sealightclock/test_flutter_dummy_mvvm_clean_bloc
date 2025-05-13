@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'app/theme/app_theme.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
 import 'features/settings/presentation/bloc/settings_event.dart';
 import 'features/settings/presentation/bloc/settings_state.dart';
 import 'root_screen.dart';
-import 'theme/app_theme.dart';
 
 /// The root widget of the app, wrapped with BlocProviders.
 ///

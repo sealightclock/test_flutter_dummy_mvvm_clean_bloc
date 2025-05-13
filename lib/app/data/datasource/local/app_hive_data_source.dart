@@ -1,6 +1,5 @@
-import 'package:test_flutter_dummy_mvvm_clean_bloc/util/app_constants.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/util/hive_utils.dart';
-
+import '../../../util/app_constants.dart';
+import '../../../util/hive_utils.dart';
 import 'app_tab_enum.dart';
 
 /// App-wide Hive data source to manage global values like last seen screen.

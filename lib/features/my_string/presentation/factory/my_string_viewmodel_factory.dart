@@ -1,6 +1,5 @@
-import 'package:test_flutter_dummy_mvvm_clean_bloc/util/di_config.dart';
-
-import '../../../../util/di_initializer.dart';
+import '../../../../app/di/di_config.dart';
+import '../../../../app/di/di_initializer.dart';
 import '../../data/di/my_string_dependency_injection.dart';
 import '../../data/repository/my_string_repository_impl.dart';
 import '../../domain/usecase/get_my_string_from_local_use_case.dart';

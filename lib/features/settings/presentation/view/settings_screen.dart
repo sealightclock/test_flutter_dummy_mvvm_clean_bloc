@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../util/app_constants.dart';
+import '../../../../app/util/app_constants.dart';
 import '../../domain/entity/settings_entity.dart';
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';
