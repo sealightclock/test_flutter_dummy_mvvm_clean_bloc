@@ -7,15 +7,15 @@
 // For larger apps, consider using a library like Provider, Riverpod, or GetIt.
 // ===================================================================================
 
-import '../../../../app/util/enums/local_store_enum.dart';
-import '../../../../app/util/enums/remote_server_enum.dart';
-import '../datasource/local/my_string_hive_data_source.dart';
-import '../datasource/local/my_string_local_data_source.dart';
-import '../datasource/local/my_string_shared_prefs_data_source.dart';
-import '../datasource/remote/my_string_dio_data_source.dart';
-import '../datasource/remote/my_string_http_data_source.dart';
-import '../datasource/remote/my_string_remote_data_source.dart';
-import '../datasource/remote/my_string_simulator_data_source.dart';
+import '../util/enums/local_store_enum.dart';
+import '../util/enums/remote_server_enum.dart';
+import '../../features/my_string/data/datasource/local/my_string_hive_data_source.dart';
+import '../../features/my_string/data/datasource/local/my_string_local_data_source.dart';
+import '../../features/my_string/data/datasource/local/my_string_shared_prefs_data_source.dart';
+import '../../features/my_string/data/datasource/remote/my_string_dio_data_source.dart';
+import '../../features/my_string/data/datasource/remote/my_string_http_data_source.dart';
+import '../../features/my_string/data/datasource/remote/my_string_remote_data_source.dart';
+import '../../features/my_string/data/datasource/remote/my_string_simulator_data_source.dart';
 
 // -------------------------------------------------------------------------------
 // Factory Methods to Create Data Sources Based on Config

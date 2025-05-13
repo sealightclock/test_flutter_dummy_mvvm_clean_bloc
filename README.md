@@ -32,7 +32,7 @@ The UI should be intuitive. 'my_string' can be modified by:
 ## Source file structure
 The file structure is as follows:
 
-### util,theme/ (and other app-level directories or files)
+### app/ (app-level directories or files)
 
 ### features/my_string/
 
@@ -105,10 +105,6 @@ The file structure is as follows:
 -------- my_string_dio_data_source.dart
 
 -------- my_string_http_data_source.dart
-
----- **di**/
-
------- my_string_dependency_injection.dart
 
 (together with some additional files/directories that are not specific to the MVVM Clean + Bloc 
 architecture)
