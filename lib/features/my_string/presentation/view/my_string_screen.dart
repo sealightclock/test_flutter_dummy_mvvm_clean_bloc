@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../app/di/di_config.dart';
 import '../../../../app/theme/app_styles.dart';
-import '../../../../app/util/app_constants.dart';
-import '../../../../app/util/feedback_type_enum.dart';
-import '../../../../app/util/global_feedback_handler.dart';
-import '../../../../app/util/result.dart';
-import '../../../../app/util/result_handler.dart';
+import '../../../../app/util/constants/app_constants.dart';
+import '../../../../app/util/enums/feedback_type_enum.dart';
+import '../../../../app/util/feedback/global_feedback_handler.dart';
+import '../../../../app/util/result/result.dart';
+import '../../../../app/util/result/result_handler.dart';
 import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'feedback_type_enum.dart'; // Updated to use inline enum methods
+import '../enums/feedback_type_enum.dart'; // Updated to use inline enum methods
 
 /// Global function to show user feedback messages consistently across the app.
 void showFeedback(BuildContext context, String message, FeedbackType type) {

@@ -1,4 +1,4 @@
-import 'app_constants.dart';
+import '../constants/app_constants.dart';
 
 /// Enum to select which Local Store to use
 enum LocalStore {

@@ -2,7 +2,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/data/repository
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/auth/domain/entity'
     '/auth_entity.dart';
 
-import '../../../../app/util/result.dart';
+import '../../../../app/util/result/result.dart';
 
 class GetAuthUseCase {
   final AuthRepository repository;

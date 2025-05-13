@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../../../../../app/util/app_constants.dart';
-import '../../../../../app/util/app_exception.dart';
+import '../../../../../app/util/constants/app_constants.dart';
+import '../../../../../app/util/error/app_exception.dart';
 
 /// Handles API calls to the backend server using Dio.
 /// Includes timeout settings for reliability.

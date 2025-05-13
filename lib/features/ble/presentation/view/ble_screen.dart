@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../../app/util/feedback_type_enum.dart';
-import '../../../../app/util/global_feedback_handler.dart';
+import '../../../../app/util/enums/feedback_type_enum.dart';
+import '../../../../app/util/feedback/global_feedback_handler.dart';
 import '../bloc/ble_bloc.dart';
 import '../bloc/ble_event.dart';
 import '../bloc/ble_state.dart';

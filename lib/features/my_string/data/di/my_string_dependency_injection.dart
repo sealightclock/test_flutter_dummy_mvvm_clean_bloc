@@ -7,8 +7,8 @@
 // For larger apps, consider using a library like Provider, Riverpod, or GetIt.
 // ===================================================================================
 
-import '../../../../app/util/local_store_enum.dart';
-import '../../../../app/util/remote_server_enum.dart';
+import '../../../../app/util/enums/local_store_enum.dart';
+import '../../../../app/util/enums/remote_server_enum.dart';
 import '../datasource/local/my_string_hive_data_source.dart';
 import '../datasource/local/my_string_local_data_source.dart';
 import '../datasource/local/my_string_shared_prefs_data_source.dart';

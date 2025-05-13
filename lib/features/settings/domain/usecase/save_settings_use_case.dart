@@ -1,4 +1,4 @@
-import '../../../../app/util/result.dart';
+import '../../../../app/util/result/result.dart';
 import '../../data/repository/settings_repository.dart';
 import '../entity/settings_entity.dart';
 

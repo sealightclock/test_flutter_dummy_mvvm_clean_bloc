@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
-import '../../../../../app/util/app_constants.dart';
-import '../../../../../app/util/app_exception.dart';
+import '../../../../../app/util/constants/app_constants.dart';
+import '../../../../../app/util/error/app_exception.dart';
 
 /// Handles API calls to the backend server using the http package.
 /// Includes timeout settings for reliability.
