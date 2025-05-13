@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../app/util/enums/app_tab_enum.dart';
 import '../../../../app/util/enums/feedback_type_enum.dart';
 import '../../../../app/util/feedback/global_feedback_handler.dart';
 import '../bloc/ble_bloc.dart';
@@ -155,8 +156,8 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('BLE Devices'),
-          centerTitle: true, // ✅ Fixes left-alignment flicker during app launch
+          title: Text(AppTab.ble.title),
+          centerTitle: true,
       ),
       body: BlocListener<BleBloc, BleState>(
         listener: (context, state) {

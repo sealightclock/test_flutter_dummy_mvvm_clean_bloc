@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../app/di/di_config.dart';
 import '../../../../app/theme/app_styles.dart';
 import '../../../../app/util/constants/app_constants.dart';
+import '../../../../app/util/enums/app_tab_enum.dart';
 import '../../../../app/util/enums/feedback_type_enum.dart';
 import '../../../../app/util/feedback/global_feedback_handler.dart';
 import '../../../../app/util/result/result.dart';
@@ -134,7 +135,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter MVVM Clean + Bloc'),
+        title: Text(AppTab.myString.title),
         centerTitle: true,
       ),
       body: OrientationBuilder(

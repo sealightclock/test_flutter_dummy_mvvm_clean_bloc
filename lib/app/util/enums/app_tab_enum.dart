@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
 enum AppTab {
-  auth('Auth', Icons.lock, false),
-  myString('MyString', Icons.storage, true),
-  account('A/C', Icons.person, true),
-  settings('Settings', Icons.settings, false),
-  ble('BLE', Icons.bluetooth, true),
-  status('Status', Icons.location_on, true);
+  auth('Auth', 'Authentication', Icons.lock, false),
+  myString('MyString', 'Flutter MVVM Clean + Bloc', Icons.storage, true),
+  account('A/C', 'Account Info', Icons.person, true),
+  settings('Settings', 'App Settings', Icons.settings, false),
+  ble('BLE', 'Bluetooth Devices', Icons.bluetooth, true),
+  status('Status', 'Vehicle Status', Icons.location_on, true);
 
-  final String label;
-  final IconData icon;
-  final bool _protected;
+  final String label;     // For BottomNavigationBar
+  final String title;     // For AppBar
+  final IconData icon;    // Icon for nav bar
+  final bool _protected;  // Access control
 
-  const AppTab(this.label, this.icon, this._protected);
+  const AppTab(this.label, this.title, this.icon, this._protected);
 
   bool isProtected() => _protected;
 
