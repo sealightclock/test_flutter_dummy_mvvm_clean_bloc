@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../app/util/constants/app_constants.dart';
+import '../../../../app/util/enums/app_tab_enum.dart';
 import '../../domain/entity/settings_entity.dart';
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';
@@ -26,7 +27,7 @@ class SettingsScreenBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text(AppConstants.settingsLabel),
+          title: Text(AppTab.settings.label),
           centerTitle: true, // ✅ Fixes left-alignment flicker during app launch
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(

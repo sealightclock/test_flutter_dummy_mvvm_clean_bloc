@@ -22,17 +22,6 @@ class AppConstants {
   static const String remoteServerLabelHttp = 'Http';
 
   // ---------------------------------------------------------------------------
-  // UI Labels for RootScreen (bottom navigation bar)
-  // ---------------------------------------------------------------------------
-  static const String authLabel = 'Auth';
-  static const String myStringLabel = 'MyString';
-  static const String accountLabel = 'A/C';
-  static const String settingsLabel = 'Settings';
-  static const String bleLabel = 'BLE';
-  static const String statusLabel = 'Status';
-  // TODO: Add more labels here
-
-  // ---------------------------------------------------------------------------
   // UI Labels for MyStringScreen (used in text fields, buttons, hints)
   // ---------------------------------------------------------------------------
 

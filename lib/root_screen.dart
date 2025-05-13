@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart' as my_logger;
 
 import 'app/core/storage/app_hive_data_source.dart';
-import 'app/util/constants/app_constants.dart';
 import 'app/util/enums/app_tab_enum.dart';
 import 'app/util/enums/feedback_type_enum.dart';
 import 'app/util/feedback/global_feedback_handler.dart';
@@ -20,54 +19,6 @@ final logger = my_logger.Logger();
 
 /// Global flag to force opening MyString screen (used by tests or special flows)
 bool forceStartOnMyStringScreen = false;
-
-/// Extension for tab metadata like label, icon, and protection
-extension AppTabExtension on AppTab {
-  String get label {
-    switch (this) {
-      case AppTab.auth:
-        return AppConstants.authLabel;
-      case AppTab.myString:
-        return AppConstants.myStringLabel;
-      case AppTab.account:
-        return AppConstants.accountLabel;
-      case AppTab.settings:
-        return AppConstants.settingsLabel;
-      case AppTab.ble:
-        return AppConstants.bleLabel;
-      case AppTab.status:
-        return AppConstants.statusLabel;
-      // TODO: Add more tabs here
-    }
-  }
-
-  IconData get icon {
-    switch (this) {
-      case AppTab.auth:
-        return Icons.lock;
-      case AppTab.myString:
-        return Icons.storage;
-      case AppTab.account:
-        return Icons.person;
-      case AppTab.settings:
-        return Icons.settings;
-      case AppTab.ble:
-        return Icons.bluetooth;
-      case AppTab.status:
-        return Icons.location_on;
-      // TODO: Add more tabs here
-    }
-  }
-
-  bool isProtected() => this == AppTab.myString || this == AppTab.account;
-
-  static AppTab fromString(String name) {
-    return AppTab.values.firstWhere(
-          (tab) => tab.name == name,
-      orElse: () => AppTab.auth,
-    );
-  }
-}
 
 /// RootScreen shows the main bottom navigation bar and manages screen switching
 class RootScreen extends StatefulWidget {
@@ -206,14 +157,11 @@ class RootScreenState extends State<RootScreen> {
     final bool isSelected = _selectedTab == tab;
     final bool enabled = !tab.isProtected() || isAuthenticated;
 
-    Color color;
-    if (!enabled) {
-      color = lightColor;
-    } else if (isSelected) {
-      color = strongColor;
-    } else {
-      color = mediumColor;
-    }
+    final color = !enabled
+        ? lightColor
+        : isSelected
+        ? strongColor
+        : mediumColor;
 
     return BottomNavigationBarItem(
       icon: Icon(tab.icon, color: color),
