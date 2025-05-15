@@ -25,7 +25,7 @@ sealed class MyStringState extends Equatable {
 // - Success (Loaded) state
 // - Error state
 
-/// Initial state of the BLoC (e.g., when the app or screen first loads).
+/// Initial state of the BLoC (e.g., when the core or screen first loads).
 ///
 /// Typically used before any data is loaded or interaction happens.
 final class MyStringInitialState extends MyStringState {

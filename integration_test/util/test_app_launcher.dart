@@ -8,7 +8,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentati
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/view/my_string_screen.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/root_screen.dart';
 
-/// Utility class to help launching the app during integration tests.
+/// Utility class to help launching the core during integration tests.
 ///
 /// Usage:
 /// ```dart
@@ -22,7 +22,7 @@ class TestAppLauncher {
 
   TestAppLauncher(this.tester);
 
-  /// Launch app with AuthBloc pre-configured to skip manual login.
+  /// Launch core with AuthBloc pre-configured to skip manual login.
   Future<void> launchApp() async {
     await tester.pumpWidget(const MyAppForTesting());
     await tester.pumpAndSettle();
@@ -50,7 +50,7 @@ class TestAppLauncher {
   Future<void> refreshAfterRestart() => prepareBloc();
 }
 
-/// Dummy test app with AuthBloc pre-initialized for guest login
+/// Dummy test core with AuthBloc pre-initialized for guest login
 class MyAppForTesting extends StatelessWidget {
   const MyAppForTesting({super.key});
 

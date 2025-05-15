@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Shared App Text Styles
 ///
-/// These styles are used throughout the app to keep font sizes, colors, and weights consistent.
+/// These styles are used throughout the core to keep font sizes, colors, and weights consistent.
 /// NOTE: These are static and not Theme-dependent yet, so they remain the same in Light/Dark mode.
 class AppTextStyles {
   static const TextStyle small = TextStyle(
@@ -36,7 +36,7 @@ class AppTextStyles {
 
 /// Shared App Dimensions
 ///
-/// These constants define common padding, margins, radius used in the app.
+/// These constants define common padding, margins, radius used in the core.
 class AppDimens {
   static const double screenPadding = 16.0;
   static const double cardElevation = 4.0;

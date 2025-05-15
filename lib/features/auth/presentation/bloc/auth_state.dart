@@ -10,7 +10,7 @@ sealed class AuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Initial state when app starts
+/// Initial state when core starts
 class AuthInitialState extends AuthState {
   const AuthInitialState();
 }

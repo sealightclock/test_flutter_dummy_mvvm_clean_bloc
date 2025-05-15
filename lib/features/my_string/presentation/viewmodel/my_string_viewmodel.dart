@@ -1,4 +1,4 @@
-import '../../../../app/util/result/result.dart';
+import '../../../../core/util/result/result.dart';
 import '../../domain/entity/my_string_entity.dart';
 import '../../domain/usecase/get_my_string_from_local_use_case.dart';
 import '../../domain/usecase/get_my_string_from_remote_use_case.dart';

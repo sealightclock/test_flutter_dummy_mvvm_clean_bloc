@@ -14,7 +14,7 @@ void main() {
   // Bind integration test environment (required boilerplate)
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Full app lifecycle with Auth and MyString persistence', (tester) async {
+  testWidgets('Full core lifecycle with Auth and MyString persistence', (tester) async {
     // ─────────────────────────────────────────────────────────────────────
     // 👟 Step 0a: Temporary splash screen during test setup
     // ─────────────────────────────────────────────────────────────────────
@@ -25,19 +25,19 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    // This ensures that the integration test still works even if an old app
+    // This ensures that the integration test still works even if an old core
     // was installed on the device with old Hive data.
     await resetHive();
 
     // ─────────────────────────────────────────────────────────────────────
     // ⏱️ Step 1: Start timer for debugging test duration
     // ─────────────────────────────────────────────────────────────────────
-    final timer = TestTimer('Full app lifecycle with Auth and MyString persistence');
+    final timer = TestTimer('Full core lifecycle with Auth and MyString persistence');
     timer.start();
 
     // ─────────────────────────────────────────────────────────────────────
-    // 🚀 Step 2: Launch the app
-    // ❗ Force app to start on MyStringScreen (ignore last seen screen)
+    // 🚀 Step 2: Launch the core
+    // ❗ Force core to start on MyStringScreen (ignore last seen screen)
     // ─────────────────────────────────────────────────────────────────────
     forceStartOnMyStringScreen = true; // ✅ Ensures test always starts on desired screen
     final launcher = TestAppLauncher(tester);
@@ -86,7 +86,7 @@ void main() {
     );
 
     // ─────────────────────────────────────────────────────────────────────
-    // 🔁 Step 7: Relaunch app to simulate real user relaunch
+    // 🔁 Step 7: Relaunch core to simulate real user relaunch
     // ─────────────────────────────────────────────────────────────────────
     await launcher.launchApp();
     await tester.pumpAndSettle();
@@ -106,7 +106,7 @@ void main() {
     }
 
     // ─────────────────────────────────────────────────────────────────────
-    // 🎯 Step 9: Refresh Bloc after app relaunch
+    // 🎯 Step 9: Refresh Bloc after core relaunch
     // ─────────────────────────────────────────────────────────────────────
     await launcher.refreshAfterRestart();
     final blocAfterRelaunch = launcher.bloc;

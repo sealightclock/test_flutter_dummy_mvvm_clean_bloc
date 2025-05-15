@@ -30,7 +30,7 @@ class HiveUtils {
 
   /// Centralized registration for all Hive adapters.
   ///
-  /// This ensures adapters are registered once app-wide.
+  /// This ensures adapters are registered once core-wide.
   static void registerAdapters() {
     if (!Hive.isAdapterRegistered(AuthEntityAdapter().typeId)) {
       Hive.registerAdapter(AuthEntityAdapter());

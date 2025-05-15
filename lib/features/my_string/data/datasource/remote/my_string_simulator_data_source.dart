@@ -1,4 +1,4 @@
-import '../../../../../app/util/constants/app_constants.dart';
+import '../../../../../core/util/constants/app_constants.dart';
 import '../../../domain/entity/my_string_entity.dart';
 import 'my_string_remote_data_source.dart';
 

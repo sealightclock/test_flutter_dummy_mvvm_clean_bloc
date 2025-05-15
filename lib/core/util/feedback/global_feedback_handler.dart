@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../enums/feedback_type_enum.dart'; // Updated to use inline enum methods
 
-/// Global function to show user feedback messages consistently across the app.
+/// Global function to show user feedback messages consistently across the core.
 void showFeedback(BuildContext context, String message, FeedbackType type) {
   final messenger = ScaffoldMessenger.of(context);
   messenger.clearSnackBars(); // Prevents queueing multiple messages

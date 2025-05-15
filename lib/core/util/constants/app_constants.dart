@@ -1,4 +1,4 @@
-/// Central place to define all string constants used across the app.
+/// Central place to define all string constants used across the core.
 ///
 /// Helps improve consistency, prevents hardcoded strings everywhere,
 /// and makes localization easier in the future.

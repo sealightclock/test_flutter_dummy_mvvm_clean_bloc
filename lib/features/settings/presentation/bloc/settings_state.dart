@@ -15,7 +15,7 @@ sealed class SettingsState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// State before any settings are loaded (used briefly on app start)
+/// State before any settings are loaded (used briefly on core start)
 class SettingsInitialState extends SettingsState {}
 
 /// State when settings have been successfully loaded or updated

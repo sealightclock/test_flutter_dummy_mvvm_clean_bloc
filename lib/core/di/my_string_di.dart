@@ -1,7 +1,7 @@
 // ===================================================================================
 // Manual Dependency Injection
 //
-// This file controls which Local and Remote Data Source will be used in the app.
+// This file controls which Local and Remote Data Source will be used in the core.
 //
 // For simple apps, manual DI is easy and fast.
 // For larger apps, consider using a library like Provider, Riverpod, or GetIt.

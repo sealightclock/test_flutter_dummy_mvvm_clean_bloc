@@ -1,5 +1,5 @@
-import '../../../../../app/util/constants/app_constants.dart';
-import '../../../../../app/util/error/app_exception.dart';
+import '../../../../../core/util/constants/app_constants.dart';
+import '../../../../../core/util/error/app_exception.dart';
 import '../../../domain/entity/my_string_entity.dart';
 import 'my_string_http_api.dart';
 import 'my_string_remote_data_source.dart';

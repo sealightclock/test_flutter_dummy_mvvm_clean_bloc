@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../app/util/enums/feedback_type_enum.dart';
-import '../../../../app/util/feedback/global_feedback_handler.dart';
+import '../../../../core/util/enums/feedback_type_enum.dart';
+import '../../../../core/util/feedback/global_feedback_handler.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/account_bloc.dart';
 import '../bloc/account_event.dart';
@@ -36,7 +36,7 @@ class AccountScreenBody extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Account'),
-        centerTitle: true, // ✅ Fixes left-alignment flicker during app launch
+        centerTitle: true, // ✅ Fixes left-alignment flicker during core launch
       ),
       body: Center(
         child: ElevatedButton.icon(

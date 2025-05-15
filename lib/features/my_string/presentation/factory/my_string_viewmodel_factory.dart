@@ -1,6 +1,6 @@
-import '../../../../app/di/di_config.dart';
-import '../../../../app/di/di_initializer.dart';
-import '../../../../app/di/my_string_di.dart';
+import '../../../../core/di/di_config.dart';
+import '../../../../core/di/di_initializer.dart';
+import '../../../../core/di/my_string_di.dart';
 import '../../data/repository/my_string_repository_impl.dart';
 import '../../domain/usecase/get_my_string_from_local_use_case.dart';
 import '../../domain/usecase/get_my_string_from_remote_use_case.dart';

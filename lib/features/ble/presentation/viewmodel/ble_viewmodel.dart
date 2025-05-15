@@ -1,6 +1,6 @@
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
-import '../../../../app/core/permission/permission_manager.dart';
+import '../../../../core/core/permission/permission_manager.dart';
 import '../../domain/entity/ble_device_entity.dart';
 import '../../domain/usecase/connect_to_ble_device_usecase.dart';
 import '../../domain/usecase/scan_ble_devices_usecase.dart';

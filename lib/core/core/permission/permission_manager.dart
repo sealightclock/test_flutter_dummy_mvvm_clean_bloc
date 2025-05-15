@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-/// Abstract list of permissions that can be requested by app features.
+/// Abstract list of permissions that can be requested by core features.
 ///
 /// This keeps feature logic decoupled from platform-specific Permission enums.
 enum AppPermission {

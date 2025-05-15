@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../app/util/result/result.dart';
+import '../../../../core/util/result/result.dart';
 import '../../../../main.dart'; // Needed for triggerAppRebuild()
 import '../bloc/settings_event.dart';
 import '../bloc/settings_state.dart';
 import '../factory/settings_viewmodel_factory.dart';
 import '../viewmodel/settings_viewmodel.dart';
 
-/// BLoC that manages app settings such as dark mode and font size.
+/// BLoC that manages core settings such as dark mode and font size.
 ///
 /// It loads initial settings from Hive and handles user-triggered updates.
 /// After saving new settings, it triggers a UI rebuild using [triggerAppRebuild].

@@ -9,18 +9,18 @@ sealed class MyStringEvent {
 }
 
 // There are 2 types of events for a UI view:
-// - system events (e.g., app launch)
+// - system events (e.g., core launch)
 // - user events (e.g., button click)
 
-/// Event: Triggered when the app needs to load the string value.
-/// This might be called when the app starts or when the screen is opened.
+/// Event: Triggered when the core needs to load the string value.
+/// This might be called when the core starts or when the screen is opened.
 final class MyStringLoadEvent extends MyStringEvent {
   const MyStringLoadEvent(); // Constructor with no parameters.
 
   // No additional data is needed for this event.
 }
 
-/// Event: Triggered when the app launches and needs to load the string value.
+/// Event: Triggered when the core launches and needs to load the string value.
 /// This is a system event.
 final class MyStringUpdateFromLocalEvent extends MyStringEvent {
   final String value; // The new value retrieved from the local store.

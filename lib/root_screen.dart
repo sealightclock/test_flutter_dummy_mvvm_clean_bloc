@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart' as my_logger;
 
-import 'app/core/storage/app_hive_data_source.dart';
-import 'app/util/enums/app_tab_enum.dart';
-import 'app/util/enums/feedback_type_enum.dart';
-import 'app/util/feedback/global_feedback_handler.dart';
+import 'core/core/storage/app_hive_data_source.dart';
+import 'core/util/enums/app_tab_enum.dart';
+import 'core/util/enums/feedback_type_enum.dart';
+import 'core/util/feedback/global_feedback_handler.dart';
 import 'features/account/presentation/view/account_screen.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';

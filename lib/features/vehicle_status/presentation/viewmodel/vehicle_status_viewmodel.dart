@@ -1,4 +1,4 @@
-import '../../../../app/core/permission/permission_manager.dart';
+import '../../../../core/core/permission/permission_manager.dart';
 import '../../domain/entity/vehicle_status_entity.dart';
 import '../../domain/usecase/get_vehicle_status_use_case.dart';
 

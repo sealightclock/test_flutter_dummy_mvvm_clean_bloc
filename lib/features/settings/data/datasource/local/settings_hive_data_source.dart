@@ -1,11 +1,11 @@
-import '../../../../../app/util/constants/app_constants.dart';
-import '../../../../../app/util/hive/hive_utils.dart';
+import '../../../../../core/util/constants/app_constants.dart';
+import '../../../../../core/util/hive/hive_utils.dart';
 import '../../../domain/entity/settings_entity.dart';
 
-/// Data source to manage reading and writing app settings using Hive.
+/// Data source to manage reading and writing core settings using Hive.
 ///
 /// This class delegates Hive initialization and adapter registration
-/// to [HiveUtils] for simplicity and consistency across the app.
+/// to [HiveUtils] for simplicity and consistency across the core.
 class SettingsHiveDataSource {
   /// Retrieve settings from Hive or return a default instance.
   Future<SettingsEntity> getSettings() async {

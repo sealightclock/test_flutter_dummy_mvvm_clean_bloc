@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'app/theme/app_theme.dart';
+import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
@@ -9,7 +9,7 @@ import 'features/settings/presentation/bloc/settings_event.dart';
 import 'features/settings/presentation/bloc/settings_state.dart';
 import 'root_screen.dart';
 
-/// The root widget of the app, wrapped with BlocProviders.
+/// The root widget of the core, wrapped with BlocProviders.
 ///
 /// - It listens to settings changes (like dark mode, font size)
 /// - It builds the MaterialApp with the correct theme
@@ -66,7 +66,7 @@ class MyAppState extends State<MyApp> {
 
               return MaterialApp(
                 title: 'Flutter MVVM Clean + Bloc Demo',
-                restorationScopeId: 'app', // Helps in restoring state after app restarts
+                restorationScopeId: 'core', // Helps in restoring state after core restarts
                 theme: theme,
                 home: const RootScreen(),
               );

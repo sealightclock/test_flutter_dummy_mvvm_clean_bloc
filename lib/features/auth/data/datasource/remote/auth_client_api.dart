@@ -27,14 +27,14 @@ class AuthClientApi {
   /// Simulate signup API call
   Future<AuthEntity> signup(String username, String password) async {
     await Future.delayed(const Duration(seconds: 1)); // Simulate network delay
-    // TODO: In real app, you would POST to server here
+    // TODO: In real core, you would POST to server here
     return AuthEntity(username: username, password: password, isLoggedIn: true);
   }
 
   /// Simulate login API call
   Future<AuthEntity> login(String username, String password) async {
     await Future.delayed(const Duration(seconds: 1)); // Simulate network delay
-    // TODO: In real app, you would POST and validate user credentials
+    // TODO: In real core, you would POST and validate user credentials
     return AuthEntity(username: username, password: password, isLoggedIn: true);
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../app/util/enums/app_tab_enum.dart';
+import '../../../../core/util/enums/app_tab_enum.dart';
 import '../bloc/vehicle_status_bloc.dart';
 import '../bloc/vehicle_status_event.dart';
 import '../bloc/vehicle_status_state.dart';
@@ -17,7 +17,7 @@ class VehicleStatusScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(AppTab.status.title),
-          centerTitle: true, // to be consistent with app themes
+          centerTitle: true, // to be consistent with core themes
         ),
         body: BlocBuilder<VehicleStatusBloc, VehicleStatusState>(
           builder: (context, state) {
