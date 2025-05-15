@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/util/enums/app_tab_enum.dart';
-import '../../../../core/util/enums/feedback_type_enum.dart';
-import '../../../../core/util/feedback/global_feedback_handler.dart';
-import '../../../../core/util/result/result.dart';
+import '../../../../core/enums/feedback_type_enum.dart';
+import '../../../../core/feedback/global_feedback_handler.dart';
+import '../../../../core/result/result.dart';
 import '../../../../root_screen.dart';
+import '../../../../shared/util/enums/app_tab_enum.dart';
 import '../../domain/entity/auth_entity.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';

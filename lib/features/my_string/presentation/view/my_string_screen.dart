@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/di/di_config.dart';
+import '../../../../core/enums/feedback_type_enum.dart';
+import '../../../../core/feedback/global_feedback_handler.dart';
+import '../../../../core/result/result.dart';
+import '../../../../core/result/result_handler.dart';
 import '../../../../core/theme/app_styles.dart';
-import '../../../../core/util/constants/app_constants.dart';
-import '../../../../core/util/enums/app_tab_enum.dart';
-import '../../../../core/util/enums/feedback_type_enum.dart';
-import '../../../../core/util/feedback/global_feedback_handler.dart';
-import '../../../../core/util/result/result.dart';
-import '../../../../core/util/result/result_handler.dart';
+import '../../../../shared/di/di_config.dart';
+import '../../../../shared/util/constants/app_constants.dart';
+import '../../../../shared/util/enums/app_tab_enum.dart';
 import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';

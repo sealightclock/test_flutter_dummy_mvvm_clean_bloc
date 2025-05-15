@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../../core/util/constants/app_constants.dart';
+import '../../../../../shared/util/constants/app_constants.dart';
 import '../../../domain/entity/my_string_entity.dart';
 import 'my_string_local_data_source.dart';
 

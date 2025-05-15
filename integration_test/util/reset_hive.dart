@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:test_flutter_dummy_mvvm_clean_bloc/core/util/constants/app_constants.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/shared/util/constants/app_constants.dart';
 
 /// Helper to reset Hive database for clean integration testing.
 ///

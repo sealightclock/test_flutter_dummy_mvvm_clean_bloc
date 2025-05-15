@@ -1,4 +1,4 @@
-import '../../../../core/util/result/result.dart';
+import '../../../../core/result/result.dart';
 import '../../domain/entity/auth_entity.dart';
 import '../../domain/usecase/get_auth_use_case.dart';
 import '../../domain/usecase/guest_login_use_case.dart';

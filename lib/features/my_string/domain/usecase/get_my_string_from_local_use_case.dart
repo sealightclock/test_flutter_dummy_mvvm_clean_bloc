@@ -1,7 +1,7 @@
 // This UseCase file is responsible for retrieving "my_string" from a local store,
 // using the Domain Layer and clean error handling.
 
-import '../../../../core/util/result/result.dart';
+import '../../../../core/result/result.dart';
 import '../../data/repository/my_string_repository.dart';
 import '../entity/my_string_entity.dart';
 

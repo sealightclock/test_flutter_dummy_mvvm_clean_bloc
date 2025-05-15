@@ -1,5 +1,5 @@
-import '../../../../../core/util/constants/app_constants.dart';
-import '../../../../../core/util/hive/hive_utils.dart';
+import '../../../../../shared/util/constants/app_constants.dart';
+import '../../../../../shared/util/hive/hive_utils.dart';
 import '../../../domain/entity/auth_entity.dart';
 
 /// Data source handler to manage authentication locally using Hive.

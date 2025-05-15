@@ -1,5 +1,5 @@
-import '../../../../../core/util/constants/app_constants.dart';
-import '../../../../../core/util/hive/hive_utils.dart';
+import '../../../../../shared/util/constants/app_constants.dart';
+import '../../../../../shared/util/hive/hive_utils.dart';
 import '../../../domain/entity/settings_entity.dart';
 
 /// Data source to manage reading and writing core settings using Hive.
