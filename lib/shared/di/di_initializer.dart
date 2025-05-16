@@ -1,4 +1,4 @@
-import '../../shared/di/di_config.dart';
+import 'di_config.dart';
 
 /// Helper to initialize Dependency Injection configuration
 /// based on environment, platform, or test context.
