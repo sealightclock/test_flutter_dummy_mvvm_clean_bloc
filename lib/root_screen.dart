@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart' as my_logger;
-import 'package:test_flutter_dummy_mvvm_clean_bloc/shared/storage/app_hive_data_source.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/shared_feature/app_hive_data_source.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/shared/util/enums/app_tab_enum.dart';
 
 import 'core/enums/feedback_type_enum.dart';

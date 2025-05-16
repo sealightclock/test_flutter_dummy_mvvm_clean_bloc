@@ -1,5 +1,5 @@
 import '../../../../../shared/util/constants/app_constants.dart';
-import '../../../../../shared/util/hive/hive_utils.dart';
+import '../../../../shared_feature/hive_utils.dart';
 import '../../../domain/entity/my_string_entity.dart';
 import 'my_string_local_data_source.dart';
 
