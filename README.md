@@ -29,10 +29,10 @@ The UI should be intuitive. 'my_string' can be modified by:
 - backend server
 - local storage at app launch
 
-## Source file structure
-The file structure is as follows:
+## Source file structure for "my_string" feature
+The file structure for this "my_string" feature is as follows:
 
-### app/ (app-level directories or files)
+lib/
 
 ### features/my_string/
 
@@ -106,6 +106,11 @@ The file structure is as follows:
 
 -------- my_string_http_data_source.dart
 
+------ di/
+
+-------- my_string_di.dart (for dependency injection)
+
+
 (together with some additional files/directories that are not specific to the MVVM Clean + Bloc 
 architecture)
 
@@ -158,6 +163,32 @@ All of these features, including:
 
 have been implemented using the same "MVVM Clean + Bloc" design pattern and a similar file structure. Some 
 minor features may be implemented using a simplified version of the "MVVM Clean + Bloc" architecture.
+
+## Source file structure for "my_string" feature
+The file structure for the entire app is as follows:
+
+lib/
+
+-- main.dart
+
+-- app.dart
+
+-- root_screen.dart
+
+-- features/
+
+-- shared/
+
+-- core/
+
+It also follows a layered structure:
+
+main.dart -> app.dart -> root_screen.dart -> features/ -> shared/ -> core/.
+
+The "shared" directory houses app-level shared code, such as constants.
+
+The "core" directory contains core code that can be used even by outside apps, such as 
+Permission Manager. This is a candidate for a separate library.
 
 This project is evolving based on our understanding of Flutter, especially of the "MVVM Clean + 
 Bloc" architecture.

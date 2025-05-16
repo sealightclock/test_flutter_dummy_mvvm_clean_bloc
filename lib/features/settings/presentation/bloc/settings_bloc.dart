@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/result/result.dart';
-import '../../../../main.dart'; // Needed for triggerAppRebuild()
+import '../../../../main.dart'; // TODO: This is anti-pattern: Feature code
+// should not depend on main.dart.
 import '../bloc/settings_event.dart';
 import '../bloc/settings_state.dart';
 import '../factory/settings_viewmodel_factory.dart';
@@ -53,6 +54,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
               }
               // immediately
               await Future.delayed(const Duration(milliseconds: 300));
+              // TODO: This is anti-pattern: Feature code should not depend
+              //  on main.dart.
               triggerAppRebuild(); // Trigger theme/font rebuild
               break;
 

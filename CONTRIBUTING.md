@@ -180,6 +180,22 @@ app.dart: MyApp() -> MaterialApp() -> RootScreen()
 
 root_screen.dart: RootScreen() -> <Feature>Screen()
 
+Set up the app's file structure as follows:
+
+lib/
+
+-- main.dart
+
+-- app.dart
+
+-- root_screen.dart
+
+-- features/
+
+-- shared/
+
+-- core/
+
 ### App Permissions
 
 The handling of app permissions is challenging: It is not a product feature, rather, it sits on 

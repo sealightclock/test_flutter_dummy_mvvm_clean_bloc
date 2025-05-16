@@ -4,7 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/enums/feedback_type_enum.dart';
 import '../../../../core/feedback/global_feedback_handler.dart';
 import '../../../../core/result/result.dart';
-import '../../../../root_screen.dart';
+import '../../../../root_screen.dart'; // TODO: This might be anti-pattern:
+// Usually a feature screen should not depend on RootScreen. However, since
+// we want to implement this special requirement: Pressing "Guest Login"
+// should lead to MyStringScreen, we have to access RootScreen.
 import '../../../../shared/enums/app_tab_enum.dart';
 import '../../domain/entity/auth_entity.dart';
 import '../bloc/auth_bloc.dart';
