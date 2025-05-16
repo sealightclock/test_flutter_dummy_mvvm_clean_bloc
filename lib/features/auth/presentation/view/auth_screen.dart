@@ -5,7 +5,7 @@ import '../../../../core/enums/feedback_type_enum.dart';
 import '../../../../core/feedback/global_feedback_handler.dart';
 import '../../../../core/result/result.dart';
 import '../../../../root_screen.dart';
-import '../../../../shared/util/enums/app_tab_enum.dart';
+import '../../../../shared/enums/app_tab_enum.dart';
 import '../../domain/entity/auth_entity.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';

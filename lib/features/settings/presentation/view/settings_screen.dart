@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../shared/util/constants/app_constants.dart';
-import '../../../../shared/util/enums/app_tab_enum.dart';
+import '../../../../shared/constants/app_constants.dart';
+import '../../../../shared/enums/app_tab_enum.dart';
 import '../../domain/entity/settings_entity.dart';
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';

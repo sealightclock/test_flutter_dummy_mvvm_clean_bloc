@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../shared/util/enums/app_tab_enum.dart';
+import '../../../../shared/enums/app_tab_enum.dart';
 import '../bloc/vehicle_status_bloc.dart';
 import '../bloc/vehicle_status_event.dart';
 import '../bloc/vehicle_status_state.dart';

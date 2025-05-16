@@ -1,5 +1,5 @@
-import '../util/enums/local_store_enum.dart';
-import '../util/enums/remote_server_enum.dart';
+import '../enums/local_store_enum.dart';
+import '../enums/remote_server_enum.dart';
 
 /// Singleton-style config class for managing DI choices in the core.
 class DiConfig {

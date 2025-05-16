@@ -1,5 +1,5 @@
-import '../../shared/util/constants/app_constants.dart';
-import '../../shared/util/enums/app_tab_enum.dart';
+import '../../shared/constants/app_constants.dart';
+import '../../shared/enums/app_tab_enum.dart';
 import 'hive_utils.dart';
 
 /// App-wide Hive data source to manage global values like last seen screen.

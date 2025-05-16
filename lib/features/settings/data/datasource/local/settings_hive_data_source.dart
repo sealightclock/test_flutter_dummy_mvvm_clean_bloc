@@ -1,4 +1,4 @@
-import '../../../../../shared/util/constants/app_constants.dart';
+import '../../../../../shared/constants/app_constants.dart';
 import '../../../../shared_feature/hive_utils.dart';
 import '../../../domain/entity/settings_entity.dart';
 

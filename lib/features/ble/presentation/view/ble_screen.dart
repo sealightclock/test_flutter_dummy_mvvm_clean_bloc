@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/enums/feedback_type_enum.dart';
 import '../../../../core/feedback/global_feedback_handler.dart';
-import '../../../../shared/util/enums/app_tab_enum.dart';
+import '../../../../shared/enums/app_tab_enum.dart';
 import '../bloc/ble_bloc.dart';
 import '../bloc/ble_event.dart';
 import '../bloc/ble_state.dart';
