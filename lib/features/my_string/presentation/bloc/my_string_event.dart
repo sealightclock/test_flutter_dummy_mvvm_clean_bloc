@@ -17,7 +17,7 @@ sealed class MyStringEvent {
 final class MyStringLoadEvent extends MyStringEvent {
   const MyStringLoadEvent(); // Constructor with no parameters.
 
-  // No additional data is needed for this event.
+// No additional data is needed for this event.
 }
 
 /// Event: Triggered when the core launches and needs to load the string value.

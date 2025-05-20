@@ -11,8 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 ///
 /// It keeps pumping the widget tree until the desired text appears
 /// or until a timeout occurs (default 10 seconds).
-Future<void> pumpUntilFound(
-    WidgetTester tester,
+Future<void> pumpUntilFound(WidgetTester tester,
     String text, {
       Duration timeout = const Duration(seconds: 10),
     }) async {
@@ -21,7 +20,10 @@ Future<void> pumpUntilFound(
   while (DateTime.now().isBefore(endTime)) {
     await tester.pump(const Duration(milliseconds: 200)); // Pump the widget tree
 
-    if (find.text(text).evaluate().isNotEmpty) {
+    if (find
+        .text(text)
+        .evaluate()
+        .isNotEmpty) {
       return; // Text found, return success
     }
   }
@@ -34,8 +36,7 @@ Future<void> pumpUntilFound(
 ///
 /// [matcher] is a function that returns true if the state is the one we want.
 /// [timeout] is how long to wait before failing the test.
-Future<void> waitForBlocState<B extends BlocBase<S>, S>(
-    WidgetTester tester,
+Future<void> waitForBlocState<B extends BlocBase<S>, S>(WidgetTester tester,
     B bloc,
     bool Function(S) matcher, {
       Duration timeout = const Duration(seconds: 10),
@@ -54,12 +55,15 @@ Future<void> waitForBlocState<B extends BlocBase<S>, S>(
 }
 
 /// Pumps the widget tree until a specific widget is found, or timeout.
-Future<void> pumpUntilFoundWidget(WidgetTester tester, Finder finder, {Duration timeout = const Duration(seconds: 10)}) async {
+Future<void> pumpUntilFoundWidget(WidgetTester tester, Finder finder,
+    {Duration timeout = const Duration(seconds: 10)}) async {
   final endTime = DateTime.now().add(timeout);
 
   while (DateTime.now().isBefore(endTime)) {
     await tester.pump(const Duration(milliseconds: 100));
-    if (finder.evaluate().isNotEmpty) {
+    if (finder
+        .evaluate()
+        .isNotEmpty) {
       return;
     }
   }
@@ -73,16 +77,17 @@ Future<void> pumpUntilFoundWidget(WidgetTester tester, Finder finder, {Duration 
 /// [timeoutSeconds] is the maximum time to wait before giving up.
 ///
 /// Throws an exception if the widget is not found within timeout.
-Future<void> waitForWidgetReady<T extends Widget>(
-    WidgetTester tester, {
-      int timeoutSeconds = 10,
-    }) async {
+Future<void> waitForWidgetReady<T extends Widget>(WidgetTester tester, {
+  int timeoutSeconds = 10,
+}) async {
   final finder = find.byType(T);
   final endTime = DateTime.now().add(Duration(seconds: timeoutSeconds));
 
   while (DateTime.now().isBefore(endTime)) {
     await tester.pump(const Duration(milliseconds: 100));
-    if (finder.evaluate().isNotEmpty) {
+    if (finder
+        .evaluate()
+        .isNotEmpty) {
       return; // Found the widget
     }
   }
@@ -98,12 +103,10 @@ Future<void> waitForWidgetReady<T extends Widget>(
 /// - [bloc] is the Bloc we are monitoring.
 /// - [statePredicate] defines what Bloc state we are waiting for.
 /// - [expectedText] defines what UI text we expect to appear.
-Future<void> waitForBlocStateAndUi<B extends BlocBase<S>, S>(
-    WidgetTester tester,
+Future<void> waitForBlocStateAndUi<B extends BlocBase<S>, S>(WidgetTester tester,
     B bloc,
     bool Function(S state) statePredicate,
-    String expectedText,
-    ) async {
+    String expectedText,) async {
   const maxTries = 50; // 50 * 200ms = 10 seconds
   int tries = 0;
 
@@ -115,7 +118,10 @@ Future<void> waitForBlocStateAndUi<B extends BlocBase<S>, S>(
   while (tries < maxTries) {
     final currentState = bloc.state;
     final hasCorrectState = statePredicate(currentState);
-    final hasExpectedText = find.text(expectedText).evaluate().isNotEmpty;
+    final hasExpectedText = find
+        .text(expectedText)
+        .evaluate()
+        .isNotEmpty;
 
     if (hasCorrectState && hasExpectedText) {
       success = true;

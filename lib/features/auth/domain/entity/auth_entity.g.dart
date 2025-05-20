@@ -26,8 +26,7 @@ class AuthEntityAdapter extends TypeAdapter<AuthEntity> {
   @override
   void write(BinaryWriter writer, AuthEntity obj) {
     writer
-      ..writeByte(3)
-      ..writeByte(0)
+      ..writeByte(3)..writeByte(0)
       ..write(obj.username)
       ..writeByte(1)
       ..write(obj.password)
@@ -41,7 +40,7 @@ class AuthEntityAdapter extends TypeAdapter<AuthEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AuthEntityAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+          other is AuthEntityAdapter &&
+              runtimeType == other.runtimeType &&
+              typeId == other.typeId;
 }

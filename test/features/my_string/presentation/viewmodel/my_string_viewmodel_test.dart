@@ -9,7 +9,9 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/use
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/viewmodel/my_string_viewmodel.dart';
 
 class MockGetLocal extends Mock implements GetMyStringFromLocalUseCase {}
+
 class MockStoreLocal extends Mock implements StoreMyStringToLocalUseCase {}
+
 class MockGetRemote extends Mock implements GetMyStringFromRemoteUseCase {}
 
 void main() {
@@ -55,9 +57,10 @@ void main() {
 
     await viewModel.storeMyStringToLocal('Save Me');
 
-    verify(() => mockStoreLocal.call(
-        any(that: predicate<MyStringEntity>((entity) => entity.value == 'Save Me'))
-    )).called(1);
+    verify(() =>
+        mockStoreLocal.call(
+            any(that: predicate<MyStringEntity>((entity) => entity.value == 'Save Me'))
+        )).called(1);
   });
 
   test('getMyStringFromRemote returns expected string', () async {

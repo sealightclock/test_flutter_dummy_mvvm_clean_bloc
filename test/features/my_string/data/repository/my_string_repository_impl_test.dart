@@ -6,6 +6,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/data/repos
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/entity/my_string_entity.dart';
 
 class MockLocalDataSource extends Mock implements MyStringLocalDataSource {}
+
 class MockRemoteDataSource extends Mock implements MyStringRemoteDataSource {}
 
 void main() {

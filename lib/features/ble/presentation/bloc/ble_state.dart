@@ -5,6 +5,7 @@ import '../../domain/entity/ble_device_entity.dart';
 
 abstract class BleState extends Equatable {
   const BleState();
+
   @override
   List<Object?> get props => [];
 

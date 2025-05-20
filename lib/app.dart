@@ -49,10 +49,14 @@ class MyAppState extends State<MyApp> {
         child: MultiBlocProvider(
           providers: [
             BlocProvider<AuthBloc>(
-              create: (_) => AuthBloc()..add(const AuthUnauthenticatedEvent()),
+              create: (_) =>
+              AuthBloc()
+                ..add(const AuthUnauthenticatedEvent()),
             ),
             BlocProvider<SettingsBloc>(
-              create: (_) => SettingsBloc()..add(SettingsLoadEvent()),
+              create: (_) =>
+              SettingsBloc()
+                ..add(SettingsLoadEvent()),
             ),
           ],
           child: BlocBuilder<SettingsBloc, SettingsState>(

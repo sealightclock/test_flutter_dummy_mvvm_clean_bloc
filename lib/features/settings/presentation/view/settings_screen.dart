@@ -14,7 +14,9 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SettingsBloc()..add(SettingsLoadEvent()),
+      create: (_) =>
+      SettingsBloc()
+        ..add(SettingsLoadEvent()),
       child: const SettingsScreenBody(),
     );
   }
@@ -27,8 +29,8 @@ class SettingsScreenBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(AppTab.settings.title),
-          centerTitle: true,
+        title: Text(AppTab.settings.title),
+        centerTitle: true,
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {

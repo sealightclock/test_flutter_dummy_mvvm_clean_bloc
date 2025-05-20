@@ -88,7 +88,7 @@ class AuthScreenState extends State<AuthScreen> {
             _bloc.add(const AuthUnauthenticatedEvent());
             _showSnackBarMessage(
                 'You are not authenticated.', FeedbackType.warning);
-            }
+          }
           break;
 
         case Failure<AuthEntity>(:final message):
@@ -103,7 +103,8 @@ class AuthScreenState extends State<AuthScreen> {
   }
 
   void _signUp() async {
-    _showSnackBarMessage('You are signed up as a new user and logged in. You should be able to use all features.', FeedbackType.info);
+    _showSnackBarMessage('You are signed up as a new user and logged in. You should be able to use all features.',
+        FeedbackType.info);
 
     _bloc.add(const AuthStartEvent());
     try {
@@ -123,7 +124,7 @@ class AuthScreenState extends State<AuthScreen> {
             _bloc.add(const AuthUnauthenticatedEvent());
             _showSnackBarMessage(
                 'You are not authenticated.', FeedbackType.warning);
-            }
+          }
           break;
 
         case Failure<AuthEntity>(:final message):
@@ -212,10 +213,10 @@ class AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 16),
                   OutlinedButton(
                     onPressed: () {
-                        // Do not check mounted for button callbacks.
-                        setState(() {
-                          _showMoreOptions = !_showMoreOptions;
-                        });
+                      // Do not check mounted for button callbacks.
+                      setState(() {
+                        _showMoreOptions = !_showMoreOptions;
+                      });
                       //}
                     },
                     child: Text(_showMoreOptions ? 'Fewer Options' : 'More Options'),

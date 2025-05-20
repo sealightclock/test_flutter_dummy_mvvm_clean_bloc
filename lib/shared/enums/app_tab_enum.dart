@@ -8,10 +8,10 @@ enum AppTab {
   ble('BLE', 'Bluetooth Devices', Icons.bluetooth, true),
   status('Status', 'Vehicle Status', Icons.location_on, true);
 
-  final String label;     // For BottomNavigationBar
-  final String title;     // For AppBar
-  final IconData icon;    // Icon for nav bar
-  final bool _protected;  // Access control
+  final String label; // For BottomNavigationBar
+  final String title; // For AppBar
+  final IconData icon; // Icon for nav bar
+  final bool _protected; // Access control
 
   const AppTab(this.label, this.title, this.icon, this._protected);
 

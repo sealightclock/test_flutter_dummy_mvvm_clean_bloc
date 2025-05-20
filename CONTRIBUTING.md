@@ -2,8 +2,8 @@
 
 ## Introduction
 
-This document lists some guidelines for developing a Flutter app, based on the MVVM Clean + Bloc 
-architecture. Most of these guidelines will be grouped into the architecture's layers; some will 
+This document lists some guidelines for developing a Flutter app, based on the MVVM Clean + Bloc
+architecture. Most of these guidelines will be grouped into the architecture's layers; some will
 be handled specifically.
 
 Refer to file "README.md" for an example where these guidelines have been applied.
@@ -18,7 +18,7 @@ The View usually represents a screen.
 
 #### [GUIDELINE] Screen class
 
-A Screen (View) class should not see ViewModel and its lower-level classes. It should only see 
+A Screen (View) class should not see ViewModel and its lower-level classes. It should only see
 Bloc-related classes: View -> Bloc.
 
 When adding or refactoring screens, please follow:
@@ -51,11 +51,11 @@ Always call:
 
 Supported FeedbackType values:
 
-•	error: For critical issues.
+• error: For critical issues.
 
-•	warning: For recoverable problems.
+• warning: For recoverable problems.
 
-•	info: For normal user notifications.
+• info: For normal user notifications.
 
 This ensures consistent Snackbar behavior, styling, and UX across the app.
 
@@ -94,7 +94,8 @@ A ViewModel class should only see UseCase classes: ViewModel -> UseCase.
 There should be a same number of ViewModel functions and UseCases.
 
 #### [GUIDELINE] ViewModelFactory
-Use a factory to facilitate the creation of a ViewModel instance, as it's built in multiple 
+
+Use a factory to facilitate the creation of a ViewModel instance, as it's built in multiple
 steps, up from DataSource, Repository to UseCase.
 
 ## Domain Layer
@@ -105,32 +106,32 @@ The Domain layer contains Entity and UseCase classes.
 
 The constructor of an Entity class should use named parameters to avoid confusion.
 
-In general, an Entity class should have a Hive adapter whose code can be generated using 
+In general, an Entity class should have a Hive adapter whose code can be generated using
 bash command:
 
 `flutter packages pub run build_runner build --delete-conflicting-outputs`
 
 #### [GUIDELINE] Entity conversion
 
-Some Entity classes may be used by all the (Presentation, Domain, Data) layers. However, different 
-layers may have different versions of a same entity. Conversions of the entity 
+Some Entity classes may be used by all the (Presentation, Domain, Data) layers. However, different
+layers may have different versions of a same entity. Conversions of the entity
 between layers may be needed and should be done in the ViewModel or in the Repository.
 
 ### UseCase
 
 A UseCase class should only see Repository classes: UseCase -> Repository.
 
-Use call(), rather than execute(), to run a UseCase. This makes the UseCase class look like 
+Use call(), rather than execute(), to run a UseCase. This makes the UseCase class look like
 a function.
 
 #### [GUIDELINE] Return value of a UseCase function
 
-In general, especially for a single-result operation, wrap the return value of a UseCase function 
-into a Result<T> class with Success<T> or Failure<String> so that the Presentation layer (View 
+In general, especially for a single-result operation, wrap the return value of a UseCase function
+into a Result<T> class with Success<T> or Failure<String> so that the Presentation layer (View
 or Bloc) can handle the result easily rather than having to deal with exceptions.
 
-However, there are some exceptions to this guideline. For example, a Stream return value should 
-not be wrapped into Result<T>; instead, it should be returned as is so that the Presentation 
+However, there are some exceptions to this guideline. For example, a Stream return value should
+not be wrapped into Result<T>; instead, it should be returned as is so that the Presentation
 layer can listen to the stream.
 
 ## Data Layer
@@ -147,19 +148,19 @@ Data processing for the Domain layer, such as throttling, should be done in the 
 
 ### DataSource
 
-A DataSource class usually deal with one specific type, such as local storage, remote server, or 
+A DataSource class usually deal with one specific type, such as local storage, remote server, or
 testing/simulated data.
 
-DataSource streams raw updates (as fast as they arrive). 
+DataSource streams raw updates (as fast as they arrive).
 
-When using a package or API to access data, try to initialize it inside the DataSource class 
+When using a package or API to access data, try to initialize it inside the DataSource class
 rather than in the main() or other top-level functions.
 
 #### [GUIDELINE] Local storage
 
 For local storage, prefer Hive over SharedPreferences and databases.
 
-Consider one Hive Box per feature. Use a utility class for all the features to avoid code 
+Consider one Hive Box per feature. Use a utility class for all the features to avoid code
 duplication (i.e., apply the DRY principle).
 
 #### [GUIDELINE] Remote server
@@ -198,7 +199,7 @@ lib/
 
 ### App Permissions
 
-The handling of app permissions is challenging: It is not a product feature, rather, it sits on 
+The handling of app permissions is challenging: It is not a product feature, rather, it sits on
 the framework layer so can not fit into any of the components of the MVVM Clean + Bloc architecture.
 
 #### [GUIDELINE] Specify app permissions in AndroidManifest.xml and Info.plist.
@@ -209,11 +210,11 @@ Failure to do so may result in crashes or silent failures which are very hard to
 
 In View, check whether required permissions have been granted before processing an event.
 
-Use a centralized PermissionManager to handle app permissions, like a platform service. Plug 
+Use a centralized PermissionManager to handle app permissions, like a platform service. Plug
 PermissionManager into ViewModel just like a special UseCase.
 
 #### [GUIDELINE] Be careful when using package "permission_handler".
 
-It has been noticed that, while package "permission_handler" is flexible, it will silently fail 
-on iOS Simulator when dealing with location permissions. Use "geolocator" package's own 
+It has been noticed that, while package "permission_handler" is flexible, it will silently fail
+on iOS Simulator when dealing with location permissions. Use "geolocator" package's own
 permission API instead.

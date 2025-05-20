@@ -47,7 +47,9 @@ void main() {
     // 🧑 Step 3: Simulate guest login if Auth screen is shown
     // ─────────────────────────────────────────────────────────────────────
     final moreOptionsFinder = find.text('More Options');
-    if (moreOptionsFinder.evaluate().isNotEmpty) {
+    if (moreOptionsFinder
+        .evaluate()
+        .isNotEmpty) {
       await tester.tap(moreOptionsFinder);
       await tester.pumpAndSettle();
 
@@ -95,7 +97,9 @@ void main() {
     // 🧑 Step 8: Handle guest login again if Auth screen reappears
     // ─────────────────────────────────────────────────────────────────────
     final moreOptionsFinderAfterRelaunch = find.text('More Options');
-    if (moreOptionsFinderAfterRelaunch.evaluate().isNotEmpty) {
+    if (moreOptionsFinderAfterRelaunch
+        .evaluate()
+        .isNotEmpty) {
       await tester.tap(moreOptionsFinderAfterRelaunch);
       await tester.pumpAndSettle();
 

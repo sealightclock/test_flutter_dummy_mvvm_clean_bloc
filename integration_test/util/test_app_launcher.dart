@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,7 +35,9 @@ class TestAppLauncher {
     final end = DateTime.now().add(timeout);
     while (DateTime.now().isBefore(end)) {
       await tester.pumpAndSettle();
-      if (myStringBodyFinder.evaluate().isNotEmpty) {
+      if (myStringBodyFinder
+          .evaluate()
+          .isNotEmpty) {
         final state = tester.firstState<MyStringScreenBodyState>(myStringBodyFinder);
         bloc = state.exposedBloc;
         return;
@@ -57,7 +58,8 @@ class MyAppForTesting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Force guest login to bypass Auth screen
-    final authBloc = AuthBloc()..add(const AuthGuestAuthenticatedEvent());
+    final authBloc = AuthBloc()
+      ..add(const AuthGuestAuthenticatedEvent());
 
     return BlocProvider<AuthBloc>(
       create: (_) => authBloc,

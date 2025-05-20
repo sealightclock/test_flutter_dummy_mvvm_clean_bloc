@@ -5,6 +5,7 @@ import '../../domain/entity/my_string_entity.dart';
 /// Usually we need to access data from a local store and a remote server.
 abstract class MyStringRepository {
   Future<MyStringEntity> getMyStringFromLocal();
+
   Future<void> storeMyStringToLocal(MyStringEntity value);
 
   Future<MyStringEntity> getMyStringFromRemote();

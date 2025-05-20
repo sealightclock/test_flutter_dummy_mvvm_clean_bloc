@@ -7,9 +7,7 @@ import '../datasource/platform/vehicle_status_data_source.dart';
 class VehicleStatusRepository {
   late final VehicleStatusDataSource dataSource;
 
-  VehicleStatusRepository(
-      {required this.dataSource}
-  );
+  VehicleStatusRepository({required this.dataSource});
 
   /// Returns a [Stream] of [VehicleStatusEntity] throttled to 1 event per second.
   Stream<VehicleStatusEntity> getVehicleStatusStream() {

@@ -216,16 +216,19 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
                 const SizedBox(height: AppDimens.screenPadding * 2),
                 if (state is MyStringInitialState)
                   Text(AppConstants.initialHintText, style: AppTextStyles.italicHint)
-                else if (state is MyStringLoadingState)
-                  const Center(child: CircularProgressIndicator())
-                else if (state is MyStringSuccessState) ...[
-                    Text(AppConstants.currentValueLabel, style: AppTextStyles.medium),
-                    Text(state.value, style: AppTextStyles.large),
-                  ]
-                  else if (state is MyStringErrorState)
-                      Text('Error: ${state.message}', style: AppTextStyles.error)
+                else
+                  if (state is MyStringLoadingState)
+                    const Center(child: CircularProgressIndicator())
+                  else
+                    if (state is MyStringSuccessState) ...[
+                      Text(AppConstants.currentValueLabel, style: AppTextStyles.medium),
+                      Text(state.value, style: AppTextStyles.large),
+                    ]
                     else
-                      const SizedBox.shrink(),
+                      if (state is MyStringErrorState)
+                        Text('Error: ${state.message}', style: AppTextStyles.error)
+                      else
+                        const SizedBox.shrink(),
               ],
             ),
           ),

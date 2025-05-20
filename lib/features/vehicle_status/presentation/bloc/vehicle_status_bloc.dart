@@ -13,7 +13,9 @@ class VehicleStatusBloc extends Bloc<VehicleStatusEvent, VehicleStatusState> {
   final VehicleStatusViewModel _viewModel;
   StreamSubscription? _subscription;
 
-  VehicleStatusBloc() : _viewModel = VehicleStatusViewModelFactory.create(), super(VehicleStatusInitialState()) {
+  VehicleStatusBloc()
+      : _viewModel = VehicleStatusViewModelFactory.create(),
+        super(VehicleStatusInitialState()) {
     on<VehicleStatusStartEvent>(_onStarted);
     on<VehicleStatusHandlePermissionEvent>(_onPermissionChecked);
     on<VehicleStatusLoadEvent>((event, emit) => emit(VehicleStatusLoadedState(event.vehicleStatus)));

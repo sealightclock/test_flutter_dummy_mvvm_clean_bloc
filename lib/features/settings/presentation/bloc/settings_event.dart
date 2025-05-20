@@ -8,5 +8,6 @@ class SettingsLoadEvent extends SettingsEvent {}
 
 class SettingsUpdateEvent extends SettingsEvent {
   final SettingsEntity settings;
+
   const SettingsUpdateEvent(this.settings);
 }

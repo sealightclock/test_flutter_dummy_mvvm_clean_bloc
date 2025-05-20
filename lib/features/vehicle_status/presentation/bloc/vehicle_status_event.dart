@@ -9,10 +9,12 @@ class VehicleStatusStartEvent extends VehicleStatusEvent {}
 
 class VehicleStatusHandlePermissionEvent extends VehicleStatusEvent {
   final bool permissionGranted;
+
   const VehicleStatusHandlePermissionEvent(this.permissionGranted);
 }
 
 class VehicleStatusLoadEvent extends VehicleStatusEvent {
   final VehicleStatusEntity vehicleStatus;
+
   const VehicleStatusLoadEvent(this.vehicleStatus);
 }

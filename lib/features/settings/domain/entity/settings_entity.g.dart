@@ -25,8 +25,7 @@ class SettingsEntityAdapter extends TypeAdapter<SettingsEntity> {
   @override
   void write(BinaryWriter writer, SettingsEntity obj) {
     writer
-      ..writeByte(2)
-      ..writeByte(0)
+      ..writeByte(2)..writeByte(0)
       ..write(obj.darkMode)
       ..writeByte(1)
       ..write(obj.fontSize);
@@ -38,7 +37,7 @@ class SettingsEntityAdapter extends TypeAdapter<SettingsEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SettingsEntityAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+          other is SettingsEntityAdapter &&
+              runtimeType == other.runtimeType &&
+              typeId == other.typeId;
 }

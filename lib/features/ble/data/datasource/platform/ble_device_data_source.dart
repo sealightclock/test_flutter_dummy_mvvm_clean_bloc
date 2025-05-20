@@ -20,7 +20,9 @@ class BleDeviceDataSource implements BleDeviceRepository {
 
     await for (final device in _ble.scanForDevices(withServices: [])) {
       final id = device.id.toUpperCase();
-      final name = device.name.trim().isEmpty ? "Unknown Device" : device.name.trim();
+      final name = device.name
+          .trim()
+          .isEmpty ? "Unknown Device" : device.name.trim();
 
       int? manufacturerId;
       String? manufacturerHex;

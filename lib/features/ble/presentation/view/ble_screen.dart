@@ -156,8 +156,8 @@ class _BleScreenBodyState extends State<BleScreenBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(AppTab.ble.title),
-          centerTitle: true,
+        title: Text(AppTab.ble.title),
+        centerTitle: true,
       ),
       body: BlocListener<BleBloc, BleState>(
         listener: (context, state) {
@@ -184,12 +184,14 @@ class _BleScreenBodyState extends State<BleScreenBody> {
                 if (lastScanTime != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Text('Last scanned: ${_formatTime(lastScanTime!)}', style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                    child: Text('Last scanned: ${_formatTime(lastScanTime!)}', style: const TextStyle(fontSize: 14,
+                        color: Colors.grey)),
                   ),
                 if (state.devices != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Text('Devices found: ${state.devices.length}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    child: Text('Devices found: ${state.devices.length}', style: const TextStyle(fontSize: 14,
+                        fontWeight: FontWeight.bold)),
                   ),
                 Expanded(
                   child: _buildBody(state, isScanning),
@@ -242,7 +244,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
       );
     } else if (isScanning) {
       return const Center(child: CircularProgressIndicator());
-    // TODO: For now, let's just show the devices for the last scan.
+      // TODO: For now, let's just show the devices for the last scan.
     } else if (state is BleDevicesFoundState || state is BleDeviceDisconnectedState) {
       return ListView.builder(
         itemCount: state.devices.length,
@@ -259,23 +261,23 @@ class _BleScreenBodyState extends State<BleScreenBody> {
             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: InkWell(
               onTap: () => _connectToDevice(device.id),
-              
+
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      (device.manufacturerHex != null) ?
-                      "Raw: ${device.manufacturerHex?.substring(0, min
-                              (manuHexLength, 20))}" :
-                      "Raw: null"
+                        (device.manufacturerHex != null) ?
+                        "Raw: ${device.manufacturerHex?.substring(0, min
+                          (manuHexLength, 20))}" :
+                        "Raw: null"
                     ),
                     Text("ID: ${device.id}"),
                     Text("Name: ${device.name}"),
                     if (manuId != null)
                       Text("Manufacturer: 0x${manuId.toRadixString(16)
-                       .toUpperCase()} ($manuName)"),
+                          .toUpperCase()} ($manuName)"),
                     Text("RSSI: ${device.rssi}"),
                     Text("Status: $connectionStatus"),
                   ],
@@ -299,7 +301,7 @@ class _BleScreenBodyState extends State<BleScreenBody> {
           ],
         ),
       );
-    // TODO: This case is not used for now.
+      // TODO: This case is not used for now.
     } else if (state is BleDeviceDisconnectedState) {
       return Center(
         child: Column(

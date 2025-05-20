@@ -7,8 +7,8 @@ class MyStringSimulatorDataSource implements MyStringRemoteDataSource {
   /// Fetches data from the simulator.
   @override
   Future<MyStringEntity> getMyString() async {
-      await Future.delayed(Duration(seconds: AppConstants.simulatorDelaySeconds));
-      return MyStringEntity(value: '${AppConstants.prefixSimulationValue}${DateTime.now()}');
+    await Future.delayed(Duration(seconds: AppConstants.simulatorDelaySeconds));
+    return MyStringEntity(value: '${AppConstants.prefixSimulationValue}${DateTime.now()}');
   }
 
   @override

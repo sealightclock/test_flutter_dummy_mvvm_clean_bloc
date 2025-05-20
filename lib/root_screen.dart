@@ -124,7 +124,7 @@ class RootScreenState extends State<RootScreen> {
                 ? VehicleStatusScreen()
                 : const Center(child: Text('Please log in first.'));
             break;
-          // TODO: Add more tabs here
+        // TODO: Add more tabs here
         }
 
         return Scaffold(

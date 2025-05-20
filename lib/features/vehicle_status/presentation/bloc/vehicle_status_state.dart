@@ -16,6 +16,7 @@ class VehicleStatusPermissionDeniedState extends VehicleStatusState {}
 
 class VehicleStatusLoadedState extends VehicleStatusState {
   final VehicleStatusEntity vehicleStatus;
+
   const VehicleStatusLoadedState(this.vehicleStatus);
 
   @override

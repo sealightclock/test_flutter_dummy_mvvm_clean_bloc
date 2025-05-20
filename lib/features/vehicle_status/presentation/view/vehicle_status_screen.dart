@@ -13,7 +13,9 @@ class VehicleStatusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => VehicleStatusBloc()..add(VehicleStatusStartEvent()),
+      create: (_) =>
+      VehicleStatusBloc()
+        ..add(VehicleStatusStartEvent()),
       child: Scaffold(
         appBar: AppBar(
           title: Text(AppTab.status.title),

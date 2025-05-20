@@ -132,7 +132,8 @@ class BleBloc extends Bloc<BleEvent, BleState> {
               _autoReconnectOrRescan();
             }
           } else {
-            logger.e("TFDB: BleBloc: _onDeviceSelectedEvent: unexpected update.connectionState=[${update.connectionState}]");
+            logger.e(
+                "TFDB: BleBloc: _onDeviceSelectedEvent: unexpected update.connectionState=[${update.connectionState}]");
           }
         } else {
           logger.w("TFDB: BleBloc: _onDeviceSelectedEvent: emit.isDone==true while update=[$update]");
@@ -191,7 +192,7 @@ class BleBloc extends Bloc<BleEvent, BleState> {
 
       add(BleDisconnectDeviceEvent(_lastConnectedDeviceId!));
     } else if (update.connectionState == DeviceConnectionState.connecting) {
-        _startConnectionTimeoutTimer(_lastConnectedDeviceId!);
+      _startConnectionTimeoutTimer(_lastConnectedDeviceId!);
     } else {
       logger.e("TFDB: BleBloc: "
           "_handleConnectionUpdateOutsideEmit: Unexpected connection state: "
