@@ -111,11 +111,30 @@ bash command:
 
 `flutter packages pub run build_runner build --delete-conflicting-outputs`
 
-#### [GUIDELINE] Entity conversion
+#### [GUIDELINE] Entity conversion between layers may be needed.
 
 Some Entity classes may be used by all the (Presentation, Domain, Data) layers. However, different
 layers may have different versions of a same entity. Conversions of the entity
-between layers may be needed and should be done in the ViewModel or in the Repository.
+between layers may be needed and should be done in the ViewModel or in the Repository. A 
+proposed file structure for different Entity classes is as follows:
+
+presentation/
+
+-- model/
+
+---- <Feature>Model.dart
+
+domain/
+
+-- entity/
+
+---- <Feature>Entity.dart
+
+data/
+
+-- dto/
+
+---- <Feature>Dto.dart
 
 ### UseCase
 

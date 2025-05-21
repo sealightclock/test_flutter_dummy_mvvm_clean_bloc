@@ -1,7 +1,3 @@
-import 'package:hive/hive.dart';
-
-part 'my_string_entity.g.dart';
-
 /// Immutable entity class representing a string value.
 ///
 /// "Entity" is alternatively known as "Model" or "DataModel" or "Entry".
@@ -13,12 +9,8 @@ part 'my_string_entity.g.dart';
 ///
 /// This "Entity" class is primarily used in the Domain layer.
 ///
-/// Make this class Hive-compatible by adding the @HiveType annotation.
-/// This should work for both Hive and SharedPreferences on the Data layer.
-/// However, it may need to adapt to the Presentation layer.
-@HiveType(typeId: 0)
+/// However, it may need to be converted to the Presentation and Domain layers.
 class MyStringEntity {
-  @HiveField(0)
   final String value;
 
   // Use "required" for clarity.

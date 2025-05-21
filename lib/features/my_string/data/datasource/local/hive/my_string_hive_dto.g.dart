@@ -1,28 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'my_string_entity.dart';
+part of 'my_string_hive_dto.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class MyStringEntityAdapter extends TypeAdapter<MyStringEntity> {
+class MyStringHiveDtoAdapter extends TypeAdapter<MyStringHiveDto> {
   @override
   final int typeId = 0;
 
   @override
-  MyStringEntity read(BinaryReader reader) {
+  MyStringHiveDto read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return MyStringEntity(
+    return MyStringHiveDto(
       value: fields[0] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, MyStringEntity obj) {
+  void write(BinaryWriter writer, MyStringHiveDto obj) {
     writer
       ..writeByte(1)
       ..writeByte(0)
@@ -35,7 +35,7 @@ class MyStringEntityAdapter extends TypeAdapter<MyStringEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MyStringEntityAdapter &&
+      other is MyStringHiveDtoAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -73,8 +73,6 @@ lib/
 
 ------ my_string_entity.dart
 
------- my_string_entity.g.dart (auto-generated for Hive adaptor)
-
 ---- **usecase**/
 
 ------ get_my_string_from_local_use_case.dart
@@ -97,23 +95,37 @@ lib/
 
 -------- my_string_local_data_source.dart
 
--------- my_string_shared_prefs_data_source.dart
+-------- shared_prefs/
 
--------- my_string_hive_data_source.dart
+---------- my_string_shared_prefs_data_source.dart
+
+-------- hive/
+
+---------- my_string_hive_dto.dart
+
+---------- my_string_hive_dto.g.dart (auto-generated for Hive adaptor)
+
+---------- my_string_hive_data_source.dart
 
 ------ remote/
 
--------- my_string_dio_api.dart
-
--------- my_string_http_api.dart
-
 -------- my_string_remote_data_source.dart
 
--------- my_string_simulator_data_source.dart
+-------- dio/
 
--------- my_string_dio_data_source.dart
+---------- my_string_dio_api.dart
 
--------- my_string_http_data_source.dart
+---------- my_string_dio_data_source.dart
+
+-------- http/
+
+---------- my_string_http_api.dart
+
+---------- my_string_http_data_source.dart
+
+-------- simulator/
+
+---------- my_string_simulator_data_source.dart
 
 ------ di/
 
