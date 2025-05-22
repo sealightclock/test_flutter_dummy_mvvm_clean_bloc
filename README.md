@@ -89,6 +89,14 @@ lib/
 
 #### -- ***data***/
 
+---- dto/
+
+------ my_string_hive_dto.dart (Data layer entity)
+
+------ my_string_hive_dto.g.dart (auto-generated for Hive adaptor)
+
+------ my_string_hive_data_mapper.dart (for conversion between Data and Domain layers)
+
 ---- **repository**/
 
 ------ my_string_repository.dart
@@ -106,12 +114,6 @@ lib/
 ---------- my_string_shared_prefs_data_source.dart
 
 -------- hive/
-
----------- my_string_hive_dto.dart (Data layer entity)
-
----------- my_string_hive_dto.g.dart (auto-generated for Hive adaptor)
-
----------- my_string_hive_data_mapper.dart (for conversion between Data and Domain layers)
 
 ---------- my_string_hive_data_source.dart
 
@@ -137,7 +139,7 @@ lib/
 
 ------ di/
 
--------- my_string_di.dart (for dependency injection)
+-------- my_string_di.dart (for manual dependency injection)
 
 (together with some additional files/directories that are not specific to the MVVM Clean + Bloc
 architecture)

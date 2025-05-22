@@ -1,4 +1,4 @@
-import '../../../../domain/entity/my_string_entity.dart';
+import '../../domain/entity/my_string_entity.dart';
 import 'my_string_hive_dto.dart';
 
 /// A utility class to convert between Domain Entity and Presentation Model.

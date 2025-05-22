@@ -1,6 +1,6 @@
 import '../../../../shared/constants/app_constants.dart';
 import '../../domain/entity/my_string_entity.dart';
-import '../datasource/local/hive/my_string_hive_data_mapper.dart';
+import '../dto/my_string_hive_data_mapper.dart';
 import '../datasource/local/hive/my_string_hive_data_source.dart';
 import '../datasource/local/my_string_local_data_source.dart';
 import '../datasource/remote/my_string_remote_data_source.dart';

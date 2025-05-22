@@ -1,6 +1,6 @@
 import '../../../../../../shared/constants/app_constants.dart';
 import '../../../../../shared_feature/hive_utils.dart';
-import 'my_string_hive_dto.dart';
+import '../../../dto/my_string_hive_dto.dart';
 
 /// Specialized Hive-only local data source that avoids using domain entities.
 ///

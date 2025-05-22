@@ -1,7 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../auth/domain/entity/auth_entity.dart';
-import '../my_string/data/datasource/local/hive/my_string_hive_dto.dart';
+import '../my_string/data/dto/my_string_hive_dto.dart';
 import '../settings/domain/entity/settings_entity.dart';
 
 /// Utility class to centralize Hive initialization and operations.
