@@ -55,6 +55,8 @@ lib/
 
 ------ my_string_model.dart (Presentation layer entity)
 
+------ my_string_ui_mapper.dart (for conversion between Presentation and Domain layers)
+
 ---- **bloc**/
 
 ------ my_string_bloc.dart
@@ -108,6 +110,8 @@ lib/
 ---------- my_string_hive_dto.dart (Data layer entity)
 
 ---------- my_string_hive_dto.g.dart (auto-generated for Hive adaptor)
+
+---------- my_string_hive_data_mapper.dart (for conversion between Data and Domain layers)
 
 ---------- my_string_hive_data_source.dart
 

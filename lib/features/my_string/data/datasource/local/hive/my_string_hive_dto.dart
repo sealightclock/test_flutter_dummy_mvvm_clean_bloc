@@ -1,7 +1,5 @@
 import 'package:hive/hive.dart';
 
-import '../../../../domain/entity/my_string_entity.dart';
-
 part 'my_string_hive_dto.g.dart';
 
 /// Immutable Data Transfer Object (DTO) class representing a string value.
@@ -18,6 +16,4 @@ class MyStringHiveDto {
 
   // Use "required" for clarity.
   const MyStringHiveDto({required this.value});
-
-  MyStringEntity toEntity() => MyStringEntity(value: value);
 }
