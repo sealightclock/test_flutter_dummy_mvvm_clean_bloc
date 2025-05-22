@@ -47,7 +47,7 @@ class MyStringBloc extends Bloc<MyStringEvent, MyStringState> {
 
           try {
             final value = await event.fetchFromServer();
-            if (value.isNotEmpty) {
+            if (value.value.isNotEmpty) {
               if (state is! MyStringSuccessState ||
                   (state as MyStringSuccessState).value != value) {
                 emit(MyStringSuccessState(value));

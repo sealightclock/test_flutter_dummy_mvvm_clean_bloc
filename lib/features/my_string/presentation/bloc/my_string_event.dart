@@ -1,3 +1,5 @@
+import '../model/MyStringModel.dart';
+
 /// Sealed base class for all events that can be sent to MyStringBloc.
 /// Events represent user actions or system triggers that should result in
 /// state changes.
@@ -23,7 +25,7 @@ final class MyStringLoadEvent extends MyStringEvent {
 /// Event: Triggered when the core launches and needs to load the string value.
 /// This is a system event.
 final class MyStringUpdateFromLocalEvent extends MyStringEvent {
-  final String value; // The new value retrieved from the local store.
+  final MyStringModel value; // The new value retrieved from the local store.
 
   const MyStringUpdateFromLocalEvent(this.value); // Constructor to pass the local stored value.
 }
@@ -31,14 +33,14 @@ final class MyStringUpdateFromLocalEvent extends MyStringEvent {
 /// Event: Triggered when the user manually updates the string via text field
 /// + "Update from User" button.
 final class MyStringUpdateFromUserEvent extends MyStringEvent {
-  final String value; // The new value entered by the user.
+  final MyStringModel value; // The new value entered by the user.
 
   const MyStringUpdateFromUserEvent(this.value); // Constructor to pass the user input.
 }
 
 /// Event: Triggered when the user presses "Update from Server" button.
 final class MyStringUpdateFromServerEvent extends MyStringEvent {
-  final Future<String> Function() fetchFromServer; // The function to fetch value from server.
+  final Future<MyStringModel> Function() fetchFromServer; // The function to fetch value from server.
 
   const MyStringUpdateFromServerEvent(this.fetchFromServer); // Constructor to pass in the fetch function.
 }

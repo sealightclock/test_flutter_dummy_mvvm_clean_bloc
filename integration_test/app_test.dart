@@ -83,7 +83,7 @@ void main() {
     await waitForBlocStateAndUi<MyStringBloc, MyStringState>(
       tester,
       bloc,
-          (state) => state is MyStringSuccessState && state.value == testValue,
+          (state) => state is MyStringSuccessState && state.value.value == testValue,
       testValue,
     );
 
@@ -121,7 +121,7 @@ void main() {
     await waitForBlocStateAndUi<MyStringBloc, MyStringState>(
       tester,
       blocAfterRelaunch,
-          (state) => state is MyStringSuccessState && state.value == testValue,
+          (state) => state is MyStringSuccessState && state.value.value == testValue,
       testValue,
     );
 

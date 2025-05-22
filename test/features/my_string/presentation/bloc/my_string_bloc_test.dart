@@ -3,17 +3,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_bloc.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_event.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/bloc/my_string_state.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/model/MyStringModel.dart';
 
 void main() {
   group('MyStringBloc', () {
     blocTest<MyStringBloc, MyStringState>(
       'emits [Loading, Loaded] when UpdateMyStringFromServerEvent succeeds',
       build: () => MyStringBloc(),
-      act: (bloc) => bloc.add(MyStringUpdateFromServerEvent(() async => 'Server Value')),
+      act: (bloc) => bloc.add(MyStringUpdateFromServerEvent(() async => MyStringModel(value: 'Server Value'))),
       expect: () =>
       [
         isA<MyStringLoadingState>(),
-        isA<MyStringSuccessState>().having((s) => s.value, 'value', 'Server Value'),
+        isA<MyStringSuccessState>().having((s) => s.value.value, 'value', 'Server Value'),
       ],
     );
 
@@ -34,20 +35,20 @@ void main() {
     blocTest<MyStringBloc, MyStringState>(
       'emits [Loaded] when UpdateMyStringFromUserEvent is added',
       build: () => MyStringBloc(),
-      act: (bloc) => bloc.add(MyStringUpdateFromUserEvent('User Input')),
+      act: (bloc) => bloc.add(MyStringUpdateFromUserEvent(MyStringModel(value: 'User Input'))),
       expect: () =>
       [
-        isA<MyStringSuccessState>().having((s) => s.value, 'value', 'User Input'),
+        isA<MyStringSuccessState>().having((s) => s.value.value, 'value', 'User Input'),
       ],
     );
 
     blocTest<MyStringBloc, MyStringState>(
       'emits [Loaded] when UpdateMyStringFromLocalEvent is added',
       build: () => MyStringBloc(),
-      act: (bloc) => bloc.add(MyStringUpdateFromLocalEvent('Local Value')),
+      act: (bloc) => bloc.add(MyStringUpdateFromLocalEvent(MyStringModel(value: 'Local Value'))),
       expect: () =>
       [
-        isA<MyStringSuccessState>().having((s) => s.value, 'value', 'Local Value'),
+        isA<MyStringSuccessState>().having((s) => s.value.value, 'value', 'Local Value'),
       ],
     );
   });

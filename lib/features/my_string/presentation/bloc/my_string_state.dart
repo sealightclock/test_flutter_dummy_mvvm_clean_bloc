@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:logger/logger.dart' as my_logger;
 
+import '../model/MyStringModel.dart';
+
 final logger = my_logger.Logger();
 
 /// Sealed base class for all states emitted by MyStringBloc.
@@ -49,7 +51,7 @@ final class MyStringLoadingState extends MyStringState {
 ///
 /// This state carries the actual string value.
 final class MyStringSuccessState extends MyStringState {
-  final String value; // The current value of the string
+  final MyStringModel value; // The current value of the string
 
   MyStringSuccessState(this.value) {
     logger.d('TFDB: MyStringSuccessState: MyStringSuccessState: $value');

@@ -51,6 +51,10 @@ lib/
 
 ------ my_string_screen.dart
 
+---- model/
+
+------ my_string_model.dart (Presentation layer entity)
+
 ---- **bloc**/
 
 ------ my_string_bloc.dart
@@ -71,7 +75,7 @@ lib/
 
 ---- **entity**/
 
------- my_string_entity.dart
+------ my_string_entity.dart (Domain layer entity)
 
 ---- **usecase**/
 
@@ -101,7 +105,7 @@ lib/
 
 -------- hive/
 
----------- my_string_hive_dto.dart
+---------- my_string_hive_dto.dart (Data layer entity)
 
 ---------- my_string_hive_dto.g.dart (auto-generated for Hive adaptor)
 

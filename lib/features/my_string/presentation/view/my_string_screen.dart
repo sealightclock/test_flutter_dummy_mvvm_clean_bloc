@@ -13,6 +13,7 @@ import '../../domain/entity/my_string_entity.dart';
 import '../bloc/my_string_bloc.dart';
 import '../bloc/my_string_event.dart';
 import '../bloc/my_string_state.dart';
+import '../model/MyStringModel.dart';
 
 /// This screen demonstrates how to apply MVVM Clean + Bloc architecture
 /// to manage a simple string stored locally and remotely.
@@ -60,10 +61,10 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     bloc.viewModel.getMyStringFromLocal().then((result) {
       switch (result) {
         case Success<MyStringEntity>(:final data):
-          bloc.add(MyStringUpdateFromLocalEvent(data.value));
+          bloc.add(MyStringUpdateFromLocalEvent(MyStringModel(value: data.value)));
           break;
         case Failure<MyStringEntity>(:final message):
-          bloc.add(MyStringUpdateFromLocalEvent('Error loading: $message'));
+          bloc.add(MyStringUpdateFromLocalEvent(MyStringModel(value: 'Error loading: $message')));
           break;
       }
       textEditController.clear();
@@ -95,7 +96,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
     final newValue = textEditController.text.trim();
     final previousState = bloc.state;
 
-    bloc.add(MyStringUpdateFromUserEvent(newValue));
+    bloc.add(MyStringUpdateFromUserEvent(MyStringModel(value: newValue)));
 
     await handleResult<void>(
       futureResult: bloc.viewModel.storeMyStringToLocal(newValue),
@@ -112,7 +113,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
   }
 
   void updateFromServer() async {
-    Future<String> fetchAndStore() async {
+    Future<MyStringModel> fetchAndStore() async {
       final result = await bloc.viewModel.getMyStringFromRemote();
 
       final value = await handleResultReturning<MyStringEntity, String>(
@@ -125,7 +126,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
         await bloc.viewModel.storeMyStringToLocal(value);
       }
 
-      return value;
+      return MyStringModel(value: value);
     }
 
     bloc.add(MyStringUpdateFromServerEvent(fetchAndStore));
@@ -222,7 +223,7 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
                   else
                     if (state is MyStringSuccessState) ...[
                       Text(AppConstants.currentValueLabel, style: AppTextStyles.medium),
-                      Text(state.value, style: AppTextStyles.large),
+                      Text(state.value.value, style: AppTextStyles.large),
                     ]
                     else
                       if (state is MyStringErrorState)
