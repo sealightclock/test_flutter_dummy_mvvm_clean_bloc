@@ -8,30 +8,41 @@ import '../../domain/usecase/store_my_string_to_local_use_case.dart';
 import '../viewmodel/my_string_viewmodel.dart';
 
 /// Factory class to create the MyStringViewModel from ground up:
-/// Data Sources -> Repository -> Use Cases -> ViewModel
+/// Data Sources → Repository → Use Cases → ViewModel
 class MyStringViewModelFactory {
   /// Static method to create a fully wired-up MyStringViewModel
+  ///
+  /// This method uses manual Dependency Injection (DI) to select the desired
+  /// local and remote data sources, then wires them into a repository.
+  /// The repository handles all conversions and is then passed to Use Cases,
+  /// which are in turn passed to the ViewModel.
   static MyStringViewModel create() {
-    // Create Data Sources using Dependency Injection (DI)
-    // For now: Configure DI to use Hive and Simulator, manually.
-    // TODO: In the future, find a better way:
+    // Initialize DI configuration, such as selecting Hive or SharedPrefs.
     DiInitializer.init();
 
+    // Create local and remote data sources using factory methods.
+    // SharedPrefs → localDataSource; Hive → hiveDataSource.
     final localDataSource = createLocalDataSource(DiConfig.localStore);
+    final hiveDataSource = createHiveDtoDataSource(DiConfig.localStore);
     final remoteDataSource = createRemoteDataSource(DiConfig.remoteServer);
 
-    // Create Repository
+    // Create the repository, which bridges domain and data layers.
+    // It will handle DTO ↔ Entity conversion if needed.
     final repository = MyStringRepositoryImpl(
       localDataSource: localDataSource,
+      hiveDataSource: hiveDataSource,
       remoteDataSource: remoteDataSource,
     );
 
-    // Create Use Cases
-    final getMyStringFromLocalUseCase = GetMyStringFromLocalUseCase(repository: repository);
-    final storeMyStringToLocalUseCase = StoreMyStringToLocalUseCase(repository: repository);
-    final getMyStringFromRemoteUseCase = GetMyStringFromRemoteUseCase(repository: repository);
+    // Create Use Cases that expose specific business actions.
+    final getMyStringFromLocalUseCase =
+    GetMyStringFromLocalUseCase(repository: repository);
+    final storeMyStringToLocalUseCase =
+    StoreMyStringToLocalUseCase(repository: repository);
+    final getMyStringFromRemoteUseCase =
+    GetMyStringFromRemoteUseCase(repository: repository);
 
-    // Finally, create ViewModel
+    // Finally, create the ViewModel that connects the UI with the use cases.
     return MyStringViewModel(
       getMyStringFromLocalUseCase: getMyStringFromLocalUseCase,
       storeMyStringToLocalUseCase: storeMyStringToLocalUseCase,

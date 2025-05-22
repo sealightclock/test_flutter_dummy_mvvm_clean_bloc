@@ -214,6 +214,10 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
                   ],
                 ),
                 const SizedBox(height: AppDimens.screenPadding * 2),
+
+                // ─────────────────────────────────────────────────────────────
+                // 🧠 State-based UI: render based on current MyStringState
+                // ─────────────────────────────────────────────────────────────
                 if (state is MyStringInitialState)
                   Text(AppConstants.initialHintText, style: AppTextStyles.italicHint)
                 else
@@ -222,7 +226,13 @@ class MyStringScreenBodyState extends State<MyStringScreenBody> with WidgetsBind
                   else
                     if (state is MyStringSuccessState) ...[
                       Text(AppConstants.currentValueLabel, style: AppTextStyles.medium),
-                      Text(state.value.value, style: AppTextStyles.large),
+
+                      // ✅ Mark final value with a Key so it can be tested easily
+                      Text(
+                        state.value.value,
+                        key: const Key('myStringDisplayText'), // 👈 Added Key
+                        style: AppTextStyles.large,
+                      ),
                     ]
                     else
                       if (state is MyStringErrorState)

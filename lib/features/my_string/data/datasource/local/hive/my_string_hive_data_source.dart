@@ -1,31 +1,21 @@
 import '../../../../../../shared/constants/app_constants.dart';
 import '../../../../../shared_feature/hive_utils.dart';
-import '../../../../domain/entity/my_string_entity.dart';
-import '../my_string_local_data_source.dart';
-import 'my_string_hive_data_mapper.dart';
 import 'my_string_hive_dto.dart';
 
-/// Data source handler to handle local data persistence using Hive.
-class MyStringHiveDataSource implements MyStringLocalDataSource {
-  /// Retrieves stored MyStringEntity object or assigns a default value if absent.
-  @override
-  Future<MyStringEntity> getMyString() async {
+/// Specialized Hive-only local data source that avoids using domain entities.
+///
+/// This source works only with [MyStringHiveDto] objects.
+/// Conversion to/from [MyStringEntity] is handled in the Repository layer.
+class MyStringHiveDataSource {
+  /// Retrieves stored Hive DTO or returns null if not set.
+  Future<MyStringHiveDto?> getMyStringDto() async {
     final box = await HiveUtils.openBox<MyStringHiveDto>(AppConstants.myStringHiveBoxName);
-
-    final defaultVal = MyStringEntity(value: AppConstants.defaultValueHive);
-    final storedVal = box.get(AppConstants.myStringKey);
-    if (storedVal == null) {
-      return defaultVal;
-    } else {
-      return MyStringHiveDataMapper.toEntity(storedVal);
-    }
+    return box.get(AppConstants.myStringKey);
   }
 
-  /// Stores a MyStringEntity object into Hive Box.
-  @override
-  Future<void> storeMyString(MyStringEntity value) async {
+  /// Stores a Hive DTO into the Hive box.
+  Future<void> storeMyStringDto(MyStringHiveDto dto) async {
     final box = await HiveUtils.openBox<MyStringHiveDto>(AppConstants.myStringHiveBoxName);
-    final val = MyStringHiveDto(value: value.value);
-    await box.put(AppConstants.myStringKey, val);
+    await box.put(AppConstants.myStringKey, dto);
   }
 }

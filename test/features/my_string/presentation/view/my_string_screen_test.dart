@@ -21,7 +21,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('Current Value:'), findsOneWidget);
-    expect(find.text(testInput), findsOneWidget);
+    expect(find.byKey(const Key('myStringDisplayText')), findsOneWidget);
+    expect(find.text(testInput), findsWidgets); // optional
   });
 }

@@ -9,7 +9,7 @@
 
 import '../../../../../shared/enums/local_store_enum.dart';
 import '../../../../../shared/enums/remote_server_enum.dart';
-import '../local/hive/my_string_hive_data_source.dart';
+import '../local/hive/my_string_hive_data_source.dart'; // ✅ NEW DTO-based Hive data source
 import '../local/my_string_local_data_source.dart';
 import '../local/shared_prefs/my_string_shared_prefs_data_source.dart';
 import '../remote/dio/my_string_dio_data_source.dart';
@@ -17,18 +17,35 @@ import '../remote/http/my_string_http_data_source.dart';
 import '../remote/my_string_remote_data_source.dart';
 import '../remote/simulator/my_string_simulator_data_source.dart';
 
-// -------------------------------------------------------------------------------
-// Factory Methods to Create Data Sources Based on Config
-// -------------------------------------------------------------------------------
-
-/// Factory function to create a Local Data Source based on DI config
-MyStringLocalDataSource createLocalDataSource(LocalStore storeType) {
+/// Factory function to create a Local Entity-based Data Source
+///
+/// This returns a [MyStringLocalDataSource], which is used when the local
+/// implementation works directly with [MyStringEntity] (e.g., SharedPrefs).
+MyStringLocalDataSource? createLocalDataSource(LocalStore storeType) {
   switch (storeType) {
     case LocalStore.sharedPrefs:
       return MyStringSharedPrefsDataSource();
     case LocalStore.hive:
-      return MyStringHiveDataSource();
+      return null; // ❌ Hive does not return a MyStringEntity-based data source
   }
+
+  // Fallback — should never occur
+  // ignore: dead_code
+  throw ArgumentError('Unsupported LocalStore type: $storeType');
+}
+
+/// Factory function to create a Local Hive DTO-based Data Source
+///
+/// This returns a [MyStringHiveLocalDataSource] if Hive is selected.
+/// Other sources will return null.
+MyStringHiveDataSource? createHiveDtoDataSource(LocalStore storeType) {
+  switch (storeType) {
+    case LocalStore.hive:
+      return MyStringHiveDataSource();
+    case LocalStore.sharedPrefs:
+      return null; // ❌ Not applicable
+  }
+
   // Fallback — should never occur
   // ignore: dead_code
   throw ArgumentError('Unsupported LocalStore type: $storeType');
@@ -44,6 +61,7 @@ MyStringRemoteDataSource createRemoteDataSource(RemoteServer serverType) {
     case RemoteServer.http:
       return MyStringHttpDataSource();
   }
+
   // Fallback — should never occur
   // ignore: dead_code
   throw ArgumentError('Unsupported RemoteServer type: $serverType');
