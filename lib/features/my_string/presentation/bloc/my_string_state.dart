@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:logger/logger.dart' as my_logger;
 
-import '../model/MyStringModel.dart';
+import '../model/my_string_model.dart';
 
 final logger = my_logger.Logger();
 

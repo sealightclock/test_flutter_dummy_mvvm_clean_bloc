@@ -1,4 +1,4 @@
-import '../model/MyStringModel.dart';
+import '../model/my_string_model.dart';
 
 /// Sealed base class for all events that can be sent to MyStringBloc.
 /// Events represent user actions or system triggers that should result in

@@ -6,6 +6,7 @@ import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/ent
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/get_my_string_from_local_use_case.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/get_my_string_from_remote_use_case.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/domain/usecase/store_my_string_to_local_use_case.dart';
+import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/model/my_string_model.dart';
 import 'package:test_flutter_dummy_mvvm_clean_bloc/features/my_string/presentation/viewmodel/my_string_viewmodel.dart';
 
 class MockGetLocal extends Mock implements GetMyStringFromLocalUseCase {}
@@ -43,10 +44,10 @@ void main() {
     final result = await viewModel.getMyStringFromLocal();
 
     switch (result) {
-      case Success<MyStringEntity>(:final data):
+      case Success<MyStringModel>(:final data):
         expect(data.value, 'Local String');
         break;
-      case Failure<MyStringEntity>(:final message):
+      case Failure<MyStringModel>(:final message):
         fail('Expected Success but got Failure: $message');
     }
   });
@@ -55,7 +56,7 @@ void main() {
     when(() => mockStoreLocal.call(any()))
         .thenAnswer((_) async => const Success(null)); // <- important
 
-    await viewModel.storeMyStringToLocal('Save Me');
+    await viewModel.storeMyStringToLocal(MyStringModel(value: 'Save Me'));
 
     verify(() =>
         mockStoreLocal.call(
@@ -67,11 +68,11 @@ void main() {
     when(() => mockGetRemote.call())
         .thenAnswer((_) async => Success(MyStringEntity(value: 'Remote String')));
 
-    handleResult<MyStringEntity>(
+    handleResult<MyStringModel>(
       futureResult: viewModel.getMyStringFromRemote(),
       onSuccess: (data) {
         expect(data.value, 'Remote String');
-        expect(data, isA<MyStringEntity>());
+        expect(data, isA<MyStringModel>());
       },
       onFailure: (message) {
         fail('Expected success but got failure: $message');
