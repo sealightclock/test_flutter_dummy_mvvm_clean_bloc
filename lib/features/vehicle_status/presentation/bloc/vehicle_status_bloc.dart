@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../factory/vehicle_status_viewmodel_factory.dart';
+import '../viewmodel/vehicle_status_viewmodel_factory.dart';
 import '../viewmodel/vehicle_status_viewmodel.dart';
 import 'vehicle_status_event.dart';
 import 'vehicle_status_state.dart';

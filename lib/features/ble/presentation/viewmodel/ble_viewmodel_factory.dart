@@ -4,7 +4,7 @@ import '../../../../core/permission/permission_manager.dart';
 import '../../data/datasource/platform/ble_device_data_source.dart';
 import '../../domain/usecase/connect_to_ble_device_usecase.dart';
 import '../../domain/usecase/scan_ble_devices_usecase.dart';
-import '../viewmodel/ble_viewmodel.dart';
+import 'ble_viewmodel.dart';
 
 /// Factory for creating a BLE ViewModel with proper dependencies.
 ///

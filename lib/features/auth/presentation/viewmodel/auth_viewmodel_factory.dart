@@ -6,7 +6,7 @@ import '../../domain/usecase/guest_login_use_case.dart';
 import '../../domain/usecase/login_use_case.dart';
 import '../../domain/usecase/logout_use_case.dart';
 import '../../domain/usecase/signup_use_case.dart';
-import '../viewmodel/auth_viewmodel.dart';
+import 'auth_viewmodel.dart';
 
 /// Factory to create AuthViewModel with all dependencies injected.
 class AuthViewModelFactory {

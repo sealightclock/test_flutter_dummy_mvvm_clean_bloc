@@ -5,7 +5,7 @@ import '../../../../main.dart'; // TODO: This is anti-pattern: Feature code
 // should not depend on main.dart.
 import '../bloc/settings_event.dart';
 import '../bloc/settings_state.dart';
-import '../factory/settings_viewmodel_factory.dart';
+import '../viewmodel/settings_viewmodel_factory.dart';
 import '../viewmodel/settings_viewmodel.dart';
 
 /// BLoC that manages core settings such as dark mode and font size.

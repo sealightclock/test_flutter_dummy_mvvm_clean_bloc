@@ -5,7 +5,7 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:logger/logger.dart' as my_logger;
 
 import '../../domain/entity/ble_device_entity.dart';
-import '../factory/ble_viewmodel_factory.dart';
+import '../viewmodel/ble_viewmodel_factory.dart';
 import '../viewmodel/ble_viewmodel.dart';
 import 'ble_event.dart';
 import 'ble_state.dart';

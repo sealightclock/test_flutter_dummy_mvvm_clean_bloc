@@ -45,7 +45,7 @@ lib/
 
 ### features/my_string/
 
-#### -- **presentation**/
+#### -- ***presentation***/
 
 ---- **view**/
 
@@ -68,8 +68,6 @@ lib/
 ---- **viewmodel**/
 
 ------ my_string_viewmodel.dart
-
----- factory/
 
 ------ my_string_viewmodel_factory.dart
 
@@ -214,11 +212,13 @@ lib/
 
 -- features/
 
+---- shared_feature/ (a pseudo-feature to coordinate among all the features)
+
 -- shared/
 
 -- core/
 
-It also follows a layered structure:
+It also follows a layered and modular structure:
 
 main.dart -> app.dart -> root_screen.dart -> features/ -> shared/ -> core/.
 

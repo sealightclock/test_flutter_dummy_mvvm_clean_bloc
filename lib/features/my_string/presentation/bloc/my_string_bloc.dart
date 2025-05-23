@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../factory/my_string_viewmodel_factory.dart';
+import '../viewmodel/my_string_viewmodel_factory.dart';
 import '../viewmodel/my_string_viewmodel.dart';
 import 'my_string_event.dart';
 import 'my_string_state.dart';

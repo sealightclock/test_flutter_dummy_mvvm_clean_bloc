@@ -5,7 +5,7 @@ import '../../data/repository/my_string_repository_impl.dart';
 import '../../domain/usecase/get_my_string_from_local_use_case.dart';
 import '../../domain/usecase/get_my_string_from_remote_use_case.dart';
 import '../../domain/usecase/store_my_string_to_local_use_case.dart';
-import '../viewmodel/my_string_viewmodel.dart';
+import 'my_string_viewmodel.dart';
 
 /// Factory class to create the MyStringViewModel from ground up:
 /// Data Sources → Repository → Use Cases → ViewModel

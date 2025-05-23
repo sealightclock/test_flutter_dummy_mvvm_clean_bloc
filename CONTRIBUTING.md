@@ -43,7 +43,7 @@ Tip: Even if a screen starts small, prefer the split if you expect it to expand 
 
 #### [GUIDELINE] User Feedback
 
-Use the global feedback handler located at lib/util/global_feedback_handler.dart.
+Use the global feedback handler in file "global_feedback_handler.dart".
 
 Always call:
 
@@ -122,19 +122,19 @@ presentation/
 
 -- model/
 
----- <Feature>Model.dart
+---- <feature>_model.dart
 
 domain/
 
 -- entity/
 
----- <Feature>Entity.dart
+---- <feature_entity.dart
 
 data/
 
 -- dto/
 
----- <Feature>Dto.dart
+---- <feature_dto.dart
 
 ### UseCase
 
